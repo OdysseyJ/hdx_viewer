@@ -1,0 +1,39 @@
+package application;
+
+public class HDXProfile {
+	HDXProfile(int id, double mz, int charge, String peptide, String protein, int posFrom, int posTo, double expMz, double mzShift, int startScan, int endScan){
+		this.id = id;
+	}
+
+	private int id;
+	
+	private double mz;
+	
+	private int charge;
+	
+	private String peptide;
+	
+	private String protein;
+	
+	private int posFrom;
+	
+	private int posTo;
+	
+	private double expMz;
+	
+	private double mzShift;
+	
+	private int startScan;
+	
+	private int endScan;
+	
+	private double apexScan;
+	
+	private double apexRt;
+	
+	private String second30;
+	
+	private String minute10;
+	
+	private String minute60;
+}
