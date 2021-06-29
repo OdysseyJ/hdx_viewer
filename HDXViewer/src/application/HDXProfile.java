@@ -4,31 +4,31 @@ public class HDXProfile {
 	
 	public HDXProfile() {}
 	
-	private int id;
+	private String id;
 	
-	private double mz;
+	private String mz;
 	
-	private int charge;
+	private String charge;
 	
 	private String peptide;
 	
 	private String protein;
 	
-	private int posFrom;
+	private String posFrom;
 	
-	private int posTo;
+	private String posTo;
 	
-	private double expMz;
+	private String expMz;
 	
-	private double mzShift;
+	private String mzShift;
 	
-	private int startScan;
+	private String startScan;
 	
-	private int endScan;
+	private String endScan;
 	
-	private double apexScan;
+	private String apexScan;
 	
-	private double apexRt;
+	private String apexRt;
 	
 	private String second30;
 	
@@ -36,15 +36,15 @@ public class HDXProfile {
 	
 	private String minute60;
 
-	public int getId() {
+	public String getId() {
 		return this.id;
 	}
 	
-	public double getMz() {
+	public String getMz() {
 		return this.mz;
 	}
 	
-	public int getCharge() {
+	public String getCharge() {
 		return this.charge;
 	}
 	
@@ -56,35 +56,35 @@ public class HDXProfile {
 		return this.protein;
 	}
 	
-	public int getPosFrom() {
+	public String getPosFrom() {
 		return this.posFrom;
 	}
 	
-	public int getPosTo() {
+	public String getPosTo() {
 		return this.posTo;
 	}
 	
-	public double getExpMz() {
+	public String getExpMz() {
 		return this.expMz;
 	}
 	
-	public double getMzShift() {
+	public String getMzShift() {
 		return this.mzShift;
 	}
 	
-	public int getStartScan() {
+	public String getStartScan() {
 		return this.startScan;
 	}
 	
-	public int getEndScan() {
+	public String getEndScan() {
 		return this.endScan;
 	}
 	
-	public double getApexScan() {
+	public String getApexScan() {
 		return this.apexScan;
 	}
 	
-	public double getApexRt() {
+	public String getApexRt() {
 		return this.apexRt;
 	}
 	
@@ -100,15 +100,15 @@ public class HDXProfile {
 		return this.minute60;
 	}
 	
-	public void setId(int id){
+	public void setId(String id){
 		this.id = id;
 	}
 	
-	public void setMz(double mz) {
+	public void setMz(String mz) {
 		this.mz = mz;
 	}
 	
-	public void setCharge(int charge) {
+	public void setCharge(String charge) {
 		this.charge = charge;
 	}
 	
@@ -120,35 +120,35 @@ public class HDXProfile {
 		this.protein = protein;
 	}
 	
-	public void setPosFrom(int posFrom) {
+	public void setPosFrom(String posFrom) {
 		this.posFrom = posFrom;
 	}
 	
-	public void setPosTo(int posTo) {
+	public void setPosTo(String posTo) {
 		this.posTo = posTo;
 	}
 	
-	public void setExpMz(double expMz) {
+	public void setExpMz(String expMz) {
 		this.expMz = expMz;
 	}
 	
-	public void setMzShift(double mzShift) {
+	public void setMzShift(String mzShift) {
 		this.mzShift = mzShift;
 	}
 	
-	public void setStartScan(int startScan) {
+	public void setStartScan(String startScan) {
 		this.startScan = startScan;
 	}
 	
-	public void setEndScan(int endScan) {
+	public void setEndScan(String endScan) {
 		this.endScan = endScan;
 	}
 	
-	public void setApexScan(double apexScan) {
+	public void setApexScan(String apexScan) {
 		this.apexScan = apexScan;
 	}
 	
-	public void setApexRt(double apexRt) {
+	public void setApexRt(String apexRt) {
 		this.apexRt = apexRt;
 	}
 	

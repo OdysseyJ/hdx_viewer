@@ -73,19 +73,19 @@ public class FileSelectViewController {
 		for (int i = 1; i < allRows.size(); i++) {
 			HDXProfile profile = new HDXProfile();
 			for (int j = 0; j < allRows.get(0).length; j++) {
-				profile.setId(Integer.parseInt(allRows.get(i)[0]));
-				profile.setMz(Double.parseDouble(allRows.get(i)[1]));
-				profile.setCharge(Integer.parseInt(allRows.get(i)[2]));
+				profile.setId(allRows.get(i)[0]);
+				profile.setMz(allRows.get(i)[1]);
+				profile.setCharge(allRows.get(i)[2]);
 				profile.setPeptide(allRows.get(i)[3]);
 				profile.setProtein(allRows.get(i)[4]);
-				profile.setPosFrom(Integer.parseInt(allRows.get(i)[5]));
-				profile.setPosTo(Integer.parseInt(allRows.get(i)[6]));
-				profile.setExpMz(Double.parseDouble(allRows.get(i)[7]));
-				profile.setMzShift(Double.parseDouble(allRows.get(i)[8]));
-				profile.setStartScan(Integer.parseInt(allRows.get(i)[9]));
-				profile.setEndScan(Integer.parseInt(allRows.get(i)[10]));
-				profile.setApexScan(Double.parseDouble(allRows.get(i)[11]));
-				profile.setApexRt(Double.parseDouble(allRows.get(i)[12]));
+				profile.setPosFrom(allRows.get(i)[5]);
+				profile.setPosTo(allRows.get(i)[6]);
+				profile.setExpMz(allRows.get(i)[7]);
+				profile.setMzShift(allRows.get(i)[8]);
+				profile.setStartScan(allRows.get(i)[9]);
+				profile.setEndScan(allRows.get(i)[10]);
+				profile.setApexScan(allRows.get(i)[11]);
+				profile.setApexRt(allRows.get(i)[12]);
 				profile.setSecond30(allRows.get(i)[13]);
 				profile.setMinute10(allRows.get(i)[14]);
 				profile.setMinute60(allRows.get(i)[15]);

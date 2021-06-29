@@ -11,9 +11,10 @@ import javax.xml.stream.XMLStreamException;
 import org.systemsbiology.jrap.stax.MSXMLSequentialParser;
 import org.systemsbiology.jrap.stax.Scan;
 
-import application.table.Person;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -21,10 +22,13 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
@@ -34,10 +38,17 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 public class MainViewController implements Initializable {
 	
+	ObservableList<HDXProfile> recordList = FXCollections.observableArrayList();
+	
 	private ArrayList<File> files = new ArrayList<File>();
+	
+	CategoryAxis xAxis = new CategoryAxis();
+	
+	NumberAxis yAxis = new NumberAxis();
 
     @FXML
     private MenuItem open;
@@ -46,7 +57,7 @@ public class MainViewController implements Initializable {
     private TreeView<String> treeview;
 
     @FXML
-    private LineChart<?, ?> linechart;
+    private LineChart<String,Number> linechart = new LineChart<String,Number>(xAxis,yAxis);
 
     @FXML
     private BarChart<?, ?> barchart_up;
@@ -131,55 +142,6 @@ public class MainViewController implements Initializable {
     	});
 	}
 	
-	public void setTableViewData(ArrayList<HDXProfile> profileList) {
-		
-		TableColumn<HDXProfile, String> column1 = new TableColumn<>("Id");
-	    column1.setCellValueFactory(new PropertyValueFactory<>("id"));
-
-	    TableColumn<HDXProfile, String> column2 = new TableColumn<>("Mz");
-	    column2.setCellValueFactory(new PropertyValueFactory<>("mz"));
-	    
-	    TableColumn<HDXProfile, String> column3 = new TableColumn<>("Charge");
-	    column3.setCellValueFactory(new PropertyValueFactory<>("charge"));
-	    
-	    TableColumn<HDXProfile, String> column4 = new TableColumn<>("Peptide");
-	    column4.setCellValueFactory(new PropertyValueFactory<>("peptide"));
-	    
-	    TableColumn<HDXProfile, String> column5 = new TableColumn<>("Protein");
-	    column5.setCellValueFactory(new PropertyValueFactory<>("protein"));
-
-	    TableColumn<HDXProfile, String> column6 = new TableColumn<>("ExpMz");
-	    column6.setCellValueFactory(new PropertyValueFactory<>("expMz"));
-
-	    TableColumn<HDXProfile, String> column7 = new TableColumn<>("MzShift");
-	    column7.setCellValueFactory(new PropertyValueFactory<>("mzShift"));
-
-	    TableColumn<HDXProfile, String> column8 = new TableColumn<>("30Second");
-	    column8.setCellValueFactory(new PropertyValueFactory<>("second30"));
-
-	    TableColumn<HDXProfile, String> column9 = new TableColumn<>("10Minute");
-	    column9.setCellValueFactory(new PropertyValueFactory<>("minute10"));
-
-	    TableColumn<HDXProfile, String> column10 = new TableColumn<>("60Minute");
-	    column10.setCellValueFactory(new PropertyValueFactory<>("minute60"));
-
-		tableview.getColumns().remove(0);
-		tableview.getColumns().remove(0);
-
-	    tableview.getColumns().add(column1);
-	    tableview.getColumns().add(column2);
-	    tableview.getColumns().add(column3);
-	    tableview.getColumns().add(column4);
-	    tableview.getColumns().add(column5);
-	    tableview.getColumns().add(column6);
-	    tableview.getColumns().add(column7);
-	    tableview.getColumns().add(column8);
-	    tableview.getColumns().add(column9);
-	    tableview.getColumns().add(column10);
-
-	    tableview.setItems(FXCollections.observableArrayList(profileList));
-	}
-	
 	public void setTreeItem(ArrayList<File> files) {
 		try {
 			this.files = files;
@@ -196,4 +158,132 @@ public class MainViewController implements Initializable {
 			
 		}
 	}
+	
+	// ------------------------------line chart------------------
+		public void setLineChartData(int index) {
+			String second30 = recordList.get(index).getSecond30();
+			String minute10 = recordList.get(index).getMinute10();
+			String minute60 = recordList.get(index).getMinute60();
+			
+			String[] s30 = second30.split("~");
+			String[] m10 = minute10.split("~");
+			String[] m60 = minute60.split("~");
+			Double s30d = 0.0;
+			Double m10d = 0.0;
+			Double m60d = 0.0;
+			for (int i = 0; i < s30.length; i++) {
+				if (s30[i].equals("-")) {
+					break;
+				}
+				s30d += Double.parseDouble(s30[i]);
+			}
+			for (int i = 0; i < m10.length; i++) {
+				if (m10[i].equals("-")) {
+					break;
+				}
+				m10d += Double.parseDouble(m10[i]);
+			}
+			for (int i = 0; i < m60.length; i++) {
+				if (m60[i].equals("-")) {
+					break;
+				}
+				m60d += Double.parseDouble(m60[i]);
+			}
+			s30d /= s30.length;
+			m10d /= m10.length;
+			m60d /= m60.length;
+	
+			linechart.getData().clear();
+			linechart.setTitle("count per time");
+			XYChart.Series series = new XYChart.Series();
+			series.getData().add(new XYChart.Data("30second", s30d));
+			series.getData().add(new XYChart.Data("10minute", m10d));
+			series.getData().add(new XYChart.Data("60minute", m60d));
+			linechart.getData().add(series);
+		}
+	
+	// ------------------------------Table View---------------------
+
+	public void setTableViewData(ArrayList<HDXProfile> profileList) {
+		recordList.setAll(FXCollections.observableArrayList(profileList));
+        Callback<TableColumn<HDXProfile, String>, TableCell<HDXProfile, String>> stringCellFactory =
+                new Callback<TableColumn<HDXProfile, String>, TableCell<HDXProfile, String>>() {
+            @Override
+            public TableCell<HDXProfile, String> call(TableColumn<HDXProfile, String> p) {
+                StringTableCell cell = new StringTableCell();
+                cell.addEventFilter(MouseEvent.MOUSE_CLICKED, new MyEventHandler());
+                return cell;
+            }
+        };
+        
+		TableColumn<HDXProfile, String> column1 = new TableColumn<>("Id");
+	    column1.setCellValueFactory(new PropertyValueFactory<HDXProfile, String>("id"));
+	    column1.setCellFactory(stringCellFactory);
+	    
+	    TableColumn<HDXProfile, String> column2 = new TableColumn<>("Mz");
+	    column2.setCellValueFactory(new PropertyValueFactory<>("mz"));
+	    column2.setCellFactory(stringCellFactory);
+	    
+	    TableColumn<HDXProfile, String> column3 = new TableColumn<>("Charge");
+	    column3.setCellValueFactory(new PropertyValueFactory<>("charge"));
+	    column3.setCellFactory(stringCellFactory);
+	    
+	    TableColumn<HDXProfile, String> column4 = new TableColumn<>("Peptide");
+	    column4.setCellValueFactory(new PropertyValueFactory<>("peptide"));
+	    column4.setCellFactory(stringCellFactory);
+	    
+	    TableColumn<HDXProfile, String> column5 = new TableColumn<>("Protein");
+	    column5.setCellValueFactory(new PropertyValueFactory<>("protein"));
+	    column5.setCellFactory(stringCellFactory);
+
+	    TableColumn<HDXProfile, String> column6 = new TableColumn<>("ExpMz");
+	    column6.setCellValueFactory(new PropertyValueFactory<>("expMz"));
+	    column6.setCellFactory(stringCellFactory);
+
+	    TableColumn<HDXProfile, String> column7 = new TableColumn<>("MzShift");
+	    column7.setCellValueFactory(new PropertyValueFactory<>("mzShift"));
+	    column7.setCellFactory(stringCellFactory);
+
+	    TableColumn<HDXProfile, String> column8 = new TableColumn<>("30Second");
+	    column8.setCellValueFactory(new PropertyValueFactory<>("second30"));
+	    column8.setCellFactory(stringCellFactory);
+
+	    TableColumn<HDXProfile, String> column9 = new TableColumn<>("10Minute");
+	    column9.setCellValueFactory(new PropertyValueFactory<>("minute10"));
+	    column9.setCellFactory(stringCellFactory);
+
+	    TableColumn<HDXProfile, String> column10 = new TableColumn<>("60Minute");
+	    column10.setCellValueFactory(new PropertyValueFactory<>("minute60"));
+	    column10.setCellFactory(stringCellFactory);
+
+		tableview.getColumns().remove(0);
+		tableview.getColumns().remove(0);
+
+	    tableview.getColumns().addAll(column1, column2, column3, column4, column5, column6, column7, column8, column9, column10);
+
+	    tableview.setItems(recordList);
+	}
+	  
+	class StringTableCell extends TableCell<HDXProfile, String> {
+	        @Override
+	        public void updateItem(String item, boolean empty) {
+	            super.updateItem(item, empty);
+	            setText(empty ? null : getString());
+	            setGraphic(null);
+	        }
+
+	        private String getString() {
+	            return getItem() == null ? "" : getItem().toString();
+	        }
+	 }
+	
+	 class MyEventHandler implements EventHandler<MouseEvent> {
+
+	        @Override
+	        public void handle(MouseEvent t) {
+	            TableCell c = (TableCell) t.getSource();
+	            int index = c.getIndex();
+	            setLineChartData(index);
+	        }
+	 }
 }

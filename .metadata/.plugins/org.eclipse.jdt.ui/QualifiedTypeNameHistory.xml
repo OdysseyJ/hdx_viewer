@@ -5,8 +5,6 @@
     <fullyQualifiedTypeName name="javafx.scene.layout.VBox"/>
     <fullyQualifiedTypeName name="javafx.scene.control.Menu"/>
     <fullyQualifiedTypeName name="javafx.scene.control.MenuItem"/>
-    <fullyQualifiedTypeName name="javafx.scene.chart.CategoryAxis"/>
-    <fullyQualifiedTypeName name="javafx.scene.chart.NumberAxis"/>
     <fullyQualifiedTypeName name="javafx.scene.chart.BarChart"/>
     <fullyQualifiedTypeName name="javafx.scene.chart.XYChart"/>
     <fullyQualifiedTypeName name="application.chart.BarChartBuilder"/>
@@ -41,7 +39,6 @@
     <fullyQualifiedTypeName name="javafx.scene.control.Alert"/>
     <fullyQualifiedTypeName name="javafx.scene.control.Alert.AlertType"/>
     <fullyQualifiedTypeName name="java.util.ArrayList"/>
-    <fullyQualifiedTypeName name="javafx.event.EventHandler"/>
     <fullyQualifiedTypeName name="application.MainViewController"/>
     <fullyQualifiedTypeName name="com.univocity.parsers.tsv.TsvParserSettings"/>
     <fullyQualifiedTypeName name="com.univocity.parsers.tsv.TsvParser"/>
@@ -52,4 +49,11 @@
     <fullyQualifiedTypeName name="java.io.InputStreamReader"/>
     <fullyQualifiedTypeName name="java.io.Reader"/>
     <fullyQualifiedTypeName name="javafx.collections.FXCollections"/>
+    <fullyQualifiedTypeName name="javafx.event.EventHandler"/>
+    <fullyQualifiedTypeName name="javax.swing.text.TableView.TableCell"/>
+    <fullyQualifiedTypeName name="javafx.scene.control.TableCell"/>
+    <fullyQualifiedTypeName name="javafx.collections.ObservableList"/>
+    <fullyQualifiedTypeName name="javafx.util.Callback"/>
+    <fullyQualifiedTypeName name="javafx.scene.chart.NumberAxis"/>
+    <fullyQualifiedTypeName name="javafx.scene.chart.CategoryAxis"/>
 </qualifiedTypeNameHistroy>
