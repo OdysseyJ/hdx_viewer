@@ -149,6 +149,7 @@ public class MainViewController implements Initializable {
     	});
 	}
 	
+	// ------------------------------tree view------------------
 	public void setTreeItem(ArrayList<File> files) {
 		try {
 			this.files = files;
@@ -168,47 +169,47 @@ public class MainViewController implements Initializable {
 	}
 
 	// ------------------------------line chart------------------
-		public void setLineChartData(int index) {
-			String second30 = recordList.get(index).getSecond30();
-			String minute10 = recordList.get(index).getMinute10();
-			String minute60 = recordList.get(index).getMinute60();
-			
-			String[] s30 = second30.split("~");
-			String[] m10 = minute10.split("~");
-			String[] m60 = minute60.split("~");
-			Double s30d = 0.0;
-			Double m10d = 0.0;
-			Double m60d = 0.0;
-			for (int i = 0; i < s30.length; i++) {
-				if (s30[i].equals("-")) {
-					break;
-				}
-				s30d += Double.parseDouble(s30[i]);
+	public void setLineChartData(int index) {
+		String second30 = recordList.get(index).getSecond30();
+		String minute10 = recordList.get(index).getMinute10();
+		String minute60 = recordList.get(index).getMinute60();
+		
+		String[] s30 = second30.split("~");
+		String[] m10 = minute10.split("~");
+		String[] m60 = minute60.split("~");
+		Double s30d = 0.0;
+		Double m10d = 0.0;
+		Double m60d = 0.0;
+		for (int i = 0; i < s30.length; i++) {
+			if (s30[i].equals("-")) {
+				break;
 			}
-			for (int i = 0; i < m10.length; i++) {
-				if (m10[i].equals("-")) {
-					break;
-				}
-				m10d += Double.parseDouble(m10[i]);
-			}
-			for (int i = 0; i < m60.length; i++) {
-				if (m60[i].equals("-")) {
-					break;
-				}
-				m60d += Double.parseDouble(m60[i]);
-			}
-			s30d /= s30.length;
-			m10d /= m10.length;
-			m60d /= m60.length;
-	
-			linechart.getData().clear();
-			linechart.setTitle("count per time");
-			XYChart.Series series = new XYChart.Series();
-			series.getData().add(new XYChart.Data("30second", s30d));
-			series.getData().add(new XYChart.Data("10minute", m10d));
-			series.getData().add(new XYChart.Data("60minute", m60d));
-			linechart.getData().add(series);
+			s30d += Double.parseDouble(s30[i]);
 		}
+		for (int i = 0; i < m10.length; i++) {
+			if (m10[i].equals("-")) {
+				break;
+			}
+			m10d += Double.parseDouble(m10[i]);
+		}
+		for (int i = 0; i < m60.length; i++) {
+			if (m60[i].equals("-")) {
+				break;
+			}
+			m60d += Double.parseDouble(m60[i]);
+		}
+		s30d /= s30.length;
+		m10d /= m10.length;
+		m60d /= m60.length;
+
+		linechart.getData().clear();
+		linechart.setTitle("count per time");
+		XYChart.Series series = new XYChart.Series();
+		series.getData().add(new XYChart.Data("30second", s30d));
+		series.getData().add(new XYChart.Data("10minute", m10d));
+		series.getData().add(new XYChart.Data("60minute", m60d));
+		linechart.getData().add(series);
+	}
 	
 	// ------------------------------Table View---------------------
 
