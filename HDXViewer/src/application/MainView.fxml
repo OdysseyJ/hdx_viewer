@@ -51,7 +51,7 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <TreeView fx:id="treeview" prefHeight="263.0" prefWidth="365.0" />
+                        <TreeView fx:id="treeview" onMouseClicked="#onClickTreeView" prefHeight="263.0" prefWidth="365.0" />
                         <LineChart fx:id="linechart" GridPane.rowIndex="1">
                           <xAxis>
                             <CategoryAxis side="BOTTOM" />

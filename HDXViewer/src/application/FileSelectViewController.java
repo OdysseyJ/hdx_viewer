@@ -92,6 +92,7 @@ public class FileSelectViewController {
 			}
 			profileList.add(profile);
 		}
+		Main.mainViewController.setTreeItem(this.files);
     	Main.mainViewController.setTableViewData(profileList);
 
     	thisStage.close();

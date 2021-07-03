@@ -34,6 +34,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -91,6 +93,11 @@ public class MainViewController implements Initializable {
     		System.out.println(e);
     	}
     }
+    
+    @FXML
+    void onClickTreeView(MouseEvent event) {
+
+    }
 
     @FXML
     void onClickTableView(MouseEvent event) {
@@ -145,20 +152,21 @@ public class MainViewController implements Initializable {
 	public void setTreeItem(ArrayList<File> files) {
 		try {
 			this.files = files;
-			TreeItem<String> Root = new TreeItem<String>("FILES");
-			TreeItem<String> newItem = new TreeItem<String>("condition");
-			for (int i = 0; i < files.size(); i++) {
-				TreeItem<String> child = new TreeItem<String>(files.get(i).getName());
-				newItem.getChildren().add(child);
+			TreeItem<String> Root = new TreeItem<String>("Project");
+			if( files.size() > 0 ) {
+				TreeItem<String> newItem = new TreeItem<String>("Con 1");
+				for (int i = 1; i < files.size(); i++) {
+					TreeItem<String> child = new TreeItem<String>("t " + i);
+					newItem.getChildren().add(child);
+				}
+				Root.getChildren().add(newItem);
 			}
-			Root.getChildren().add(newItem);
-	
 	    	treeview.setRoot(Root);
 		} catch(Exception e) {
 			
 		}
 	}
-	
+
 	// ------------------------------line chart------------------
 		public void setLineChartData(int index) {
 			String second30 = recordList.get(index).getSecond30();
