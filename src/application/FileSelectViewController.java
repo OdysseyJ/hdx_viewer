@@ -70,6 +70,30 @@ public class FileSelectViewController {
 		List<String[]> allDdueAnals = parser.parseAll(getReader("foo_pept_HDXProfile.tsv"));
 		List<String[]> allHDXProfiles = parser.parseAll(getReader("foo_pept_HDXProfile.tsv"));
 		ArrayList<HDXProfile> profileList = new ArrayList<HDXProfile>();
+		ArrayList<DdeuAnal> ddueList = new ArrayList<DdeuAnal>();
+		
+		for (int i = 1; i < allDdueAnals.size(); i++) {
+			DdeuAnal ddeu = new DdeuAnal();
+			String[] line = allDdueAnals.get(i);
+			ddeu.setId(line[0]);
+			ddeu.setMz(line[1]);
+			ddeu.setCharge(line[2]);
+			ddeu.setPeptide(line[3]);
+			ddeu.setD2OLabelfirst(line[4]);
+			ddeu.setFirstDdeuNum(line[5]);
+			ddeu.setFirstDdeuPercent(line[6]);
+			ddeu.setSecondDdeuNum(line[7]);
+			ddeu.setSecondDdeuPercent(line[8]);
+			ddeu.setPredictedDdeu(line[9]);
+			ddeu.setStartScan(line[10]);
+			ddeu.setEndScan(line[11]);
+			ddeu.setStartRT(line[12]);
+			ddeu.setEndRT(line[13]);
+			ddeu.setObservedDdeu(line[14]);
+			ddeu.setMatchedScore(line[15]);
+			System.out.println(ddeu);
+			ddueList.add(ddeu);
+		}
 		
 		for (int i = 1; i < allHDXProfiles.size(); i++) {
 			HDXProfile profile = new HDXProfile();
@@ -93,14 +117,16 @@ public class FileSelectViewController {
 			}
 			profileList.add(profile);
 		}
+		
+		Main.mainViewController.setDdeuData(ddueList);
 		Main.mainViewController.setTreeItem(this.files);
     	Main.mainViewController.setTableViewData(profileList);
 
     	thisStage.close();
     	} catch(Exception e) {
     		Alert alert = new Alert(AlertType.WARNING);
-    		alert.setTitle("¿À·ù°¡ ¹ß»ýÇß½À´Ï´Ù.");
-    		alert.setHeaderText("ÆÄÀÏÀ» ÀÐ¾î¿À´Âµ¥ ½ÇÆÐÇß½À´Ï´Ù.");
+    		alert.setTitle("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß»ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½.");
+    		alert.setHeaderText("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ð¾ï¿½ï¿½ï¿½Âµï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ß½ï¿½ï¿½Ï´ï¿½.");
     		alert.setContentText(e.getMessage());
 
     		alert.showAndWait();

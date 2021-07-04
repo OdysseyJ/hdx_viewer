@@ -45,6 +45,8 @@ import javafx.util.Callback;
 public class MainViewController implements Initializable {
 	
 	ObservableList<HDXProfile> recordList = FXCollections.observableArrayList();
+
+	ArrayList<DdeuAnal> ddeuList = new ArrayList<DdeuAnal>();
 	
 	private ArrayList<File> files = new ArrayList<File>();
 	
@@ -113,6 +115,16 @@ public class MainViewController implements Initializable {
 		barchart_down.setLegendVisible(false);
 		barchart_down.getXAxis().setAnimated(false);
 		barchart_down.getYAxis().setAnimated(false);
+		
+		
+		XYChart.Series dataSeries1 = new XYChart.Series();
+
+		dataSeries1.getData().add(new XYChart.Data("Desktop", 178));
+		dataSeries1.getData().add(new XYChart.Data("Phone"  , 65));
+		dataSeries1.getData().add(new XYChart.Data("Tablet"  , 23));
+
+
+		barchart_up.getData().add(dataSeries1);
 		
 //		treeview.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 //    	    if(newValue != null && newValue.getValue() != "FILES" && newValue.getValue() != "condition" && newValue != oldValue){
@@ -209,6 +221,11 @@ public class MainViewController implements Initializable {
 		series.getData().add(new XYChart.Data("10minute", m10d));
 		series.getData().add(new XYChart.Data("60minute", m60d));
 		linechart.getData().add(series);
+	}
+	
+	// ------------------------------Ddeu Data --------------------
+	public void setDdeuData(ArrayList<DdeuAnal> ddeuAnals) {
+		ddeuList.addAll(ddeuAnals);
 	}
 	
 	// ------------------------------Table View---------------------
