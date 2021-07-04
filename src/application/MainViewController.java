@@ -114,39 +114,39 @@ public class MainViewController implements Initializable {
 		barchart_down.getXAxis().setAnimated(false);
 		barchart_down.getYAxis().setAnimated(false);
 		
-		treeview.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-    	    if(newValue != null && newValue.getValue() != "FILES" && newValue.getValue() != "condition" && newValue != oldValue){
-    	    	String fileName = newValue.getValue();
-    			String filePath = "";
-    			for (int i = 0; i < files.size(); i++) {
-    				if (files.get(0).getName().equals(fileName)) {
-    					filePath = files.get(i).getPath();
-    				}
-    			}
-    			
-    			
-	    	   try {
-	    	    	MSXMLSequentialParser parser = new MSXMLSequentialParser();
-					parser.open(filePath);
-					
-					Scan scan = parser.getNextScan();
-	
-					double[][] array = scan.getMassIntensityList();
-					XYChart.Series data = new XYChart.Series();
-					
-					for (int j = 0; j < array[0].length; j++) {
-						double key = array[1][j];
-						String s = String.format("%.2f", key);
-						double value = array[0][j];
-						data.getData().add(new XYChart.Data(s, value));
-					}	
-	
-					barchart_up.getData().clear();
-					barchart_up.getData().add(data);
-				} catch (FileNotFoundException | XMLStreamException e) {
-				}
-    	    }
-    	});
+//		treeview.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+//    	    if(newValue != null && newValue.getValue() != "FILES" && newValue.getValue() != "condition" && newValue != oldValue){
+//    	    	String fileName = newValue.getValue();
+//    			String filePath = "";
+//    			for (int i = 0; i < files.size(); i++) {
+//    				if (files.get(0).getName().equals(fileName)) {
+//    					filePath = files.get(i).getPath();
+//    				}
+//    			}
+//    			
+//    			
+//	    	   try {
+//	    	    	MSXMLSequentialParser parser = new MSXMLSequentialParser();
+//					parser.open(filePath);
+//					
+//					Scan scan = parser.getNextScan();
+//	
+//					double[][] array = scan.getMassIntensityList();
+//					XYChart.Series data = new XYChart.Series();
+//					
+//					for (int j = 0; j < array[0].length; j++) {
+//						double key = array[1][j];
+//						String s = String.format("%.2f", key);
+//						double value = array[0][j];
+//						data.getData().add(new XYChart.Data(s, value));
+//					}	
+//	
+//					barchart_up.getData().clear();
+//					barchart_up.getData().add(data);
+//				} catch (FileNotFoundException | XMLStreamException e) {
+//				}
+//    	    }
+//    	});
 	}
 	
 	// ------------------------------tree view------------------

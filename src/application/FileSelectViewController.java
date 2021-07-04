@@ -67,28 +67,29 @@ public class FileSelectViewController {
 		
 		TsvParser parser = new TsvParser(settings);
 
-		List<String[]> allRows = parser.parseAll(getReader("foo_pept_HDXProfile.tsv"));
+		List<String[]> allDdueAnals = parser.parseAll(getReader("foo_pept_HDXProfile.tsv"));
+		List<String[]> allHDXProfiles = parser.parseAll(getReader("foo_pept_HDXProfile.tsv"));
 		ArrayList<HDXProfile> profileList = new ArrayList<HDXProfile>();
 		
-		for (int i = 1; i < allRows.size(); i++) {
+		for (int i = 1; i < allHDXProfiles.size(); i++) {
 			HDXProfile profile = new HDXProfile();
-			for (int j = 0; j < allRows.get(0).length; j++) {
-				profile.setId(allRows.get(i)[0]);
-				profile.setMz(allRows.get(i)[1]);
-				profile.setCharge(allRows.get(i)[2]);
-				profile.setPeptide(allRows.get(i)[3]);
-				profile.setProtein(allRows.get(i)[4]);
-				profile.setPosFrom(allRows.get(i)[5]);
-				profile.setPosTo(allRows.get(i)[6]);
-				profile.setExpMz(allRows.get(i)[7]);
-				profile.setMzShift(allRows.get(i)[8]);
-				profile.setStartScan(allRows.get(i)[9]);
-				profile.setEndScan(allRows.get(i)[10]);
-				profile.setApexScan(allRows.get(i)[11]);
-				profile.setApexRt(allRows.get(i)[12]);
-				profile.setSecond30(allRows.get(i)[13]);
-				profile.setMinute10(allRows.get(i)[14]);
-				profile.setMinute60(allRows.get(i)[15]);
+			for (int j = 0; j < allHDXProfiles.get(0).length; j++) {
+				profile.setId(allHDXProfiles.get(i)[0]);
+				profile.setMz(allHDXProfiles.get(i)[1]);
+				profile.setCharge(allHDXProfiles.get(i)[2]);
+				profile.setPeptide(allHDXProfiles.get(i)[3]);
+				profile.setProtein(allHDXProfiles.get(i)[4]);
+				profile.setPosFrom(allHDXProfiles.get(i)[5]);
+				profile.setPosTo(allHDXProfiles.get(i)[6]);
+				profile.setExpMz(allHDXProfiles.get(i)[7]);
+				profile.setMzShift(allHDXProfiles.get(i)[8]);
+				profile.setStartScan(allHDXProfiles.get(i)[9]);
+				profile.setEndScan(allHDXProfiles.get(i)[10]);
+				profile.setApexScan(allHDXProfiles.get(i)[11]);
+				profile.setApexRt(allHDXProfiles.get(i)[12]);
+				profile.setSecond30(allHDXProfiles.get(i)[13]);
+				profile.setMinute10(allHDXProfiles.get(i)[14]);
+				profile.setMinute60(allHDXProfiles.get(i)[15]);
 			}
 			profileList.add(profile);
 		}
