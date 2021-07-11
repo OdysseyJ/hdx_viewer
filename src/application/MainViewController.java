@@ -37,6 +37,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -47,6 +48,10 @@ public class MainViewController implements Initializable {
 	ObservableList<HDXProfile> recordList = FXCollections.observableArrayList();
 
 	ArrayList<DdeuAnal> ddeuList = new ArrayList<DdeuAnal>();
+	
+	ArrayList<Scan> ctrlList = new ArrayList<Scan>();
+	
+	ArrayList<Scan> conditionList = new ArrayList<Scan>();
 	
 	private ArrayList<File> files = new ArrayList<File>();
 	
@@ -112,19 +117,14 @@ public class MainViewController implements Initializable {
 		barchart_up.setLegendVisible(false);
 		barchart_up.getXAxis().setAnimated(false);
 		barchart_up.getYAxis().setAnimated(false);
+		barchart_up.getXAxis().setTickLabelsVisible(false);
 		barchart_down.setLegendVisible(false);
 		barchart_down.getXAxis().setAnimated(false);
 		barchart_down.getYAxis().setAnimated(false);
-		
-		
-		XYChart.Series dataSeries1 = new XYChart.Series();
-
-		dataSeries1.getData().add(new XYChart.Data("Desktop", 178));
-		dataSeries1.getData().add(new XYChart.Data("Phone"  , 65));
-		dataSeries1.getData().add(new XYChart.Data("Tablet"  , 23));
-
-
-		barchart_up.getData().add(dataSeries1);
+		barchart_down.getXAxis().setTickLabelsVisible(false);
+		linechart.setLegendVisible(false);
+		linechart.getXAxis().setAnimated(false);
+		linechart.getXAxis().setAnimated(false);
 		
 //		treeview.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 //    	    if(newValue != null && newValue.getValue() != "FILES" && newValue.getValue() != "condition" && newValue != oldValue){
@@ -220,7 +220,29 @@ public class MainViewController implements Initializable {
 		series.getData().add(new XYChart.Data("30second", s30d));
 		series.getData().add(new XYChart.Data("10minute", m10d));
 		series.getData().add(new XYChart.Data("60minute", m60d));
-		linechart.getData().add(series);
+		linechart.getData().setAll(series);
+	}
+	
+	public void setScanData(ArrayList<Scan> ctrl_scans, ArrayList<Scan> condition_scans) {
+		ctrlList.addAll(ctrl_scans);
+		conditionList.addAll(condition_scans);
+	}
+	
+	public void setBarChartData(int scanNum, int startMass, int endMass, String predictedDdeu) {
+		System.out.println(predictedDdeu);
+		Scan ctrl_scan = ctrlList.get(scanNum);
+		
+		double[][] intensityList = ctrl_scan.getMassIntensityList();
+
+		XYChart.Series dataSeries1 = new XYChart.Series();
+		
+		for(int i = startMass; i < endMass; i++) {
+			String mass = Double.toString(intensityList[0][i]);
+			Double intensity = intensityList[1][i];
+			dataSeries1.getData().add(new XYChart.Data(mass, intensity));
+		}
+		
+		barchart_up.getData().setAll(dataSeries1);
 	}
 	
 	// ------------------------------Ddeu Data --------------------
@@ -309,7 +331,19 @@ public class MainViewController implements Initializable {
 	        public void handle(MouseEvent t) {
 	            TableCell c = (TableCell) t.getSource();
 	            int index = c.getIndex();
+	            HDXProfile profile = recordList.get(index);
+	            String apexScan = profile.getApexScan();
+	            String peptide = profile.getPeptide();
+	            String predictedDdeu = "";
+	            for (int i = 0; i  < ddeuList.size(); i++) {
+	            	DdeuAnal data = ddeuList.get(i);
+	            	if (data.getPeptide().equals(peptide)) {
+	            		predictedDdeu = data.getPredictedDdeu();
+	            		break;
+	            	}
+	            }
 	            setLineChartData(index);
+	            setBarChartData(Integer.parseInt(apexScan), 420, 420+peptide.length(), predictedDdeu);
 	        }
 	 }
 }

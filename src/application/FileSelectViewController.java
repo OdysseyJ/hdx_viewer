@@ -7,14 +7,15 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.systemsbiology.jrap.stax.MSXMLSequentialParser;
+import org.systemsbiology.jrap.stax.Scan;
+
 import com.univocity.parsers.tsv.TsvParser;
 import com.univocity.parsers.tsv.TsvParserSettings;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -67,14 +68,39 @@ public class FileSelectViewController {
 		
 		TsvParser parser = new TsvParser(settings);
 
-		List<String[]> allDdueAnals = parser.parseAll(getReader("foo_pept_HDXProfile.tsv"));
+		List<String[]> allDdueAnals = parser.parseAll(getReader("foo_pept_DdeuAnal.tsv"));
 		List<String[]> allHDXProfiles = parser.parseAll(getReader("foo_pept_HDXProfile.tsv"));
+		
+		MSXMLSequentialParser ctrl_parser = new MSXMLSequentialParser();
+		MSXMLSequentialParser condition_parser = new MSXMLSequentialParser();
+		ArrayList<Scan> ctrl_scans = new ArrayList<Scan>();
+		ArrayList<Scan> condition_scans = new ArrayList<Scan>();
 		ArrayList<HDXProfile> profileList = new ArrayList<HDXProfile>();
 		ArrayList<DdeuAnal> ddueList = new ArrayList<DdeuAnal>();
+		
+		// read all scans
+		try {
+			ctrl_parser.open("/Users/seongwoon/eclipse/hdx_viewer/src/application/ctrl_ms.mzXML");
+			condition_parser.open("/Users/seongwoon/eclipse/hdx_viewer/src/application/d2o_10m.mzXML");
+			while (ctrl_parser.hasNextScan()){
+				ctrl_scans.add(ctrl_parser.getNextScan());
+			}
+			while (condition_parser.hasNextScan()) {
+				condition_scans.add(condition_parser.getNextScan());
+			}
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		
+		// read all ddeu data
 		
 		for (int i = 1; i < allDdueAnals.size(); i++) {
 			DdeuAnal ddeu = new DdeuAnal();
 			String[] line = allDdueAnals.get(i);
+			System.out.println("###########");
+			System.out.println(line[3]);
+			System.out.println(line[9]);
+			System.out.println(line[10]);
 			ddeu.setId(line[0]);
 			ddeu.setMz(line[1]);
 			ddeu.setCharge(line[2]);
@@ -91,9 +117,10 @@ public class FileSelectViewController {
 			ddeu.setEndRT(line[13]);
 			ddeu.setObservedDdeu(line[14]);
 			ddeu.setMatchedScore(line[15]);
-			System.out.println(ddeu);
 			ddueList.add(ddeu);
 		}
+		
+		// read  all hdx profiles
 		
 		for (int i = 1; i < allHDXProfiles.size(); i++) {
 			HDXProfile profile = new HDXProfile();
@@ -121,6 +148,7 @@ public class FileSelectViewController {
 		Main.mainViewController.setDdeuData(ddueList);
 		Main.mainViewController.setTreeItem(this.files);
     	Main.mainViewController.setTableViewData(profileList);
+    	Main.mainViewController.setScanData(ctrl_scans, condition_scans);
 
     	thisStage.close();
     	} catch(Exception e) {
