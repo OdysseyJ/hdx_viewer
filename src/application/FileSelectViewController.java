@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.systemsbiology.jrap.stax.MSXMLSequentialParser;
@@ -25,7 +26,7 @@ import javafx.stage.Stage;
 
 public class FileSelectViewController {
 
-	private ArrayList<File> files = new ArrayList<File>(4);
+	private ArrayList<File> files = new ArrayList<File>();
 	
     private FileChooser.ExtensionFilter extFilter = 
     		new FileChooser.ExtensionFilter("MZXML FILES (*.mzxml)", "*.mzxml");
@@ -138,10 +139,7 @@ public class FileSelectViewController {
 				profile.setEndScan(allHDXProfiles.get(i)[10]);
 				profile.setApexScan(allHDXProfiles.get(i)[11]);
 				profile.setApexRt(allHDXProfiles.get(i)[12]);
-				profile.setSecond30(allHDXProfiles.get(i)[13]);
-				profile.setMinute10(allHDXProfiles.get(i)[14]);
-				profile.setMinute60(allHDXProfiles.get(i)[15]);
-			}
+				profile.setConditions(Arrays.copyOfRange(allHDXProfiles.get(i),13,allHDXProfiles.get(i).length));
 			profileList.add(profile);
 		}
 		
@@ -151,14 +149,6 @@ public class FileSelectViewController {
     	Main.mainViewController.setScanData(ctrl_scans, condition_scans);
 
     	thisStage.close();
-    	} catch(Exception e) {
-    		Alert alert = new Alert(AlertType.WARNING);
-    		alert.setTitle("������ �߻��߽��ϴ�.");
-    		alert.setHeaderText("������ �о���µ� �����߽��ϴ�.");
-    		alert.setContentText(e.getMessage());
-
-    		alert.showAndWait();
-    	}
     }
     
     public Reader getReader(String relativePath) {

@@ -11,6 +11,7 @@ import javax.xml.stream.XMLStreamException;
 import org.systemsbiology.jrap.stax.MSXMLSequentialParser;
 import org.systemsbiology.jrap.stax.Scan;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -79,6 +80,8 @@ public class MainViewController implements Initializable {
 
     @FXML
     private TableView<HDXProfile> tableview;
+    
+    private int idx;
 
     @FXML
     void onClickOpen(ActionEvent event) {
@@ -167,9 +170,10 @@ public class MainViewController implements Initializable {
 			this.files = files;
 			TreeItem<String> Root = new TreeItem<String>("Project");
 			if( files.size() > 0 ) {
-				TreeItem<String> newItem = new TreeItem<String>("Con 1");
+				TreeItem<String> newItem = new TreeItem<String>("Ctrl");
 				for (int i = 1; i < files.size(); i++) {
-					TreeItem<String> child = new TreeItem<String>("t " + i);
+					String condition = files.get(i).getName().split("_")[2];
+					TreeItem<String> child = new TreeItem<String>(condition);
 					newItem.getChildren().add(child);
 				}
 				Root.getChildren().add(newItem);
@@ -182,7 +186,7 @@ public class MainViewController implements Initializable {
 
 	// ------------------------------line chart------------------
 	public void setLineChartData(int index) {
-		String second30 = recordList.get(index).getSecond30();
+		/*String second30 = recordList.get(index).getSecond30();
 		String minute10 = recordList.get(index).getMinute10();
 		String minute60 = recordList.get(index).getMinute60();
 		
@@ -220,7 +224,7 @@ public class MainViewController implements Initializable {
 		series.getData().add(new XYChart.Data("30second", s30d));
 		series.getData().add(new XYChart.Data("10minute", m10d));
 		series.getData().add(new XYChart.Data("60minute", m60d));
-		linechart.getData().setAll(series);
+		linechart.getData().setAll(series);*/
 	}
 	
 	public void setScanData(ArrayList<Scan> ctrl_scans, ArrayList<Scan> condition_scans) {
@@ -292,22 +296,22 @@ public class MainViewController implements Initializable {
 	    column7.setCellValueFactory(new PropertyValueFactory<>("mzShift"));
 	    column7.setCellFactory(stringCellFactory);
 
-	    TableColumn<HDXProfile, String> column8 = new TableColumn<>("30Second");
-	    column8.setCellValueFactory(new PropertyValueFactory<>("second30"));
-	    column8.setCellFactory(stringCellFactory);
-
-	    TableColumn<HDXProfile, String> column9 = new TableColumn<>("10Minute");
-	    column9.setCellValueFactory(new PropertyValueFactory<>("minute10"));
-	    column9.setCellFactory(stringCellFactory);
-
-	    TableColumn<HDXProfile, String> column10 = new TableColumn<>("60Minute");
-	    column10.setCellValueFactory(new PropertyValueFactory<>("minute60"));
-	    column10.setCellFactory(stringCellFactory);
-
 		tableview.getColumns().remove(0);
 		tableview.getColumns().remove(0);
-
-	    tableview.getColumns().addAll(column1, column2, column3, column4, column5, column6, column7, column8, column9, column10);
+	    
+	    tableview.getColumns().addAll(column1, column2, column3, column4, column5, column6, column7);
+	    
+	    System.out.println("size="+files.size());
+	    
+	    for(int i = 0 ; i < files.size() - 1 ; i++) {
+	    	String condition = files.get(i).getName().split("_")[2];
+		    TableColumn<HDXProfile, String> column = new TableColumn<>(condition);
+		    idx = i;
+	    	column.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCondition(idx)));
+	    	
+	    	column.setCellFactory(stringCellFactory);
+	    	tableview.getColumns().add(column);
+	    }
 
 	    tableview.setItems(recordList);
 	}
@@ -331,6 +335,7 @@ public class MainViewController implements Initializable {
 	        public void handle(MouseEvent t) {
 	            TableCell c = (TableCell) t.getSource();
 	            int index = c.getIndex();
+
 	            HDXProfile profile = recordList.get(index);
 	            String apexScan = profile.getApexScan();
 	            String peptide = profile.getPeptide();
