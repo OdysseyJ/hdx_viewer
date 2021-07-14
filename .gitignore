@@ -1,4 +1,8 @@
 bin/
-bin/*
+tmp/
 .metadata
 .classpath
+.project
+.settings/
+.loadpath
+.recommenders
