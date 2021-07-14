@@ -80,8 +80,6 @@ public class MainViewController implements Initializable {
 
     @FXML
     private TableView<HDXProfile> tableview;
-    
-    private int idx;
 
     @FXML
     void onClickOpen(ActionEvent event) {
@@ -301,12 +299,10 @@ public class MainViewController implements Initializable {
 	    
 	    tableview.getColumns().addAll(column1, column2, column3, column4, column5, column6, column7);
 	    
-	    System.out.println("size="+files.size());
-	    
-	    for(int i = 0 ; i < files.size() - 1 ; i++) {
+	    for(int i = 1 ; i < files.size() ; i++) {
 	    	String condition = files.get(i).getName().split("_")[2];
 		    TableColumn<HDXProfile, String> column = new TableColumn<>(condition);
-		    idx = i;
+		    int idx = i - 1;
 	    	column.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCondition(idx)));
 	    	
 	    	column.setCellFactory(stringCellFactory);
