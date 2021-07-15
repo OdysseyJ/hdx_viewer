@@ -213,21 +213,28 @@ public class MainViewController implements Initializable {
 		conditionList.addAll(condition_scans);
 	}
 	
-	public void setBarChartData(int scanNum, int startMass, int endMass, String predictedDdeu) {
+	public void setBarChartData(int scanNum, int startMass, int endMass, String predictedDdeu, int startScan, int endScan) {
 		System.out.println(predictedDdeu);
 		Scan ctrl_scan = ctrlList.get(scanNum);
+		Scan initial_scan = conditionList.get(startScan+endScan/2);
 		
 		double[][] intensityList = ctrl_scan.getMassIntensityList();
+		double[][] conditionIntensityList = initial_scan.getMassIntensityList();
 
 		XYChart.Series dataSeries1 = new XYChart.Series();
+		XYChart.Series dataSeries2 = new XYChart.Series();
 		
 		for(int i = startMass; i < endMass; i++) {
-			String mass = Double.toString(intensityList[0][i]);
-			Double intensity = intensityList[1][i];
-			dataSeries1.getData().add(new XYChart.Data(mass, intensity));
+			String mass1 = Double.toString(intensityList[0][i]);
+			Double intensity1 = intensityList[1][i];
+			String mass2 = Double.toString(conditionIntensityList[0][i]);
+			Double intensity2 = conditionIntensityList[1][i];
+			dataSeries1.getData().add(new XYChart.Data(mass1, intensity1));
+			dataSeries2.getData().add(new XYChart.Data(mass2, intensity2));
 		}
 		
 		barchart_up.getData().setAll(dataSeries1);
+		barchart_down.getData().setAll(dataSeries2);
 	}
 	
 	// ------------------------------Ddeu Data --------------------
@@ -276,9 +283,6 @@ public class MainViewController implements Initializable {
 	    TableColumn<HDXProfile, String> column7 = new TableColumn<>("MzShift");
 	    column7.setCellValueFactory(new PropertyValueFactory<>("mzShift"));
 	    column7.setCellFactory(stringCellFactory);
-
-		tableview.getColumns().remove(0);
-		tableview.getColumns().remove(0);
 	    
 	    tableview.getColumns().addAll(column1, column2, column3, column4, column5, column6, column7);
 	    
@@ -296,7 +300,7 @@ public class MainViewController implements Initializable {
 	}
 	  
 	class StringTableCell extends TableCell<HDXProfile, String> {
-	        @Override
+	        @Override 
 	        public void updateItem(String item, boolean empty) {
 	            super.updateItem(item, empty);
 	            setText(empty ? null : getString());
@@ -319,15 +323,19 @@ public class MainViewController implements Initializable {
 	            String apexScan = profile.getApexScan();
 	            String peptide = profile.getPeptide();
 	            String predictedDdeu = "";
+	            int startScan = 0;
+	            int endScan = 0;
 	            for (int i = 0; i  < ddeuList.size(); i++) {
 	            	DdeuAnal data = ddeuList.get(i);
 	            	if (data.getPeptide().equals(peptide)) {
 	            		predictedDdeu = data.getPredictedDdeu();
+	            		startScan = Integer.parseInt(data.getStartScan());
+	            		endScan = Integer.parseInt(data.getEndScan());
 	            		break;
 	            	}
 	            }
 	            setLineChartData(index);
-	            setBarChartData(Integer.parseInt(apexScan), 420, 420+peptide.length(), predictedDdeu);
+	            setBarChartData(Integer.parseInt(apexScan), 420, 420+peptide.length(), predictedDdeu, startScan, endScan);
 	        }
 	 }
 }

@@ -98,10 +98,6 @@ public class FileSelectViewController {
 		for (int i = 1; i < allDdueAnals.size(); i++) {
 			DdeuAnal ddeu = new DdeuAnal();
 			String[] line = allDdueAnals.get(i);
-			System.out.println("###########");
-			System.out.println(line[3]);
-			System.out.println(line[9]);
-			System.out.println(line[10]);
 			ddeu.setId(line[0]);
 			ddeu.setMz(line[1]);
 			ddeu.setCharge(line[2]);
