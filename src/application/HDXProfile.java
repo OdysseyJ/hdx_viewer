@@ -30,11 +30,7 @@ public class HDXProfile {
 	
 	private String apexRt;
 	
-	private String second30;
-	
-	private String minute10;
-	
-	private String minute60;
+	private String[] conditions;
 
 	public String getId() {
 		return this.id;
@@ -88,16 +84,11 @@ public class HDXProfile {
 		return this.apexRt;
 	}
 	
-	public String getSecond30() {
-		return this.second30;
-	}
-	
-	public String getMinute10() {
-		return this.minute10;
-	}
-	
-	public String getMinute60() {
-		return this.minute60;
+	public String getCondition(int idx) {
+		if(conditions.length > idx)
+			return this.conditions[idx];
+		else
+			return null;
 	}
 	
 	public void setId(String id){
@@ -152,16 +143,8 @@ public class HDXProfile {
 		this.apexRt = apexRt;
 	}
 	
-	public void setSecond30(String second30) {
-		this.second30 = second30;
-	}
-	
-	public void setMinute10(String minute10) {
-		this.minute10 = minute10;
-	}
-	
-	public void setMinute60(String minute60) {
-		this.minute60 = minute60;
+	public void setConditions(String[] conditions) {
+		this.conditions = conditions;
 	}
 	
 	public String toString() {
