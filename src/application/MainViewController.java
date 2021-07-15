@@ -186,9 +186,7 @@ public class MainViewController implements Initializable {
 	public void setLineChartData(int index) {
 
 		linechart.getData().clear();
-		linechart.setTitle("count per time");
 		XYChart.Series series = new XYChart.Series();
-		linechart.getData().clear();
 		
 		for(int i = 0 ; i < files.size() - 1; i++) {
 			String HDXnum = recordList.get(index).getCondition(i);
@@ -207,7 +205,6 @@ public class MainViewController implements Initializable {
 			series.getData().add(new XYChart.Data(files.get(i+1).getName().split("_")[2], d));
 		}
 		
-		linechart.getData().add(series);
 		linechart.getData().setAll(series);
 	}
 	

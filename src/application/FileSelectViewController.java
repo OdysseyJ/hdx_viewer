@@ -140,6 +140,7 @@ public class FileSelectViewController {
 				profile.setApexScan(allHDXProfiles.get(i)[11]);
 				profile.setApexRt(allHDXProfiles.get(i)[12]);
 				profile.setConditions(Arrays.copyOfRange(allHDXProfiles.get(i),13,allHDXProfiles.get(i).length));
+			}
 			profileList.add(profile);
 		}
 		
@@ -149,6 +150,14 @@ public class FileSelectViewController {
     	Main.mainViewController.setScanData(ctrl_scans, condition_scans);
 
     	thisStage.close();
+    	} catch(Exception e) {
+    		Alert alert = new Alert(AlertType.WARNING);
+    		alert.setTitle("error.");
+    		alert.setHeaderText("error.");
+    		alert.setContentText(e.getMessage());
+
+    		alert.showAndWait();
+    	}
     }
     
     public Reader getReader(String relativePath) {
