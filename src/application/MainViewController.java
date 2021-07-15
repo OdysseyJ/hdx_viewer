@@ -73,10 +73,16 @@ public class MainViewController implements Initializable {
     private BarChart<?, ?> barchart_up;
     
     @FXML
+    private LineChart<?, ?> linechart_up;
+    
+    @FXML
     private Button peptide_view;
 
     @FXML
     private BarChart<?, ?> barchart_down;
+    
+    @FXML
+    private LineChart<?, ?> linechart_down;
 
     @FXML
     private TableView<HDXProfile> tableview;
@@ -119,10 +125,21 @@ public class MainViewController implements Initializable {
 		barchart_up.getXAxis().setAnimated(false);
 		barchart_up.getYAxis().setAnimated(false);
 		barchart_up.getXAxis().setTickLabelsVisible(false);
+		linechart_up.setLegendVisible(false);
+		linechart_up.getXAxis().setAnimated(false);
+		linechart_up.getYAxis().setAnimated(false);
+		linechart_up.getXAxis().setTickLabelsVisible(false);
+		linechart_up.lookup(".chart-plot-background").setStyle("-fx-background-color: transparent;");
+		linechart_up.lookup(".chart-content").setStyle("-fx-background-color: transparent;");
+		linechart_up.lookup(".chart").setStyle("-fx-background-color: transparent;");
 		barchart_down.setLegendVisible(false);
 		barchart_down.getXAxis().setAnimated(false);
 		barchart_down.getYAxis().setAnimated(false);
 		barchart_down.getXAxis().setTickLabelsVisible(false);
+		linechart_down.setLegendVisible(false);
+		linechart_down.getXAxis().setAnimated(false);
+		linechart_down.getYAxis().setAnimated(false);
+		linechart_down.getXAxis().setTickLabelsVisible(false);
 		linechart.setLegendVisible(false);
 		linechart.getXAxis().setAnimated(false);
 		linechart.getXAxis().setAnimated(false);
@@ -192,7 +209,7 @@ public class MainViewController implements Initializable {
 			String HDXnum = recordList.get(index).getCondition(i);
 			
 			String[] splited = HDXnum.split("~");
-			
+
 			Double d = 0.0;
 			
 			for(int j = 0 ; j < splited.length ; j++) {
@@ -202,7 +219,7 @@ public class MainViewController implements Initializable {
 			}
 			
 			d /= splited.length;
-			series.getData().add(new XYChart.Data(files.get(i+1).getName().split("_")[2], d));
+			series.getData().add(new XYChart.Data(files.get(i+1).getName(), d));
 		}
 		
 		linechart.getData().setAll(series);
@@ -214,7 +231,6 @@ public class MainViewController implements Initializable {
 	}
 	
 	public void setBarChartData(int scanNum, int startMass, int endMass, String predictedDdeu, int startScan, int endScan) {
-		System.out.println(predictedDdeu);
 		Scan ctrl_scan = ctrlList.get(scanNum);
 		Scan initial_scan = conditionList.get(startScan+endScan/2);
 		
@@ -223,6 +239,8 @@ public class MainViewController implements Initializable {
 
 		XYChart.Series dataSeries1 = new XYChart.Series();
 		XYChart.Series dataSeries2 = new XYChart.Series();
+		XYChart.Series dataSeries3 = new XYChart.Series();
+		XYChart.Series dataSeries4 = new XYChart.Series();
 		
 		for(int i = startMass; i < endMass; i++) {
 			String mass1 = Double.toString(intensityList[0][i]);
@@ -230,11 +248,16 @@ public class MainViewController implements Initializable {
 			String mass2 = Double.toString(conditionIntensityList[0][i]);
 			Double intensity2 = conditionIntensityList[1][i];
 			dataSeries1.getData().add(new XYChart.Data(mass1, intensity1));
-			dataSeries2.getData().add(new XYChart.Data(mass2, intensity2));
+			dataSeries2.getData().add(new XYChart.Data(mass1, intensity1));
+			dataSeries3.getData().add(new XYChart.Data(mass2, intensity2));
+			dataSeries4.getData().add(new XYChart.Data(mass2, intensity2));
 		}
-		
+
 		barchart_up.getData().setAll(dataSeries1);
-		barchart_down.getData().setAll(dataSeries2);
+		barchart_down.getData().setAll(dataSeries3);
+		
+		linechart_up.getData().setAll(dataSeries2);
+		linechart_down.getData().setAll(dataSeries4);
 	}
 	
 	// ------------------------------Ddeu Data --------------------
@@ -287,7 +310,7 @@ public class MainViewController implements Initializable {
 	    tableview.getColumns().addAll(column1, column2, column3, column4, column5, column6, column7);
 	    
 	    for(int i = 1 ; i < files.size() ; i++) {
-	    	String condition = files.get(i).getName().split("_")[2];
+	    	String condition = files.get(i).getName();
 		    TableColumn<HDXProfile, String> column = new TableColumn<>(condition);
 		    int idx = i - 1;
 	    	column.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCondition(idx)));

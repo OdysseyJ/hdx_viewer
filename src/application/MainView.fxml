@@ -29,7 +29,7 @@
          <children>
             <StackPane layoutX="365.0" layoutY="20.0" prefHeight="200.0" prefWidth="915.0">
                <children>
-                  <BarChart fx:id="barchart_down" prefHeight="230.0" prefWidth="915.0">
+                  <BarChart fx:id="barchart_up" prefHeight="230.0" prefWidth="915.0">
                     <xAxis>
                       <CategoryAxis prefHeight="20.0" prefWidth="842.0" side="BOTTOM" />
                     </xAxis>
@@ -37,7 +37,7 @@
                       <NumberAxis side="LEFT" />
                     </yAxis>
                   </BarChart>
-                  <LineChart>
+                  <LineChart fx:id="linechart_up">
                     <xAxis>
                       <CategoryAxis prefHeight="20.0" side="BOTTOM" />
                     </xAxis>
@@ -64,7 +64,7 @@
             </MenuButton>
             <StackPane layoutX="365.0" layoutY="270.0" prefHeight="230.0" prefWidth="915.0">
                <children>
-                  <BarChart fx:id="barchart_up" prefHeight="230.0" prefWidth="915.0">
+                  <BarChart fx:id="barchart_down" prefHeight="230.0" prefWidth="915.0">
                     <xAxis>
                       <CategoryAxis prefHeight="40.0" side="BOTTOM" />
                     </xAxis>
@@ -72,7 +72,7 @@
                       <NumberAxis side="LEFT" />
                     </yAxis>
                   </BarChart>
-                  <LineChart>
+                  <LineChart fx:id="linechart_down">
                      <xAxis>
                         <CategoryAxis prefHeight="40.0" side="BOTTOM" />
                      </xAxis>
