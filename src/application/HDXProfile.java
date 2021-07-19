@@ -91,6 +91,10 @@ public class HDXProfile {
 			return null;
 	}
 	
+	public String[] getConditions() {
+		return this.conditions;
+	}
+	
 	public void setId(String id){
 		this.id = id;
 	}

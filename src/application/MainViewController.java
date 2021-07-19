@@ -28,6 +28,7 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -50,15 +51,19 @@ public class MainViewController implements Initializable {
 
 	ArrayList<DdeuAnal> ddeuList = new ArrayList<DdeuAnal>();
 	
-	ArrayList<Scan> ctrlList = new ArrayList<Scan>();
+	ArrayList<Scan> ctrlList;
 	
-	ArrayList<Scan> conditionList = new ArrayList<Scan>();
+	ArrayList<ArrayList<Scan>> conditionLists = new ArrayList<ArrayList<Scan>>();
 	
 	private ArrayList<File> files = new ArrayList<File>();
 	
 	CategoryAxis xAxis = new CategoryAxis();
 	
 	NumberAxis yAxis = new NumberAxis();
+	
+	ArrayList<String> conditions = new ArrayList<String>();
+	
+	int currentRecordIndex = 0;
 
     @FXML
     private MenuItem open;
@@ -86,6 +91,9 @@ public class MainViewController implements Initializable {
 
     @FXML
     private TableView<HDXProfile> tableview;
+    
+    @FXML
+    private MenuButton menu_button;
 
     @FXML
     void onClickOpen(ActionEvent event) {
@@ -187,7 +195,7 @@ public class MainViewController implements Initializable {
 			if( files.size() > 0 ) {
 				TreeItem<String> newItem = new TreeItem<String>("Ctrl");
 				for (int i = 1; i < files.size(); i++) {
-					String condition = files.get(i).getName().split("_")[2];
+					String condition = files.get(i).getName();
 					TreeItem<String> child = new TreeItem<String>(condition);
 					newItem.getChildren().add(child);
 				}
@@ -225,39 +233,92 @@ public class MainViewController implements Initializable {
 		linechart.getData().setAll(series);
 	}
 	
-	public void setScanData(ArrayList<Scan> ctrl_scans, ArrayList<Scan> condition_scans) {
-		ctrlList.addAll(ctrl_scans);
-		conditionList.addAll(condition_scans);
+	public void setScanData(ArrayList<ArrayList<Scan>> file_scans) {
+		ctrlList = file_scans.get(0);
+		for (int i = 1; i < file_scans.size(); i++) {
+			conditionLists.add(file_scans.get(i));	
+		}
 	}
 	
-	public void setBarChartData(int scanNum, int startMass, int endMass, String predictedDdeu, int startScan, int endScan) {
-		Scan ctrl_scan = ctrlList.get(scanNum);
-		Scan initial_scan = conditionList.get(startScan+endScan/2);
-		
+	public void setInitialBarChartData(int index) {
+		HDXProfile profile = recordList.get(index);
+        String apexScan = profile.getApexScan();
+        String peptide = profile.getPeptide();
+        String mz = profile.getMz();
+        String predictedDdeu = "";
+        int startScan = 0;
+        int endScan = 0;
+        for (int i = 0; i  < ddeuList.size(); i++) {
+        	DdeuAnal data = ddeuList.get(i);
+        	if (data.getPeptide().equals(peptide)) {
+        		predictedDdeu = data.getPredictedDdeu();
+        		startScan = Integer.parseInt(data.getStartScan());
+        		endScan = Integer.parseInt(data.getEndScan());
+        		break;
+        	}
+        }
+        
+		Scan ctrl_scan = ctrlList.get(Integer.parseInt(apexScan));
 		double[][] intensityList = ctrl_scan.getMassIntensityList();
-		double[][] conditionIntensityList = initial_scan.getMassIntensityList();
+		int startMass = (int) (Double.parseDouble(mz));
+		int endMass = startMass + peptide.length();
+
+		XYChart.Series bar_series = new XYChart.Series();
+		XYChart.Series line_series = new XYChart.Series();
+		
+		for(int i = startMass; i < endMass; i++) {
+			String mass = Double.toString(intensityList[0][i]);
+			Double intensity = intensityList[1][i];
+			bar_series.getData().add(new XYChart.Data(mass, intensity));
+			line_series.getData().add(new XYChart.Data(mass, intensity));
+		}
+
+		barchart_up.getData().setAll(bar_series);
+		linechart_up.getData().setAll(line_series);
+		
+		setUnderBarChart(0);
+		menu_button.setText(conditions.get(0));
+	}
+	
+	public void setUnderBarChart(int conditionIndex) {
+		HDXProfile profile = recordList.get(currentRecordIndex);
+        String apexScan = profile.getApexScan();
+        String peptide = profile.getPeptide();
+        String mz = profile.getMz();
+        
+        String predictedDdeu = "";
+        int startScan = 0;
+        int endScan = 0;
+        
+        for (int i = 0; i  < ddeuList.size(); i++) {
+        	DdeuAnal data = ddeuList.get(i);
+        	if (data.getPeptide().equals(peptide)) {
+        		predictedDdeu = data.getPredictedDdeu();
+        		startScan = Integer.parseInt(data.getStartScan());
+        		endScan = Integer.parseInt(data.getEndScan());
+        		break;
+        	}
+        }
+        
+		int startMass = (int) (Double.parseDouble(mz));
+		int endMass = startMass + peptide.length();
+        
+		ArrayList<Scan> conditionScans = conditionLists.get(conditionIndex);
+		Scan scan = conditionScans.get(Integer.parseInt(apexScan));
+		double[][] conditionIntensityList = scan.getMassIntensityList();
 
 		XYChart.Series dataSeries1 = new XYChart.Series();
 		XYChart.Series dataSeries2 = new XYChart.Series();
-		XYChart.Series dataSeries3 = new XYChart.Series();
-		XYChart.Series dataSeries4 = new XYChart.Series();
 		
 		for(int i = startMass; i < endMass; i++) {
-			String mass1 = Double.toString(intensityList[0][i]);
-			Double intensity1 = intensityList[1][i];
-			String mass2 = Double.toString(conditionIntensityList[0][i]);
-			Double intensity2 = conditionIntensityList[1][i];
-			dataSeries1.getData().add(new XYChart.Data(mass1, intensity1));
-			dataSeries2.getData().add(new XYChart.Data(mass1, intensity1));
-			dataSeries3.getData().add(new XYChart.Data(mass2, intensity2));
-			dataSeries4.getData().add(new XYChart.Data(mass2, intensity2));
+			String mass = Double.toString(conditionIntensityList[0][i]);
+			Double intensity = conditionIntensityList[1][i];
+			dataSeries1.getData().add(new XYChart.Data(mass, intensity));
+			dataSeries2.getData().add(new XYChart.Data(mass, intensity));
 		}
 
-		barchart_up.getData().setAll(dataSeries1);
-		barchart_down.getData().setAll(dataSeries3);
-		
-		linechart_up.getData().setAll(dataSeries2);
-		linechart_down.getData().setAll(dataSeries4);
+		barchart_down.getData().setAll(dataSeries1);
+		linechart_down.getData().setAll(dataSeries2);
 	}
 	
 	// ------------------------------Ddeu Data --------------------
@@ -267,7 +328,23 @@ public class MainViewController implements Initializable {
 	
 	// ------------------------------Table View---------------------
 
-	public void setTableViewData(ArrayList<HDXProfile> profileList) {
+	public void setTableViewData(ArrayList<HDXProfile> profileList, ArrayList<File> files) {
+		menu_button.getItems().clear();
+		for (int i = 1; i < files.size(); i++) {
+			File file = files.get(i);
+			MenuItem item = new MenuItem(file.getName());
+			item.setOnAction(new EventHandler<ActionEvent>() {
+				public void handle(ActionEvent event) {
+					MenuItem selected = (MenuItem) event.getSource();
+					menu_button.setText(selected.getText());
+					int index = conditions.indexOf(selected.getText());
+					setUnderBarChart(index);
+				}
+			});
+			menu_button.getItems().add(item);
+			conditions.add(file.getName());
+		}
+		
 		recordList.setAll(FXCollections.observableArrayList(profileList));
         Callback<TableColumn<HDXProfile, String>, TableCell<HDXProfile, String>> stringCellFactory =
                 new Callback<TableColumn<HDXProfile, String>, TableCell<HDXProfile, String>>() {
@@ -278,6 +355,7 @@ public class MainViewController implements Initializable {
                 return cell;
             }
         };
+        
         
 		TableColumn<HDXProfile, String> column1 = new TableColumn<>("Id");
 	    column1.setCellValueFactory(new PropertyValueFactory<HDXProfile, String>("id"));
@@ -341,24 +419,9 @@ public class MainViewController implements Initializable {
 	        public void handle(MouseEvent t) {
 	            TableCell c = (TableCell) t.getSource();
 	            int index = c.getIndex();
-
-	            HDXProfile profile = recordList.get(index);
-	            String apexScan = profile.getApexScan();
-	            String peptide = profile.getPeptide();
-	            String predictedDdeu = "";
-	            int startScan = 0;
-	            int endScan = 0;
-	            for (int i = 0; i  < ddeuList.size(); i++) {
-	            	DdeuAnal data = ddeuList.get(i);
-	            	if (data.getPeptide().equals(peptide)) {
-	            		predictedDdeu = data.getPredictedDdeu();
-	            		startScan = Integer.parseInt(data.getStartScan());
-	            		endScan = Integer.parseInt(data.getEndScan());
-	            		break;
-	            	}
-	            }
+	            currentRecordIndex = index;
 	            setLineChartData(index);
-	            setBarChartData(Integer.parseInt(apexScan), 420, 420+peptide.length(), predictedDdeu, startScan, endScan);
+	            setInitialBarChartData(index);
 	        }
 	 }
 }
