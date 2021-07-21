@@ -78,9 +78,6 @@ public class MainViewController implements Initializable {
     private BarChart<?, ?> barchart_up;
     
     @FXML
-    private LineChart<?, ?> linechart_up;
-    
-    @FXML
     private Button peptide_view;
 
     @FXML
@@ -133,13 +130,6 @@ public class MainViewController implements Initializable {
 		barchart_up.getXAxis().setAnimated(false);
 		barchart_up.getYAxis().setAnimated(false);
 		barchart_up.getXAxis().setTickLabelsVisible(false);
-		linechart_up.setLegendVisible(false);
-		linechart_up.getXAxis().setAnimated(false);
-		linechart_up.getYAxis().setAnimated(false);
-		linechart_up.getXAxis().setTickLabelsVisible(false);
-		linechart_up.lookup(".chart-plot-background").setStyle("-fx-background-color: transparent;");
-		linechart_up.lookup(".chart-content").setStyle("-fx-background-color: transparent;");
-		linechart_up.lookup(".chart").setStyle("-fx-background-color: transparent;");
 		barchart_down.setLegendVisible(false);
 		barchart_down.getXAxis().setAnimated(false);
 		barchart_down.getYAxis().setAnimated(false);
@@ -264,17 +254,14 @@ public class MainViewController implements Initializable {
 		int endMass = startMass + peptide.length();
 
 		XYChart.Series bar_series = new XYChart.Series();
-		XYChart.Series line_series = new XYChart.Series();
 		
 		for(int i = startMass; i < endMass; i++) {
 			String mass = Double.toString(intensityList[0][i]);
 			Double intensity = intensityList[1][i];
 			bar_series.getData().add(new XYChart.Data(mass, intensity));
-			line_series.getData().add(new XYChart.Data(mass, intensity));
 		}
 
 		barchart_up.getData().setAll(bar_series);
-		linechart_up.getData().setAll(line_series);
 		
 		setUnderBarChart(0);
 		menu_button.setText(conditions.get(0));

@@ -3,22 +3,30 @@
 	-fx-background-color: transparent;
 }
 
-#linechart_down-content {
+#barchart_down{
 	-fx-background-color: transparent;
 }
 
-#linechart_down-plot-background {
-	-fx-background-color: transparent;
+#barchart_up .chart-bar {
+    -fx-bar-fill: #002545; 
 }
 
-#linechart_up {
-	-fx-background-color: transparent;
+#barchart_down .chart-bar {
+    -fx-bar-fill: #002545; 
 }
 
-#linechart_up-content {
-	-fx-background-color: transparent;
+#linechart_down .chart-series-line {
+	-fx-stroke: #E1AD01;
 }
 
-#linechart_up-plot-background {
-	-fx-background-color: transparent;
+#linechart .chart-series-line {
+	-fx-stroke: #E1AD01;
+}
+
+#linechart_down .chart-line-symbol{
+	-fx-background-color: #E1AD01;
+}
+
+.chart-plot-background {
+    -fx-background-color: transparent;
 }
