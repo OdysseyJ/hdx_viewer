@@ -141,40 +141,6 @@ public class MainViewController implements Initializable {
 		linechart.setLegendVisible(false);
 		linechart.getXAxis().setAnimated(false);
 		linechart.getXAxis().setAnimated(false);
-		
-//		treeview.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-//    	    if(newValue != null && newValue.getValue() != "FILES" && newValue.getValue() != "condition" && newValue != oldValue){
-//    	    	String fileName = newValue.getValue();
-//    			String filePath = "";
-//    			for (int i = 0; i < files.size(); i++) {
-//    				if (files.get(0).getName().equals(fileName)) {
-//    					filePath = files.get(i).getPath();
-//    				}
-//    			}
-//    			
-//    			
-//	    	   try {
-//	    	    	MSXMLSequentialParser parser = new MSXMLSequentialParser();
-//					parser.open(filePath);
-//					
-//					Scan scan = parser.getNextScan();
-//	
-//					double[][] array = scan.getMassIntensityList();
-//					XYChart.Series data = new XYChart.Series();
-//					
-//					for (int j = 0; j < array[0].length; j++) {
-//						double key = array[1][j];
-//						String s = String.format("%.2f", key);
-//						double value = array[0][j];
-//						data.getData().add(new XYChart.Data(s, value));
-//					}	
-//	
-//					barchart_up.getData().clear();
-//					barchart_up.getData().add(data);
-//				} catch (FileNotFoundException | XMLStreamException e) {
-//				}
-//    	    }
-//    	});
 	}
 	
 	// ------------------------------tree view------------------
@@ -185,7 +151,7 @@ public class MainViewController implements Initializable {
 			if( files.size() > 0 ) {
 				TreeItem<String> newItem = new TreeItem<String>("Ctrl");
 				for (int i = 1; i < files.size(); i++) {
-					String condition = files.get(i).getName();
+					String condition = files.get(i).getName().replaceFirst("[.][^.]+$", "");
 					TreeItem<String> child = new TreeItem<String>(condition);
 					newItem.getChildren().add(child);
 				}
@@ -217,7 +183,7 @@ public class MainViewController implements Initializable {
 			}
 			
 			d /= splited.length;
-			series.getData().add(new XYChart.Data(files.get(i+1).getName(), d));
+			series.getData().add(new XYChart.Data(files.get(i+1).getName().replaceFirst("[.][^.]+$", ""), d));
 		}
 		
 		linechart.getData().setAll(series);
@@ -235,18 +201,6 @@ public class MainViewController implements Initializable {
         String apexScan = profile.getApexScan();
         String peptide = profile.getPeptide();
         String mz = profile.getMz();
-        String predictedDdeu = "";
-        int startScan = 0;
-        int endScan = 0;
-        for (int i = 0; i  < ddeuList.size(); i++) {
-        	DdeuAnal data = ddeuList.get(i);
-        	if (data.getPeptide().equals(peptide)) {
-        		predictedDdeu = data.getPredictedDdeu();
-        		startScan = Integer.parseInt(data.getStartScan());
-        		endScan = Integer.parseInt(data.getEndScan());
-        		break;
-        	}
-        }
         
 		Scan ctrl_scan = ctrlList.get(Integer.parseInt(apexScan));
 		double[][] intensityList = ctrl_scan.getMassIntensityList();
@@ -272,17 +226,17 @@ public class MainViewController implements Initializable {
         String apexScan = profile.getApexScan();
         String peptide = profile.getPeptide();
         String mz = profile.getMz();
+        String condition = conditions.get(conditionIndex);
+        String d2o_label = condition.split("_")[1];
         
         String predictedDdeu = "";
-        int startScan = 0;
-        int endScan = 0;
         
         for (int i = 0; i  < ddeuList.size(); i++) {
         	DdeuAnal data = ddeuList.get(i);
-        	if (data.getPeptide().equals(peptide)) {
+        	String data_peptide = data.getPeptide();
+        	String data_d2o_label = data.getD2OLabelfirst();
+        	if (data_peptide.equals(peptide) && data_d2o_label.equals(d2o_label)) {
         		predictedDdeu = data.getPredictedDdeu();
-        		startScan = Integer.parseInt(data.getStartScan());
-        		endScan = Integer.parseInt(data.getEndScan());
         		break;
         	}
         }
@@ -297,11 +251,26 @@ public class MainViewController implements Initializable {
 		XYChart.Series dataSeries1 = new XYChart.Series();
 		XYChart.Series dataSeries2 = new XYChart.Series();
 		
+		Double total_intensity = 0.0;
+		ArrayList<String> mass_list = new ArrayList<String>();
 		for(int i = startMass; i < endMass; i++) {
 			String mass = Double.toString(conditionIntensityList[0][i]);
 			Double intensity = conditionIntensityList[1][i];
+			total_intensity += intensity;
+			mass_list.add(mass);
 			dataSeries1.getData().add(new XYChart.Data(mass, intensity));
-			dataSeries2.getData().add(new XYChart.Data(mass, intensity));
+		}
+		
+		String[] predictedDdeu_array = predictedDdeu.split(";");
+		for(int i = 0; i < predictedDdeu_array.length; i++) {
+			if (predictedDdeu_array[i].equals("-")) {
+				break;
+			}
+			if (i >= mass_list.size()) {
+				continue;
+			}
+			Double predicted = Double.parseDouble(predictedDdeu_array[i]);
+			dataSeries2.getData().add(new XYChart.Data(mass_list.get(i), predicted*total_intensity));
 		}
 
 		barchart_down.getData().setAll(dataSeries1);
@@ -319,7 +288,7 @@ public class MainViewController implements Initializable {
 		menu_button.getItems().clear();
 		for (int i = 1; i < files.size(); i++) {
 			File file = files.get(i);
-			MenuItem item = new MenuItem(file.getName());
+			MenuItem item = new MenuItem(file.getName().replaceFirst("[.][^.]+$", ""));
 			item.setOnAction(new EventHandler<ActionEvent>() {
 				public void handle(ActionEvent event) {
 					MenuItem selected = (MenuItem) event.getSource();
@@ -329,7 +298,7 @@ public class MainViewController implements Initializable {
 				}
 			});
 			menu_button.getItems().add(item);
-			conditions.add(file.getName());
+			conditions.add(file.getName().replaceFirst("[.][^.]+$", ""));
 		}
 		
 		recordList.setAll(FXCollections.observableArrayList(profileList));
@@ -373,9 +342,8 @@ public class MainViewController implements Initializable {
 	    column7.setCellFactory(stringCellFactory);
 	    
 	    tableview.getColumns().addAll(column1, column2, column3, column4, column5, column6, column7);
-	    
 	    for(int i = 1 ; i < files.size() ; i++) {
-	    	String condition = files.get(i).getName();
+	    	String condition = files.get(i).getName().replaceFirst("[.][^.]+$", "");
 		    TableColumn<HDXProfile, String> column = new TableColumn<>(condition);
 		    int idx = i - 1;
 	    	column.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCondition(idx)));
