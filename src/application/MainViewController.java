@@ -296,7 +296,7 @@ public class MainViewController implements Initializable {
 	    	tableview.getColumns().add(column);
 	    }
 
-	    tableview.setItems(recordList);   
+	    tableview.setItems(recordList);
 	}
 	  
 	class StringTableCell extends TableCell<HDXProfile, String> {
