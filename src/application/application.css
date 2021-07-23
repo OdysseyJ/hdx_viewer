@@ -1,1 +1,32 @@
 /* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+#linechart_down {
+	-fx-background-color: transparent;
+}
+
+#barchart_down{
+	-fx-background-color: transparent;
+}
+
+#barchart_up .chart-bar {
+    -fx-bar-fill: #002545; 
+}
+
+#barchart_down .chart-bar {
+    -fx-bar-fill: #002545; 
+}
+
+#linechart_down .chart-series-line {
+	-fx-stroke: #E1AD01;
+}
+
+#linechart .chart-series-line {
+	-fx-stroke: #E1AD01;
+}
+
+#linechart_down .chart-line-symbol{
+	-fx-background-color: #E1AD01;
+}
+
+.chart-plot-background {
+    -fx-background-color: transparent;
+}

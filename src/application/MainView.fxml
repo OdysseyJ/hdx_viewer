@@ -27,28 +27,16 @@
       </MenuBar>
       <Pane layoutY="30.0" prefHeight="500.0" prefWidth="1280.0">
          <children>
-            <StackPane layoutX="365.0" layoutY="20.0" prefHeight="200.0" prefWidth="915.0">
-               <children>
-                  <BarChart fx:id="barchart_down" prefHeight="230.0" prefWidth="915.0">
-                    <xAxis>
-                      <CategoryAxis prefHeight="20.0" prefWidth="842.0" side="BOTTOM" />
-                    </xAxis>
-                    <yAxis>
-                      <NumberAxis side="LEFT" />
-                    </yAxis>
-                  </BarChart>
-                  <LineChart>
-                    <xAxis>
-                      <CategoryAxis prefHeight="20.0" side="BOTTOM" />
-                    </xAxis>
-                    <yAxis>
-                      <NumberAxis side="LEFT" />
-                    </yAxis>
-                  </LineChart>
-               </children>
-            </StackPane>
+            <BarChart fx:id="barchart_up" animated="false" layoutX="365.0" layoutY="20.0" legendVisible="false" prefHeight="230.0" prefWidth="915.0">
+              <xAxis>
+                <CategoryAxis prefHeight="20.0" prefWidth="842.0" side="BOTTOM" />
+              </xAxis>
+              <yAxis>
+                <NumberAxis side="LEFT" />
+              </yAxis>
+            </BarChart>
             <TreeView fx:id="treeview" layoutX="10.0" layoutY="7.0" onMouseClicked="#onClickTreeView" prefHeight="193.0" prefWidth="358.0" />
-            <LineChart fx:id="linechart" layoutY="270.0" prefHeight="230.0" prefWidth="365.0">
+            <LineChart fx:id="linechart" animated="false" createSymbols="false" layoutY="270.0" legendVisible="false" prefHeight="230.0" prefWidth="365.0">
               <xAxis>
                 <CategoryAxis prefHeight="40.0" prefWidth="307.0" side="BOTTOM" />
               </xAxis>
@@ -56,7 +44,7 @@
                 <NumberAxis side="LEFT" />
               </yAxis>
             </LineChart>
-            <MenuButton layoutX="410.0" layoutY="254.0" mnemonicParsing="false" text="Conditions">
+            <MenuButton fx:id="menu_button" layoutX="410.0" layoutY="254.0" mnemonicParsing="false" text="Conditions">
               <items>
                 <MenuItem mnemonicParsing="false" text="Action 1" />
                 <MenuItem mnemonicParsing="false" text="Action 2" />
@@ -64,7 +52,7 @@
             </MenuButton>
             <StackPane layoutX="365.0" layoutY="270.0" prefHeight="230.0" prefWidth="915.0">
                <children>
-                  <BarChart fx:id="barchart_up" prefHeight="230.0" prefWidth="915.0">
+                  <BarChart fx:id="barchart_down" animated="false" legendVisible="false" prefHeight="230.0" prefWidth="915.0">
                     <xAxis>
                       <CategoryAxis prefHeight="40.0" side="BOTTOM" />
                     </xAxis>
@@ -72,7 +60,7 @@
                       <NumberAxis side="LEFT" />
                     </yAxis>
                   </BarChart>
-                  <LineChart>
+                  <LineChart fx:id="linechart_down" alternativeRowFillVisible="false" animated="false" horizontalGridLinesVisible="false" horizontalZeroLineVisible="false" legendVisible="false" verticalGridLinesVisible="false" verticalZeroLineVisible="false">
                      <xAxis>
                         <CategoryAxis prefHeight="40.0" side="BOTTOM" />
                      </xAxis>
@@ -82,10 +70,10 @@
                   </LineChart>
                </children>
             </StackPane>
-            <Button layoutX="1205.0" layoutY="255.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="&lt;" textAlignment="CENTER" />
-            <Button layoutX="1242.0" layoutY="255.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="&gt;" textAlignment="CENTER" />
-            <Button layoutX="1205.0" layoutY="5.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="&lt;" textAlignment="CENTER" />
-            <Button layoutX="1242.0" layoutY="5.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="&gt;" textAlignment="CENTER" />
+            <Button layoutX="1205.0" layoutY="255.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="-" textAlignment="CENTER" />
+            <Button layoutX="1242.0" layoutY="255.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="+" textAlignment="CENTER" />
+            <Button layoutX="1205.0" layoutY="5.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="-" textAlignment="CENTER" />
+            <Button layoutX="1242.0" layoutY="5.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="+" textAlignment="CENTER" />
          </children>
       </Pane>
       <TableView fx:id="tableview" layoutY="530.0" onMouseClicked="#onClickTableView" prefHeight="190.0" prefWidth="1280.0">

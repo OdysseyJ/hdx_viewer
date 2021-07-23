@@ -72,29 +72,27 @@ public class FileSelectViewController {
 		List<String[]> allDdueAnals = parser.parseAll(getReader("foo_pept_DdeuAnal.tsv"));
 		List<String[]> allHDXProfiles = parser.parseAll(getReader("foo_pept_HDXProfile.tsv"));
 		
-		MSXMLSequentialParser ctrl_parser = new MSXMLSequentialParser();
-		MSXMLSequentialParser condition_parser = new MSXMLSequentialParser();
-		ArrayList<Scan> ctrl_scans = new ArrayList<Scan>();
-		ArrayList<Scan> condition_scans = new ArrayList<Scan>();
+		ArrayList<ArrayList<Scan>> file_scans = new ArrayList<ArrayList<Scan>>();
 		ArrayList<HDXProfile> profileList = new ArrayList<HDXProfile>();
 		ArrayList<DdeuAnal> ddueList = new ArrayList<DdeuAnal>();
 		
 		// read all scans
-		try {
-			ctrl_parser.open("/Users/seongwoon/eclipse/hdx_viewer/src/application/ctrl_ms.mzXML");
-			condition_parser.open("/Users/seongwoon/eclipse/hdx_viewer/src/application/d2o_10m.mzXML");
-			while (ctrl_parser.hasNextScan()){
-				ctrl_scans.add(ctrl_parser.getNextScan());
-			}
-			while (condition_parser.hasNextScan()) {
-				condition_scans.add(condition_parser.getNextScan());
-			}
-		} catch (Exception e) {
-			System.out.println(e);
+		for (int i = 0; i < this.files.size(); i++) {
+			try {
+				File file = this.files.get(i);
+				MSXMLSequentialParser msxml_parser = new MSXMLSequentialParser();
+				msxml_parser.open(file.getPath());
+				ArrayList<Scan> scans = new ArrayList<Scan>();
+				while (msxml_parser.hasNextScan()){
+					scans.add(msxml_parser.getNextScan());
+				}
+				file_scans.add(scans);
+			} catch (Exception e) {
+				System.out.println(e);
+			}	
 		}
 		
 		// read all ddeu data
-		
 		for (int i = 1; i < allDdueAnals.size(); i++) {
 			DdeuAnal ddeu = new DdeuAnal();
 			String[] line = allDdueAnals.get(i);
@@ -142,8 +140,8 @@ public class FileSelectViewController {
 		
 		Main.mainViewController.setDdeuData(ddueList);
 		Main.mainViewController.setTreeItem(this.files);
-    	Main.mainViewController.setTableViewData(profileList);
-    	Main.mainViewController.setScanData(ctrl_scans, condition_scans);
+    	Main.mainViewController.setTableViewData(profileList, this.files);
+    	Main.mainViewController.setScanData(file_scans);
 
     	thisStage.close();
     	} catch(Exception e) {
