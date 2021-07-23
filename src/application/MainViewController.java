@@ -109,7 +109,7 @@ public class MainViewController implements Initializable {
 
     @FXML
     void onClickTableView(MouseEvent event) {
-
+    	
     }
 
 	@Override
@@ -297,6 +297,7 @@ public class MainViewController implements Initializable {
 	    }
 
 	    tableview.setItems(recordList);
+	    
 	}
 	  
 	class StringTableCell extends TableCell<HDXProfile, String> {
@@ -334,7 +335,7 @@ public class MainViewController implements Initializable {
 	            		break;
 	            	}
 	            }
-	            setLineChartData(index);
+	            setLineChartData(tableview.getSelectionModel().getSelectedIndex());
 	            setBarChartData(Integer.parseInt(apexScan), 420, 420+peptide.length(), predictedDdeu, startScan, endScan);
 	        }
 	 }
