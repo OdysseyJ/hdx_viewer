@@ -335,7 +335,7 @@ public class MainViewController implements Initializable {
 	            		break;
 	            	}
 	            }
-	            setLineChartData(tableview.getSelectionModel().getSelectedIndex());
+	            setLineChartData(index);
 	            setBarChartData(Integer.parseInt(apexScan), 420, 420+peptide.length(), predictedDdeu, startScan, endScan);
 	        }
 	 }
