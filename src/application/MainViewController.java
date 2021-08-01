@@ -323,6 +323,50 @@ public class MainViewController implements Initializable {
         		}
         	}
         });
+        
+        nextScan_top.setOnAction(new EventHandler<ActionEvent>() { 
+        	@Override public void handle(ActionEvent e) {
+        		currentScan_top += 1;
+	            scanLabel_top.setText("scan : " + Integer.toString(currentScan_top));
+	            Double minMass = getMinMass(mz, currentSize_top);
+	            Double maxMass = getMaxMass(minMass, peptide, currentSize_top);
+	            int tick = getTick(currentSize_top);
+	            setTopIntensityData(currentScan_top, minMass, maxMass, tick);
+        	}
+        });
+        
+        prevScan_top.setOnAction(new EventHandler<ActionEvent>() { 
+        	@Override public void handle(ActionEvent e) {
+        		currentScan_top -= 1;
+	            scanLabel_top.setText("scan : " + Integer.toString(currentScan_top));
+	            Double minMass = getMinMass(mz, currentSize_top);
+	            Double maxMass = getMaxMass(minMass, peptide, currentSize_top);
+	            int tick = getTick(currentSize_top);
+	            setTopIntensityData(currentScan_top, minMass, maxMass, tick);
+        	}
+        });
+        
+        nextScan_bottom.setOnAction(new EventHandler<ActionEvent>() { 
+        	@Override public void handle(ActionEvent e) {
+        		currentScan_bottom += 1;
+	            scanLabel_bottom.setText("scan : " + Integer.toString(currentScan_bottom));
+	            Double minMass = getMinMass(mz, currentSize_bottom);
+	            Double maxMass = getMaxMass(minMass, peptide, currentSize_bottom);
+	            int tick = getTick(currentSize_bottom);
+	            setBottomIntensityData(currentScan_bottom, currentConditionIndex, minMass, maxMass, tick);
+        	}
+        });
+        
+        prevScan_bottom.setOnAction(new EventHandler<ActionEvent>() { 
+        	@Override public void handle(ActionEvent e) {
+        		currentScan_bottom -= 1;
+	            scanLabel_bottom.setText("scan : " + Integer.toString(currentScan_bottom));
+	            Double minMass = getMinMass(mz, currentSize_bottom);
+	            Double maxMass = getMaxMass(minMass, peptide, currentSize_bottom);
+	            int tick = getTick(currentSize_bottom);
+	            setBottomIntensityData(currentScan_bottom, currentConditionIndex, minMass, maxMass, tick);
+        	}
+        });
 		
 		setChartAxis(control_xAxis, control_yAxis, tick, Math.floor(minMass), Math.ceil(maxMass));
 		
