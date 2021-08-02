@@ -368,7 +368,7 @@ public class MainViewController implements Initializable {
         	}
         });
 		
-		setChartAxis(control_xAxis, control_yAxis, tick, Math.floor(minMass), Math.ceil(maxMass));
+		setChartxAxis(control_xAxis, tick, Math.floor(minMass), Math.ceil(maxMass));
 		
 		setTopIntensityData(scanNum, minMass, maxMass, tick);
 		setBottomIntensityData(scanNum, defaultConditionIndex, minMass, maxMass, tick);
@@ -377,14 +377,13 @@ public class MainViewController implements Initializable {
 	
 	public void setTopIntensityData(int scanNum, Double minMass, Double maxMass, int tick) {
 		Scan ctrl_scan = ctrlList.get(scanNum);
-		XYChart.Series series = getIntensitySeries(ctrl_scan, minMass, maxMass);
+		double[][] intensityList = ctrl_scan.getMassIntensityList();
+		XYChart.Series series = getIntensitySeries(intensityList, minMass, maxMass);
 		control.getData().setAll(series);
-		setChartAxis(control_xAxis, control_yAxis, tick, Math.floor(minMass), Math.ceil(maxMass));
+		setChartxAxis(control_xAxis, tick, Math.floor(minMass), Math.ceil(maxMass));
 	}
 	
-	public XYChart.Series getIntensitySeries(Scan scan, Double minMass, Double maxMass) {
-		double[][] intensityList = scan.getMassIntensityList();
-
+	public XYChart.Series getIntensitySeries(double[][] intensityList, Double minMass, Double maxMass) {
 		XYChart.Series dataSeries = new XYChart.Series();
 		for(int i = 0; i < intensityList[0].length; i++) {
 			Double raw_mass = intensityList[0][i];
@@ -399,26 +398,47 @@ public class MainViewController implements Initializable {
 		return dataSeries;
 	}
 	
-	public void setChartAxis(NumberAxis xAxis, NumberAxis yAxis, int tick, Double min, Double max) {
-		yAxis.setAutoRanging(true);
+	public void setChartxAxis(NumberAxis xAxis, int tick, Double min, Double max) {
 		xAxis.setAutoRanging(false);
 		xAxis.setLowerBound(min);
 		xAxis.setUpperBound(max);
 		xAxis.setTickUnit(tick);
 	}
 	
-	public XYChart.Series getPredictSeries(String[] array, Double mz, Double charge) {
+	public void setChartyAxis(NumberAxis yAxis, int tick, Double min, Double max) {
+		yAxis.setAutoRanging(false);
+		yAxis.setLowerBound(min);
+		yAxis.setUpperBound(max);
+		yAxis.setTickUnit(tick);
+	}
+	
+	public XYChart.Series getPredictSeries(String[] array, Double minMz, Double additionalMz, Double maxIntensity, Double maxIntensityMass, String name) {
 		XYChart.Series dataSeries = new XYChart.Series();
-		Double standard_value = 1.0;
+		Double minDiff = Double.MAX_VALUE;
+		Double nearestMz = 0.0;
+		Double nearestIntensity = 0.0;
 		for(int i = 0; i < array.length; i++) {
 			if (array[i].equals("-")) {
 				break;
 			}
-			Double additional_value = standard_value/charge;
-			Double predict_y = Double.parseDouble(array[i]);
-			Double x = mz + (additional_value * i);
-			dataSeries.getData().add(new XYChart.Data(x, predict_y));
+			Double x = minMz + (additionalMz * i);
+			Double diff = Math.abs(maxIntensityMass - x);
+			if (diff < minDiff) {
+				minDiff = diff;
+				nearestMz = x;
+				nearestIntensity = Double.parseDouble(array[i]);
+			}
 		}
+		Double fittingValue = maxIntensity / nearestIntensity;
+		for(int i = 0; i < array.length; i++) {
+			if (array[i].equals("-")) {
+				break;
+			}
+			Double y = Double.parseDouble(array[i]) * fittingValue;
+			Double x = minMz + (additionalMz * i);
+			dataSeries.getData().add(new XYChart.Data(x, y));
+		}
+		dataSeries.setName(name);
 		
 		return dataSeries;
 	}
@@ -448,21 +468,50 @@ public class MainViewController implements Initializable {
         
 		ArrayList<Scan> conditionScans = conditionLists.get(conditionIndex);
 		Scan scan = conditionScans.get(scanNum);
+		double[][] intensityList = scan.getMassIntensityList();
 
 		String[] predictedDdeu_array = predictedDdeu.split(";");
 		String[] observedDdeu_array = observedDdeu.split(";");
 		
 		// --- set data ---
 		
-		XYChart.Series dataSeries1 = getIntensitySeries(scan, minMass, maxMass);
-		XYChart.Series dataSeries2 = getPredictSeries(predictedDdeu_array, mz, charge);
-		XYChart.Series dataSeries3 = getPredictSeries(observedDdeu_array, mz, charge);
+		XYChart.Series dataSeries1 = getIntensitySeries(intensityList, minMass, maxMass);
 		
-	    setChartAxis(result_xAxis, result_yAxis, tick, Math.floor(minMass), Math.ceil(maxMass));
-	    setChartAxis(predict_xAxis, predict_yAxis, tick, Math.floor(minMass), Math.ceil(maxMass));
+		Double standard_value = 1.0;
+		Double additional_value = standard_value/charge;
+		Double maxMz = mz + (additional_value * peptide.length());
+		String intensity = getMaxIntensity(intensityList, mz, maxMz);
+		Double maxIntensity = Double.parseDouble(intensity.split(",")[0]);
+		Double maxIntensityMass = Double.parseDouble(intensity.split(",")[1]);
+		
+		XYChart.Series dataSeries2 = getPredictSeries(predictedDdeu_array, mz, additional_value,  maxIntensity, maxIntensityMass, "predicted");
+		XYChart.Series dataSeries3 = getPredictSeries(observedDdeu_array, mz, additional_value, maxIntensity, maxIntensityMass, "observed");
+		
+	    setChartxAxis(result_xAxis, tick, Math.floor(minMass), Math.ceil(maxMass));
+	    setChartyAxis(result_yAxis, 100, 0.0, (Math.ceil(maxIntensity/100)*100)+300);
+	    setChartxAxis(predict_xAxis, tick, Math.floor(minMass), Math.ceil(maxMass));
+	    setChartyAxis(predict_yAxis, 100, 0.0, (Math.ceil(maxIntensity/100)*100)+300);
 
 	    result.getData().setAll(dataSeries1);
 		predict.getData().setAll(dataSeries2, dataSeries3);
+	}
+	
+	public String getMaxIntensity(double[][] intensityList, Double minMz, Double maxMz) {
+		Double maxIntensity = 0.0;
+		Double maxIntensityMass = minMz;
+		String result = maxIntensity.toString()+","+maxIntensityMass.toString();
+		for(int i = 0; i < intensityList[0].length; i++) {
+			Double raw_mass = intensityList[0][i];
+			Double intensity = intensityList[1][i];
+			if (raw_mass > maxMz) {
+				break;
+			}
+			if (raw_mass > minMz && maxIntensity < intensity) {
+				maxIntensity = intensity;
+				result = intensity.toString()+","+raw_mass.toString();
+			}
+		}
+		return result;
 	}
 	
 	public int getTick(int currentSize) {
@@ -501,12 +550,13 @@ public class MainViewController implements Initializable {
 					menu_button.setText(selected.getText());
 					int index = conditions.indexOf(selected.getText());
 					currentConditionIndex = index;
-					HDXProfile profile = recordList.get(index);
+					HDXProfile profile = recordList.get(currentRecordIndex);
 			        String peptide = profile.getPeptide();
 			        String mz = profile.getMz();
-			        Double min_mass_value = getMinMass(mz, currentSize_bottom);
-			        Double max_mass_value = getMaxMass(min_mass_value, peptide, currentSize_bottom);
-			        setBottomIntensityData(currentScan_bottom, index, min_mass_value, max_mass_value, currentSize_bottom);
+			        Double minMass = getMinMass(mz, currentSize_bottom);
+		            Double maxMass = getMaxMass(minMass, peptide, currentSize_bottom);
+		            int tick = getTick(currentSize_bottom);
+			        setBottomIntensityData(currentScan_bottom, currentConditionIndex, minMass, maxMass, tick);
 				}
 			});
 			menu_button.getItems().add(item);

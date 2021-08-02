@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
@@ -44,32 +45,35 @@
                 <NumberAxis animated="false" side="LEFT" />
               </yAxis>
             </LineChart>
+            <StackPane layoutX="365.0" layoutY="240.0" prefHeight="260.0" prefWidth="915.0">
+               <children>
+                  <LineChart fx:id="predict" alternativeRowFillVisible="false" animated="false" horizontalGridLinesVisible="false" horizontalZeroLineVisible="false" legendSide="TOP" verticalGridLinesVisible="false" verticalZeroLineVisible="false">
+                    <xAxis>
+                      <NumberAxis fx:id="predict_xAxis" animated="false" autoRanging="false" prefHeight="40.0" side="BOTTOM" tickLabelsVisible="false" />
+                    </xAxis>
+                    <yAxis>
+                      <NumberAxis fx:id="predict_yAxis" animated="false" forceZeroInRange="false" minHeight="160.0" minWidth="30.0" minorTickVisible="false" prefHeight="160.0" prefWidth="30.0" side="LEFT" tickLabelsVisible="false" tickMarkVisible="false" />
+                    </yAxis>
+                  </LineChart>
+                  <LineChart fx:id="result" alternativeRowFillVisible="false" animated="false" createSymbols="false" horizontalZeroLineVisible="false" legendVisible="false" verticalGridLinesVisible="false" verticalZeroLineVisible="false">
+                     <xAxis>
+                        <NumberAxis fx:id="result_xAxis" animated="false" autoRanging="false" prefHeight="40.0" side="BOTTOM" />
+                     </xAxis>
+                     <yAxis>
+                        <NumberAxis fx:id="result_yAxis" animated="false" minHeight="160.0" minWidth="30.0" minorTickVisible="false" prefHeight="160.0" prefWidth="30.0" side="LEFT" tickMarkVisible="false" visible="false" />
+                     </yAxis>
+                     <StackPane.margin>
+                        <Insets top="30.0" />
+                     </StackPane.margin>
+                  </LineChart>
+               </children>
+            </StackPane>
             <MenuButton fx:id="menu_button" layoutX="410.0" layoutY="254.0" mnemonicParsing="false" text="Conditions">
               <items>
                 <MenuItem mnemonicParsing="false" text="Action 1" />
                 <MenuItem mnemonicParsing="false" text="Action 2" />
               </items>
             </MenuButton>
-            <StackPane layoutX="365.0" layoutY="270.0" prefHeight="230.0" prefWidth="915.0">
-               <children>
-                  <LineChart fx:id="predict" alternativeRowFillVisible="false" animated="false" horizontalGridLinesVisible="false" horizontalZeroLineVisible="false" legendSide="TOP" legendVisible="false" verticalGridLinesVisible="false" verticalZeroLineVisible="false">
-                    <xAxis>
-                      <NumberAxis fx:id="predict_xAxis" animated="false" autoRanging="false" prefHeight="40.0" side="BOTTOM" tickLabelsVisible="false" />
-                    </xAxis>
-                    <yAxis>
-                      <NumberAxis fx:id="predict_yAxis" animated="false" prefHeight="160.0" prefWidth="30.0" side="LEFT" tickLabelsVisible="false" />
-                    </yAxis>
-                  </LineChart>
-                  <LineChart fx:id="result" alternativeRowFillVisible="false" animated="false" createSymbols="false" horizontalZeroLineVisible="false" layoutX="10.0" layoutY="10.0" legendVisible="false" verticalGridLinesVisible="false" verticalZeroLineVisible="false">
-                     <xAxis>
-                        <NumberAxis fx:id="result_xAxis" animated="false" autoRanging="false" prefHeight="40.0" side="BOTTOM" />
-                     </xAxis>
-                     <yAxis>
-                        <NumberAxis fx:id="result_yAxis" animated="false" minorTickVisible="false" prefHeight="160.0" prefWidth="30.0" side="LEFT" tickMarkVisible="false" visible="false" />
-                     </yAxis>
-                  </LineChart>
-               </children>
-            </StackPane>
             <Button fx:id="prevScan_bottom" layoutX="1215.0" layoutY="255.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="&lt;" textAlignment="CENTER" />
             <Button fx:id="nextScan_bottom" layoutX="1245.0" layoutY="255.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="&gt;" textAlignment="CENTER" />
             <Button fx:id="prevScan_top" layoutX="1215.0" layoutY="5.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="&lt;" textAlignment="CENTER" />
