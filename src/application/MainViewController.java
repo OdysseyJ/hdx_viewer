@@ -222,7 +222,7 @@ public class MainViewController implements Initializable {
 		linechart.getData().clear();
 		XYChart.Series series = new XYChart.Series();
 		
-		for(int i = 0 ; i < files.size() - 1; i++) {
+		for(int i = 0 ; i < files.size() ; i++) {
 			String HDXnum = recordList.get(index).getCondition(i);
 			
 			String[] splited = HDXnum.split("~");
@@ -236,7 +236,7 @@ public class MainViewController implements Initializable {
 			}
 			
 			d /= splited.length;
-			series.getData().add(new XYChart.Data(files.get(i+1).getName().replaceFirst("[.][^.]+$", ""), d));
+			series.getData().add(new XYChart.Data(files.get(i).getName().replaceFirst("[.][^.]+$", ""), d));
 		}
 		
 		linechart.getData().setAll(series);
@@ -484,8 +484,8 @@ public class MainViewController implements Initializable {
 		Double maxIntensity = Double.parseDouble(intensity.split(",")[0]);
 		Double maxIntensityMass = Double.parseDouble(intensity.split(",")[1]);
 		
-		XYChart.Series dataSeries2 = getPredictSeries(predictedDdeu_array, mz, additional_value,  maxIntensity, maxIntensityMass, "predicted");
-		XYChart.Series dataSeries3 = getPredictSeries(observedDdeu_array, mz, additional_value, maxIntensity, maxIntensityMass, "observed");
+//		XYChart.Series dataSeries2 = getPredictSeries(predictedDdeu_array, mz, additional_value,  maxIntensity, maxIntensityMass, "predicted");
+//		XYChart.Series dataSeries3 = getPredictSeries(observedDdeu_array, mz, additional_value, maxIntensity, maxIntensityMass, "observed");
 		
 	    setChartxAxis(result_xAxis, tick, Math.floor(minMass), Math.ceil(maxMass));
 	    setChartyAxis(result_yAxis, 100, 0.0, (Math.ceil(maxIntensity/100)*100)+300);
@@ -494,7 +494,7 @@ public class MainViewController implements Initializable {
 	    setChartyAxis(predict_yAxis, 100, 0.0, (Math.ceil(maxIntensity/100)*100)+300);
 
 	    result.getData().setAll(dataSeries1);
-		predict.getData().setAll(dataSeries2, dataSeries3);
+//		predict.getData().setAll(dataSeries2, dataSeries3);
 	}
 	
 	public String getMaxIntensity(double[][] intensityList, Double minMz, Double maxMz) {
@@ -605,10 +605,10 @@ public class MainViewController implements Initializable {
 	    column7.setCellFactory(stringCellFactory);
 	    
 	    tableview.getColumns().addAll(column1, column2, column3, column4, column5, column6, column7);
-	    for(int i = 1 ; i < files.size() ; i++) {
+	    for(int i = 0 ; i < files.size() ; i++) {
 	    	String condition = files.get(i).getName().replaceFirst("[.][^.]+$", "");
 		    TableColumn<HDXProfile, String> column = new TableColumn<>(condition);
-		    int idx = i - 1;
+		    int idx = i ;
 	    	column.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCondition(idx)));
 	    	
 	    	column.setCellFactory(stringCellFactory);
