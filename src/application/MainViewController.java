@@ -489,6 +489,7 @@ public class MainViewController implements Initializable {
 		
 	    setChartxAxis(result_xAxis, tick, Math.floor(minMass), Math.ceil(maxMass));
 	    setChartyAxis(result_yAxis, 100, 0.0, (Math.ceil(maxIntensity/100)*100)+300);
+	   
 	    setChartxAxis(predict_xAxis, tick, Math.floor(minMass), Math.ceil(maxMass));
 	    setChartyAxis(predict_yAxis, 100, 0.0, (Math.ceil(maxIntensity/100)*100)+300);
 
