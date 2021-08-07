@@ -29,7 +29,13 @@ import javafx.stage.Stage;
 
 public class FileSelectViewController {
 
-	private ArrayList<File> files = new ArrayList<File>();
+	private File control;
+	
+	private File peptide;
+	
+	private File protein;
+	
+	private ArrayList<File> condition_files = new ArrayList<File>();
 	
     private FileChooser.ExtensionFilter extFilter = 
     		new FileChooser.ExtensionFilter("MZXML FILES (*.mzxml)", "*.mzxml");
@@ -68,6 +74,11 @@ public class FileSelectViewController {
     void onConfirm(ActionEvent event) {
     	try {
     	
+    	// validation (essential field)
+    	
+    	File control_file = this.control;
+    	String mass_tolerance = this.mass_tolerance_filed.getText();
+    		
     	runDemix();
     	
     	Node node = (Node) event.getSource();
@@ -76,81 +87,81 @@ public class FileSelectViewController {
     	TsvParserSettings settings = new TsvParserSettings();
 		settings.getFormat().setLineSeparator("\n");
 		
-		TsvParser parser = new TsvParser(settings);
-
-		List<String[]> allDdueAnals = parser.parseAll(getReader("foo_pept_DdeuAnal.tsv"));
-		List<String[]> allHDXProfiles = parser.parseAll(getReader("foo_pept_HDXProfile.tsv"));
-		
-		ArrayList<ArrayList<Scan>> file_scans = new ArrayList<ArrayList<Scan>>();
-		ArrayList<HDXProfile> profileList = new ArrayList<HDXProfile>();
-		ArrayList<DdeuAnal> ddueList = new ArrayList<DdeuAnal>();
-		
+//		TsvParser parser = new TsvParser(settings);
+//
+//		List<String[]> allDdueAnals = parser.parseAll(getReader("foo_pept_DdeuAnal.tsv"));
+//		List<String[]> allHDXProfiles = parser.parseAll(getReader("foo_pept_HDXProfile.tsv"));
+//		
+//		ArrayList<ArrayList<Scan>> file_scans = new ArrayList<ArrayList<Scan>>();
+//		ArrayList<HDXProfile> profileList = new ArrayList<HDXProfile>();
+//		ArrayList<DdeuAnal> ddueList = new ArrayList<DdeuAnal>();
+//		
 		// read all scans
-		for (int i = 0; i < this.files.size(); i++) {
-			try {
-				File file = this.files.get(i);
-				MSXMLSequentialParser msxml_parser = new MSXMLSequentialParser();
-				msxml_parser.open(file.getPath());
-				ArrayList<Scan> scans = new ArrayList<Scan>();
-				while (msxml_parser.hasNextScan()){
-					scans.add(msxml_parser.getNextScan());
-				}
-				file_scans.add(scans);
-			} catch (Exception e) {
-				System.out.println(e);
-			}	
-		}
+//		for (int i = 0; i < this.files.size(); i++) {
+//			try {
+//				File file = this.files.get(i);
+//				MSXMLSequentialParser msxml_parser = new MSXMLSequentialParser();
+//				msxml_parser.open(file.getPath());
+//				ArrayList<Scan> scans = new ArrayList<Scan>();
+//				while (msxml_parser.hasNextScan()){
+//					scans.add(msxml_parser.getNextScan());
+//				}
+//				file_scans.add(scans);
+//			} catch (Exception e) {
+//				System.out.println(e);
+//			}	
+//		}
 		
 		// read all ddeu data
-		for (int i = 1; i < allDdueAnals.size(); i++) {
-			DdeuAnal ddeu = new DdeuAnal();
-			String[] line = allDdueAnals.get(i);
-			ddeu.setId(line[0]);
-			ddeu.setMz(line[1]);
-			ddeu.setCharge(line[2]);
-			ddeu.setPeptide(line[3]);
-			ddeu.setD2OLabelfirst(line[4]);
-			ddeu.setFirstDdeuNum(line[5]);
-			ddeu.setFirstDdeuPercent(line[6]);
-			ddeu.setSecondDdeuNum(line[7]);
-			ddeu.setSecondDdeuPercent(line[8]);
-			ddeu.setPredictedDdeu(line[9]);
-			ddeu.setStartScan(line[10]);
-			ddeu.setEndScan(line[11]);
-			ddeu.setStartRT(line[12]);
-			ddeu.setEndRT(line[13]);
-			ddeu.setObservedDdeu(line[14]);
-			ddeu.setMatchedScore(line[15]);
-			ddueList.add(ddeu);
-		}
+//		for (int i = 1; i < allDdueAnals.size(); i++) {
+//			DdeuAnal ddeu = new DdeuAnal();
+//			String[] line = allDdueAnals.get(i);
+//			ddeu.setId(line[0]);
+//			ddeu.setMz(line[1]);
+//			ddeu.setCharge(line[2]);
+//			ddeu.setPeptide(line[3]);
+//			ddeu.setD2OLabelfirst(line[4]);
+//			ddeu.setFirstDdeuNum(line[5]);
+//			ddeu.setFirstDdeuPercent(line[6]);
+//			ddeu.setSecondDdeuNum(line[7]);
+//			ddeu.setSecondDdeuPercent(line[8]);
+//			ddeu.setPredictedDdeu(line[9]);
+//			ddeu.setStartScan(line[10]);
+//			ddeu.setEndScan(line[11]);
+//			ddeu.setStartRT(line[12]);
+//			ddeu.setEndRT(line[13]);
+//			ddeu.setObservedDdeu(line[14]);
+//			ddeu.setMatchedScore(line[15]);
+//			ddueList.add(ddeu);
+//		}
 		
 		// read  all hdx profiles
 		
-		for (int i = 1; i < allHDXProfiles.size(); i++) {
-			HDXProfile profile = new HDXProfile();
-			for (int j = 0; j < allHDXProfiles.get(0).length; j++) {
-				profile.setId(allHDXProfiles.get(i)[0]);
-				profile.setMz(allHDXProfiles.get(i)[1]);
-				profile.setCharge(allHDXProfiles.get(i)[2]);
-				profile.setPeptide(allHDXProfiles.get(i)[3]);
-				profile.setProtein(allHDXProfiles.get(i)[4]);
-				profile.setPosFrom(allHDXProfiles.get(i)[5]);
-				profile.setPosTo(allHDXProfiles.get(i)[6]);
-				profile.setExpMz(allHDXProfiles.get(i)[7]);
-				profile.setMzShift(allHDXProfiles.get(i)[8]);
-				profile.setStartScan(allHDXProfiles.get(i)[9]);
-				profile.setEndScan(allHDXProfiles.get(i)[10]);
-				profile.setApexScan(allHDXProfiles.get(i)[11]);
-				profile.setApexRt(allHDXProfiles.get(i)[12]);
-				profile.setConditions(Arrays.copyOfRange(allHDXProfiles.get(i),13,allHDXProfiles.get(i).length));
-			}
-			profileList.add(profile);
-		}
-		
-		Main.mainViewController.setDdeuData(ddueList);
-		Main.mainViewController.setTreeItem(this.files);
-    	Main.mainViewController.setTableViewData(profileList, this.files);
-    	Main.mainViewController.setScanData(file_scans);
+//		for (int i = 1; i < allHDXProfiles.size(); i++) {
+//			HDXProfile profile = new HDXProfile();
+//			for (int j = 0; j < allHDXProfiles.get(0).length; j++) {
+//				profile.setId(allHDXProfiles.get(i)[0]);
+//				profile.setMz(allHDXProfiles.get(i)[1]);
+//				profile.setCharge(allHDXProfiles.get(i)[2]);
+//				profile.setPeptide(allHDXProfiles.get(i)[3]);
+//				profile.setProtein(allHDXProfiles.get(i)[4]);
+//				profile.setPosFrom(allHDXProfiles.get(i)[5]);
+//				profile.setPosTo(allHDXProfiles.get(i)[6]);
+//				profile.setExpMz(allHDXProfiles.get(i)[7]);
+//				profile.setMzShift(allHDXProfiles.get(i)[8]);
+//				profile.setStartScan(allHDXProfiles.get(i)[9]);
+//				profile.setEndScan(allHDXProfiles.get(i)[10]);
+//				profile.setApexScan(allHDXProfiles.get(i)[11]);
+//				profile.setApexRt(allHDXProfiles.get(i)[12]);
+//				profile.setConditions(Arrays.copyOfRange(allHDXProfiles.get(i),13,allHDXProfiles.get(i).length));
+//			}
+//			profileList.add(profile);
+//		}
+//		
+//		Main.mainViewController.setDdeuData(ddueList);
+//		Main.mainViewController.setTreeItem(this.files);
+//    	Main.mainViewController.setTableViewData(profileList, this.files);
+//    	Main.mainViewController.setScanData(file_scans);
 
     	thisStage.close();
     	} catch(Exception e) {
@@ -173,7 +184,7 @@ public class FileSelectViewController {
 		return null;
     }
     
-    void selectFile(FileChooser.ExtensionFilter filter, TextField field) {
+    void selectFile(FileChooser.ExtensionFilter filter, TextField field, File f) {
     	Stage stage = Main.getPrimaryStage();
     	
     	FileChooser fileChooser = new FileChooser();
@@ -185,14 +196,12 @@ public class FileSelectViewController {
 		File file = fileChooser.showOpenDialog(stage);
 		
 		if (file != null) {
-			if(this.files.indexOf(file) == -1) {
-				this.files.add(file);	
-			}
+			f = file;
 			field.setText(file.getName());
 		}
     }
     
-    void selectMultipleFile(FileChooser.ExtensionFilter filter, TextField field) {
+    void selectMultipleFile(FileChooser.ExtensionFilter filter, TextField field, ArrayList<File> f) {
     	Stage stage = Main.getPrimaryStage();
     	
     	FileChooser fileChooser = new FileChooser();
@@ -202,33 +211,36 @@ public class FileSelectViewController {
 //        fileChooser.getExtensionFilters().add(filter); 
         
 		List<File> files = fileChooser.showOpenMultipleDialog(stage);
+		String condition_files_text = "";
 		
 		if (files != null) {
-//			if(this.files.indexOf(file) == -1) {
-//				this.files.add(file);	
-//			}
-//			field.setText(file.getName());
+			for (int i = 0; i < files.size(); i++) {
+				f.add(files.get(i));
+				condition_files_text += files.get(i).getName();
+			}
 		}
+
+		field.setText(condition_files_text);
     }
     
     @FXML
     void onSelectControlFile(ActionEvent event) {
-    	selectFile(extFilter, control_field);
+    	selectFile(extFilter, control_field, control);
     }
 
     @FXML
     void onSelectPeptideFile(ActionEvent event) {
-    	selectFile(extFilter, peptide_field);
+    	selectFile(extFilter, peptide_field, peptide);
     }
 
     @FXML
     void onSelectConditionFiles(ActionEvent event) {
-    	selectMultipleFile(extFilter, condition_field);
+    	selectMultipleFile(extFilter, condition_field, condition_files);
     }
 
     @FXML
     void onSelectProteinFile(ActionEvent event) {
-    	selectFile(extFilter, protein_field);
+    	selectFile(extFilter, protein_field, protein);
     }
     
     void runDemix() {
