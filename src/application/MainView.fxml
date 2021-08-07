@@ -29,10 +29,10 @@
          <children>
             <BarChart fx:id="barchart_up" animated="false" layoutX="365.0" layoutY="20.0" legendVisible="false" prefHeight="230.0" prefWidth="915.0">
               <xAxis>
-                <CategoryAxis prefHeight="20.0" prefWidth="842.0" side="BOTTOM" />
+                <CategoryAxis prefHeight="20.0" prefWidth="842.0" side="LEFT" />
               </xAxis>
               <yAxis>
-                <NumberAxis side="LEFT" />
+                <NumberAxis />
               </yAxis>
             </BarChart>
             <TreeView fx:id="treeview" layoutX="10.0" layoutY="7.0" onMouseClicked="#onClickTreeView" prefHeight="193.0" prefWidth="358.0" />

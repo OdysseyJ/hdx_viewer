@@ -1,0 +1,5 @@
+Peptide= C:\Users\Jinseok\HDXViewer\deMix_v1.02\testdata\foo_pept.tsv
+CTRLData= C:\Users\Jinseok\HDXViewer\deMix_v1.02\testdata\ctrl_ms.mzXML
+HDXData=30s.mzXML, C:\Users\Jinseok\HDXViewer\deMix_v1.02\testdata\d2o_30s.mzXML
+HDXData=10m.mzXML, C:\Users\Jinseok\HDXViewer\deMix_v1.02\testdata\d2o_10m.mzXML
+HDXData=60m.mzXML, C:\Users\Jinseok\HDXViewer\deMix_v1.02\testdata\d2o_60m.mzXML
