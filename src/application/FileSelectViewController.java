@@ -96,9 +96,6 @@ public class FileSelectViewController {
 		List<String[]> allDdueAnals = parser.parseAll(getReader(ddeuPath));
 		List<String[]> allHDXProfiles = parser.parseAll(getReader(hdxPath));
 		
-		System.out.println(allDdueAnals.get(0));
-		System.out.println(allHDXProfiles.get(0));
-		
 		ArrayList<ArrayList<Scan>> file_scans = new ArrayList<ArrayList<Scan>>();
 		ArrayList<HDXProfile> profileList = new ArrayList<HDXProfile>();
 		ArrayList<DdeuAnal> ddueList = new ArrayList<DdeuAnal>();
