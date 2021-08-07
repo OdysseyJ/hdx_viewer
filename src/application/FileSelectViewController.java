@@ -2,7 +2,10 @@ package application;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
@@ -73,9 +76,7 @@ public class FileSelectViewController {
     @FXML
     void onConfirm(ActionEvent event) {
     	try {
-    	
-    	// validation (essential field)
-    		
+
     	runDemix();
     	
     	Node node = (Node) event.getSource();
@@ -84,16 +85,25 @@ public class FileSelectViewController {
     	TsvParserSettings settings = new TsvParserSettings();
 		settings.getFormat().setLineSeparator("\n");
 		
-//		TsvParser parser = new TsvParser(settings);
-//
-//		List<String[]> allDdueAnals = parser.parseAll(getReader("foo_pept_DdeuAnal.tsv"));
-//		List<String[]> allHDXProfiles = parser.parseAll(getReader("foo_pept_HDXProfile.tsv"));
-//		
+		TsvParser parser = new TsvParser(settings);
+		
+		String pept = this.peptide.getAbsolutePath();
+		String ddeuPath = pept.substring(0, pept.lastIndexOf('.'));
+		ddeuPath += "_DdeuAnal.tsv";
+		String hdxPath = pept.substring(0, pept.lastIndexOf('.'));
+		hdxPath += "_HDXProfile.tsv";
+		
+		List<String[]> allDdueAnals = parser.parseAll(getReader(ddeuPath));
+		List<String[]> allHDXProfiles = parser.parseAll(getReader(hdxPath));
+		
+		System.out.println(allDdueAnals.get(0));
+		System.out.println(allHDXProfiles.get(0));
+		
 //		ArrayList<ArrayList<Scan>> file_scans = new ArrayList<ArrayList<Scan>>();
 //		ArrayList<HDXProfile> profileList = new ArrayList<HDXProfile>();
 //		ArrayList<DdeuAnal> ddueList = new ArrayList<DdeuAnal>();
 //		
-		// read all scans
+//		// read all scans
 //		for (int i = 0; i < this.files.size(); i++) {
 //			try {
 //				File file = this.files.get(i);
@@ -108,8 +118,8 @@ public class FileSelectViewController {
 //				System.out.println(e);
 //			}	
 //		}
-		
-		// read all ddeu data
+//		
+//		// read all ddeu data
 //		for (int i = 1; i < allDdueAnals.size(); i++) {
 //			DdeuAnal ddeu = new DdeuAnal();
 //			String[] line = allDdueAnals.get(i);
@@ -131,9 +141,9 @@ public class FileSelectViewController {
 //			ddeu.setMatchedScore(line[15]);
 //			ddueList.add(ddeu);
 //		}
-		
-		// read  all hdx profiles
-		
+//		
+//		 //read  all hdx profiles
+//		
 //		for (int i = 1; i < allHDXProfiles.size(); i++) {
 //			HDXProfile profile = new HDXProfile();
 //			for (int j = 0; j < allHDXProfiles.get(0).length; j++) {
@@ -171,10 +181,14 @@ public class FileSelectViewController {
     	}
     }
     
-    public Reader getReader(String relativePath) {
+    public Reader getReader(String absolutePath) {
         try {
-			return new InputStreamReader(this.getClass().getResourceAsStream(relativePath), "UTF-8");
+        	InputStream in = new FileInputStream(absolutePath);
+			return new InputStreamReader(in, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -278,14 +292,17 @@ public class FileSelectViewController {
     	try {
 	    	File param = new File("deMix.params");
 	    	BufferedWriter bw = new BufferedWriter(new FileWriter(param));
-	    	bw.write("Peptide= C:\\Users\\Jinseok\\HDXViewer\\deMix_v1.02\\testdata\\foo_pept.tsv\n" + "CTRLData= "+this.files.get(0)+"\n");
-	    	for(int i = 1 ; i < this.files.size(); i++) {
-	    		String cond = this.files.get(i).getName().split("_")[1];
-	    		bw.write("HDXData=" + cond + ", " + this.files.get(i)+"\n");
+	    	bw.write("Peptide= "+ this.peptide + "\n" + "CTRLData= "+this.control+"\n");
+	    	for(int i = 0 ; i < this.condition_files.size(); i++) {
+	    		String cond = this.condition_files.get(i).getName().split("_")[1];
+	    		bw.write("HDXData=" + cond + ", " + this.condition_files.get(i)+"\n");
 	    	}
+	    	bw.write("MassTolerance= "+ this.mass_tolerance_filed.getText() + "\n");
+	    	if(this.protein != null)
+	    		bw.write("Protein= "+ this.protein + "\n");
 	    	bw.close();
 	    	
-	    	String[] args = {"-i","deMix.params"};
+	    	String[] args = {"-i","deMix.params","-o","result"};
 			deMix.main(args);
     	}
     	catch(Exception e) {
