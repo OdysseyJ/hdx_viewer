@@ -5,20 +5,22 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="300.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.FileSelectViewController">
+<AnchorPane prefHeight="300.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.FileSelectViewController">
    <children>
       <Button fx:id="confirm_button" layoutX="594.0" layoutY="275.0" mnemonicParsing="false" onAction="#onConfirm" text="확인" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
-      <Button fx:id="control_button" layoutX="466.0" layoutY="57.0" mnemonicParsing="false" onAction="#onSelectControlFile" text="선택" />
-      <TextField fx:id="control_field" layoutX="181.0" layoutY="57.0" prefHeight="23.0" prefWidth="242.0" />
-      <Label layoutX="61.0" layoutY="61.0" text="control file" />
-      <Button fx:id="f1_button" layoutX="466.0" layoutY="96.0" mnemonicParsing="false" onAction="#onSelectF1File" text="선택" />
-      <TextField fx:id="f1_field" layoutX="181.0" layoutY="96.0" prefHeight="23.0" prefWidth="242.0" />
-      <Label layoutX="61.0" layoutY="100.0" text="file1" />
-      <Button fx:id="f2_button" layoutX="466.0" layoutY="134.0" mnemonicParsing="false" onAction="#onSelectF2File" text="선택" />
-      <TextField fx:id="f2_field" layoutX="181.0" layoutY="134.0" prefHeight="23.0" prefWidth="242.0" />
-      <Label layoutX="61.0" layoutY="138.0" text="file2" />
-      <Button fx:id="f3_button" layoutX="466.0" layoutY="173.0" mnemonicParsing="false" onAction="#onSelectF3File" text="선택" />
-      <TextField fx:id="f3_field" layoutX="181.0" layoutY="173.0" prefHeight="23.0" prefWidth="242.0" />
-      <Label layoutX="61.0" layoutY="177.0" text="file3" />
+      <Button fx:id="control_button" layoutX="507.0" layoutY="50.0" mnemonicParsing="false" onAction="#onSelectControlFile" text="선택" />
+      <TextField fx:id="control_field" editable="false" layoutX="227.0" layoutY="50.0" prefHeight="23.0" prefWidth="242.0" />
+      <Label layoutX="61.0" layoutY="54.0" text="control file" />
+      <Button fx:id="peptide_button" layoutX="507.0" layoutY="89.0" mnemonicParsing="false" onAction="#onSelectPeptideFile" text="선택" />
+      <TextField fx:id="peptide_field" editable="false" layoutX="227.0" layoutY="89.0" prefHeight="23.0" prefWidth="242.0" />
+      <Label layoutX="61.0" layoutY="93.0" text="peptide file" />
+      <Button fx:id="protein_button" layoutX="507.0" layoutY="187.0" mnemonicParsing="false" onAction="#onSelectProteinFile" text="선택" />
+      <TextField fx:id="protein_field" editable="false" layoutX="227.0" layoutY="187.0" prefHeight="23.0" prefWidth="242.0" />
+      <Label layoutX="61.0" layoutY="191.0" text="protein file (optinal)" />
+      <TextField fx:id="mass_tolerance_filed" layoutX="227.0" layoutY="226.0" prefHeight="23.0" prefWidth="242.0" />
+      <Label layoutX="61.0" layoutY="230.0" text="mass tolerance (optional)" />
+      <Button fx:id="condition_button" layoutX="507.0" layoutY="130.0" mnemonicParsing="false" onAction="#onSelectConditionFiles" text="선택" />
+      <TextField fx:id="condition_field" editable="false" layoutX="227.0" layoutY="130.0" prefHeight="23.0" prefWidth="242.0" />
+      <Label layoutX="61.0" layoutY="134.0" text="condition files" />
    </children>
 </AnchorPane>

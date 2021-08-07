@@ -44,22 +44,25 @@ public class FileSelectViewController {
     private TextField control_field;
 
     @FXML
-    private Button f1_button;
+    private Button peptide_button;
 
     @FXML
-    private TextField f1_field;
+    private TextField peptide_field;
 
     @FXML
-    private Button f2_button;
+    private Button condition_button;
 
     @FXML
-    private TextField f2_field;
+    private TextField condition_field;
 
     @FXML
-    private Button f3_button;
+    private Button protein_button;
 
     @FXML
-    private TextField f3_field;
+    private TextField protein_field;
+
+    @FXML
+    private TextField mass_tolerance_filed;
 
     @FXML
     void onConfirm(ActionEvent event) {
@@ -189,24 +192,43 @@ public class FileSelectViewController {
 		}
     }
     
+    void selectMultipleFile(FileChooser.ExtensionFilter filter, TextField field) {
+    	Stage stage = Main.getPrimaryStage();
+    	
+    	FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Open File");
+		
+		// Set extension filter
+//        fileChooser.getExtensionFilters().add(filter); 
+        
+		List<File> files = fileChooser.showOpenMultipleDialog(stage);
+		
+		if (files != null) {
+//			if(this.files.indexOf(file) == -1) {
+//				this.files.add(file);	
+//			}
+//			field.setText(file.getName());
+		}
+    }
+    
     @FXML
     void onSelectControlFile(ActionEvent event) {
     	selectFile(extFilter, control_field);
     }
 
     @FXML
-    void onSelectF1File(ActionEvent event) {
-    	selectFile(extFilter, f1_field);
+    void onSelectPeptideFile(ActionEvent event) {
+    	selectFile(extFilter, peptide_field);
     }
 
     @FXML
-    void onSelectF2File(ActionEvent event) {
-    	selectFile(extFilter, f2_field);
+    void onSelectConditionFiles(ActionEvent event) {
+    	selectMultipleFile(extFilter, condition_field);
     }
 
     @FXML
-    void onSelectF3File(ActionEvent event) {
-    	selectFile(extFilter, f3_field);
+    void onSelectProteinFile(ActionEvent event) {
+    	selectFile(extFilter, protein_field);
     }
     
     void runDemix() {
