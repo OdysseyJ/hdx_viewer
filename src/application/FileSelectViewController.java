@@ -1,6 +1,8 @@
 package application;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
@@ -14,6 +16,7 @@ import org.systemsbiology.jrap.stax.Scan;
 import com.univocity.parsers.tsv.TsvParser;
 import com.univocity.parsers.tsv.TsvParserSettings;
 
+import deMix.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -61,6 +64,9 @@ public class FileSelectViewController {
     @FXML
     void onConfirm(ActionEvent event) {
     	try {
+    	
+    	runDemix();
+    	
     	Node node = (Node) event.getSource();
     	Stage thisStage = (Stage) node.getScene().getWindow();
     	
@@ -201,6 +207,30 @@ public class FileSelectViewController {
     @FXML
     void onSelectF3File(ActionEvent event) {
     	selectFile(extFilter, f3_field);
+    }
+    
+    void runDemix() {
+    	try {
+	    	File param = new File("deMix.params");
+	    	BufferedWriter bw = new BufferedWriter(new FileWriter(param));
+	    	bw.write("Peptide= C:\\Users\\Jinseok\\HDXViewer\\deMix_v1.02\\testdata\\foo_pept.tsv\n" + "CTRLData= "+this.files.get(0)+"\n");
+	    	for(int i = 1 ; i < this.files.size(); i++) {
+	    		String cond = this.files.get(i).getName().split("_")[1];
+	    		bw.write("HDXData=" + cond + ", " + this.files.get(i)+"\n");
+	    	}
+	    	bw.close();
+	    	
+	    	String[] args = {"-i","deMix.params"};
+			deMix.main(args);
+    	}
+    	catch(Exception e) {
+    		Alert alert = new Alert(AlertType.WARNING);
+    		alert.setTitle("error.");
+    		alert.setHeaderText("error.");
+    		alert.setContentText(e.getMessage());
+
+    		alert.showAndWait();
+    	}
     }
 
 }
