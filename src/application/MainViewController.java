@@ -203,7 +203,7 @@ public class MainViewController implements Initializable {
 			TreeItem<String> Root = new TreeItem<String>("Project");
 			if( files.size() > 0 ) {
 				TreeItem<String> newItem = new TreeItem<String>("Ctrl");
-				for (int i = 1; i < files.size(); i++) {
+				for (int i = 0; i < files.size(); i++) {
 					String condition = files.get(i).getName().replaceFirst("[.][^.]+$", "");
 					TreeItem<String> child = new TreeItem<String>(condition);
 					newItem.getChildren().add(child);
@@ -542,7 +542,7 @@ public class MainViewController implements Initializable {
 
 	public void setTableViewData(ArrayList<HDXProfile> profileList, ArrayList<File> files) {
 		menu_button.getItems().clear();
-		for (int i = 1; i < files.size(); i++) {
+		for (int i = 0; i < files.size(); i++) {
 			File file = files.get(i);
 			MenuItem item = new MenuItem(file.getName().replaceFirst("[.][^.]+$", ""));
 			item.setOnAction(new EventHandler<ActionEvent>() {

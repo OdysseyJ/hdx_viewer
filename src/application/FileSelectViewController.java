@@ -116,7 +116,6 @@ public class FileSelectViewController {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		// read all condition
 		for (int i = 0; i < this.condition_files.size(); i++) {
 			try {
 				File file = this.condition_files.get(i);
@@ -179,8 +178,8 @@ public class FileSelectViewController {
 		}
 		
 		Main.mainViewController.setDdeuData(ddueList);
-		Main.mainViewController.setTreeItem(this.files);
-    	Main.mainViewController.setTableViewData(profileList, this.files);
+		Main.mainViewController.setTreeItem(this.condition_files);
+    	Main.mainViewController.setTableViewData(profileList, this.condition_files);
     	Main.mainViewController.setScanData(file_scans);
 
     	thisStage.close();
