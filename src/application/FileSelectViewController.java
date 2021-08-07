@@ -75,9 +75,6 @@ public class FileSelectViewController {
     	try {
     	
     	// validation (essential field)
-    	
-    	File control_file = this.control;
-    	String mass_tolerance = this.mass_tolerance_filed.getText();
     		
     	runDemix();
     	
@@ -194,9 +191,7 @@ public class FileSelectViewController {
 //        fileChooser.getExtensionFilters().add(filter); 
         
 		File file = fileChooser.showOpenDialog(stage);
-		
 		if (file != null) {
-			f = file;
 			field.setText(file.getName());
 		}
     }
@@ -225,12 +220,36 @@ public class FileSelectViewController {
     
     @FXML
     void onSelectControlFile(ActionEvent event) {
-    	selectFile(extFilter, control_field, control);
+        Stage stage = Main.getPrimaryStage();
+        	
+        FileChooser fileChooser = new FileChooser();
+    	fileChooser.setTitle("Open File");
+    	
+    	// Set extension filter
+    	// fileChooser.getExtensionFilters().add(filter); 
+            
+    	File file = fileChooser.showOpenDialog(stage);
+    	if (file != null) {
+    		control = file;
+    		control_field.setText(file.getName());
+    	}
     }
 
     @FXML
     void onSelectPeptideFile(ActionEvent event) {
-    	selectFile(extFilter, peptide_field, peptide);
+        Stage stage = Main.getPrimaryStage();
+    	
+        FileChooser fileChooser = new FileChooser();
+    	fileChooser.setTitle("Open File");
+    	
+    	// Set extension filter
+    	// fileChooser.getExtensionFilters().add(filter); 
+            
+    	File file = fileChooser.showOpenDialog(stage);
+    	if (file != null) {
+    		peptide = file;
+    		peptide_field.setText(file.getName());
+    	}
     }
 
     @FXML
@@ -240,7 +259,19 @@ public class FileSelectViewController {
 
     @FXML
     void onSelectProteinFile(ActionEvent event) {
-    	selectFile(extFilter, protein_field, protein);
+        Stage stage = Main.getPrimaryStage();
+    	
+        FileChooser fileChooser = new FileChooser();
+    	fileChooser.setTitle("Open File");
+    	
+    	// Set extension filter
+    	// fileChooser.getExtensionFilters().add(filter); 
+            
+    	File file = fileChooser.showOpenDialog(stage);
+    	if (file != null) {
+    		protein = file;
+    		protein_field.setText(file.getName());
+    	}
     }
     
     void runDemix() {
