@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.AreaChart?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
@@ -47,14 +48,14 @@
             </LineChart>
             <StackPane layoutX="365.0" layoutY="240.0" prefHeight="260.0" prefWidth="915.0">
                <children>
-                  <LineChart fx:id="predict" alternativeRowFillVisible="false" animated="false" horizontalGridLinesVisible="false" horizontalZeroLineVisible="false" legendSide="TOP" verticalGridLinesVisible="false" verticalZeroLineVisible="false">
+                  <AreaChart fx:id="predict"  alternativeRowFillVisible="false" animated="false" createSymbols="false" horizontalGridLinesVisible="false" horizontalZeroLineVisible="false" legendSide="TOP" verticalGridLinesVisible="false" verticalZeroLineVisible="false">
                     <xAxis>
                       <NumberAxis fx:id="predict_xAxis" animated="false" autoRanging="false" prefHeight="40.0" side="BOTTOM" tickLabelsVisible="false" />
                     </xAxis>
                     <yAxis>
                       <NumberAxis fx:id="predict_yAxis" animated="false" forceZeroInRange="false" minHeight="160.0" minWidth="30.0" minorTickVisible="false" prefHeight="160.0" prefWidth="30.0" side="LEFT" tickLabelsVisible="false" tickMarkVisible="false" />
                     </yAxis>
-                  </LineChart>
+                  </AreaChart>
                   <LineChart fx:id="result" alternativeRowFillVisible="false" animated="false" createSymbols="false" horizontalZeroLineVisible="false" legendVisible="false" verticalGridLinesVisible="false" verticalZeroLineVisible="false">
                      <xAxis>
                         <NumberAxis fx:id="result_xAxis" animated="false" autoRanging="false" prefHeight="40.0" side="BOTTOM" />

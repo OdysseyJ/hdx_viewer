@@ -25,6 +25,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
@@ -116,7 +117,7 @@ public class MainViewController implements Initializable {
     private LineChart<Number, Number> result;
     
     @FXML
-    private LineChart<Number, Number> predict;
+    private AreaChart<Number, Number> predict;
 
     @FXML
     private TableView<HDXProfile> tableview;
@@ -412,24 +413,11 @@ public class MainViewController implements Initializable {
 		yAxis.setTickUnit(tick);
 	}
 	
-	public XYChart.Series getPredictSeries(String[] array, Double minMz, Double additionalMz, Double maxIntensity, Double maxIntensityMass, String name) {
+	public XYChart.Series getPredictSeries(String[] array, Double minMz, Double additionalMz, Double maxIntensity, int maxRatioIndex, String name) {		
 		XYChart.Series dataSeries = new XYChart.Series();
-		Double minDiff = Double.MAX_VALUE;
-		Double nearestMz = 0.0;
-		Double nearestIntensity = 0.0;
-		for(int i = 0; i < array.length; i++) {
-			if (array[i].equals("-")) {
-				break;
-			}
-			Double x = minMz + (additionalMz * i);
-			Double diff = Math.abs(maxIntensityMass - x);
-			if (diff < minDiff) {
-				minDiff = diff;
-				nearestMz = x;
-				nearestIntensity = Double.parseDouble(array[i]);
-			}
-		}
-		Double fittingValue = maxIntensity / nearestIntensity;
+		Double maxRatio = Double.parseDouble(array[maxRatioIndex]);
+		Double fittingValue = maxIntensity / maxRatio;
+		
 		for(int i = 0; i < array.length; i++) {
 			if (array[i].equals("-")) {
 				break;
@@ -451,7 +439,7 @@ public class MainViewController implements Initializable {
         String d2o_label = condition.split("_")[1];
         Double charge = Double.parseDouble(profile.getCharge());
         Double mz = Double.parseDouble(profile.getMz());
-        
+
         String predictedDdeu = "";
         String observedDdeu = "";
         
@@ -459,7 +447,7 @@ public class MainViewController implements Initializable {
         	DdeuAnal data = ddeuList.get(i);
         	String data_peptide = data.getPeptide();
         	String data_d2o_label = data.getD2OLabelfirst();
-        	if (data_peptide.equals(peptide) && data_d2o_label.equals(d2o_label)) {
+        	if (data_peptide.equals(peptide) && data_d2o_label.contains(d2o_label)) {
         		predictedDdeu = data.getPredictedDdeu();
         		observedDdeu = data.getObservedDdeu();
         		break;
@@ -480,12 +468,13 @@ public class MainViewController implements Initializable {
 		Double standard_value = 1.0;
 		Double additional_value = standard_value/charge;
 		Double maxMz = mz + (additional_value * peptide.length());
-		String intensity = getMaxIntensity(intensityList, mz, maxMz);
-		Double maxIntensity = Double.parseDouble(intensity.split(",")[0]);
-		Double maxIntensityMass = Double.parseDouble(intensity.split(",")[1]);
 		
-//		XYChart.Series dataSeries2 = getPredictSeries(predictedDdeu_array, mz, additional_value,  maxIntensity, maxIntensityMass, "predicted");
-//		XYChart.Series dataSeries3 = getPredictSeries(observedDdeu_array, mz, additional_value, maxIntensity, maxIntensityMass, "observed");
+		String data = getMaxIntensity(predictedDdeu_array, intensityList, mz, additional_value);
+		Double maxIntensity = Double.parseDouble(data.split(",")[0]);
+		int maxRatioIndex = Integer.parseInt(data.split(",")[1]);
+		
+		XYChart.Series dataSeries2 = getPredictSeries(predictedDdeu_array, mz, additional_value,  maxIntensity, maxRatioIndex, "predicted");
+		XYChart.Series dataSeries3 = getPredictSeries(observedDdeu_array, mz, additional_value, maxIntensity, maxRatioIndex, "observed");
 		
 	    setChartxAxis(result_xAxis, tick, Math.floor(minMass), Math.ceil(maxMass));
 	    setChartyAxis(result_yAxis, 100, 0.0, (Math.ceil(maxIntensity/100)*100)+300);
@@ -494,25 +483,37 @@ public class MainViewController implements Initializable {
 	    setChartyAxis(predict_yAxis, 100, 0.0, (Math.ceil(maxIntensity/100)*100)+300);
 
 	    result.getData().setAll(dataSeries1);
-//		predict.getData().setAll(dataSeries2, dataSeries3);
+		predict.getData().setAll(dataSeries2, dataSeries3);
 	}
 	
-	public String getMaxIntensity(double[][] intensityList, Double minMz, Double maxMz) {
-		Double maxIntensity = 0.0;
-		Double maxIntensityMass = minMz;
-		String result = maxIntensity.toString()+","+maxIntensityMass.toString();
-		for(int i = 0; i < intensityList[0].length; i++) {
-			Double raw_mass = intensityList[0][i];
-			Double intensity = intensityList[1][i];
-			if (raw_mass > maxMz) {
+	public String getMaxIntensity(String[] predictedDdeu_array, double[][] intensityList, Double mz, Double additional_value) {
+		Double maxRatio = 0.0;
+		int maxRatioIndex = 0;
+		for (int i = 0; i < predictedDdeu_array.length; i++) {
+			if (predictedDdeu_array[i].equals("-")) {
 				break;
 			}
-			if (raw_mass > minMz && maxIntensity < intensity) {
-				maxIntensity = intensity;
-				result = intensity.toString()+","+raw_mass.toString();
+			Double currentRatio = Double.parseDouble(predictedDdeu_array[i]);
+			if (maxRatio < currentRatio) {
+				maxRatio = currentRatio;
+				maxRatioIndex = i; 
 			}
 		}
-		return result;
+		Double maxRatioX = mz + (additional_value * maxRatioIndex);
+		
+		Double minDiff = Double.MAX_VALUE;
+		Double nearestIntensity = 0.0;
+		for(int i = 0; i < intensityList[0].length; i++) {
+			Double x = intensityList[0][i];
+			Double y = intensityList[1][i];
+			
+			Double diff = Math.abs(maxRatioX - x);
+			if (diff < minDiff) {
+				minDiff = diff;
+				nearestIntensity = y;
+			}
+		}
+		return nearestIntensity.toString() + "," + maxRatioIndex;
 	}
 	
 	public int getTick(int currentSize) {
