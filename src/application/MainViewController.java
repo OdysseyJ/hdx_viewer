@@ -25,6 +25,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
@@ -116,7 +117,7 @@ public class MainViewController implements Initializable {
     private LineChart<Number, Number> result;
     
     @FXML
-    private LineChart<Number, Number> predict;
+    private AreaChart<Number, Number> predict;
 
     @FXML
     private TableView<HDXProfile> tableview;
