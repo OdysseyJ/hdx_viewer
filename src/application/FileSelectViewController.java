@@ -40,8 +40,14 @@ public class FileSelectViewController {
 	
 	private ArrayList<File> condition_files = new ArrayList<File>();
 	
-    private FileChooser.ExtensionFilter extFilter = 
+    private FileChooser.ExtensionFilter mzxmlFilter = 
     		new FileChooser.ExtensionFilter("MZXML FILES (*.mzxml)", "*.mzxml");
+    
+    private FileChooser.ExtensionFilter tsvFilter = 
+    		new FileChooser.ExtensionFilter("tsv FILES (*.tsv)", "*.tsv");
+
+    private FileChooser.ExtensionFilter fastaFilter = 
+    		new FileChooser.ExtensionFilter("fasta FILES (*.tsv)", "*.fasta");
 	
     @FXML
     private Button confirm_button;
@@ -211,7 +217,7 @@ public class FileSelectViewController {
 		fileChooser.setTitle("Open File");
 		
 		// Set extension filter
-//        fileChooser.getExtensionFilters().add(filter); 
+        fileChooser.getExtensionFilters().add(filter); 
         
 		File file = fileChooser.showOpenDialog(stage);
 		if (file != null) {
@@ -226,7 +232,7 @@ public class FileSelectViewController {
 		fileChooser.setTitle("Open File");
 		
 		// Set extension filter
-//        fileChooser.getExtensionFilters().add(filter); 
+        fileChooser.getExtensionFilters().add(filter); 
         
 		List<File> files = fileChooser.showOpenMultipleDialog(stage);
 		String condition_files_text = "";
@@ -249,7 +255,7 @@ public class FileSelectViewController {
     	fileChooser.setTitle("Open File");
     	
     	// Set extension filter
-    	// fileChooser.getExtensionFilters().add(filter); 
+    	fileChooser.getExtensionFilters().add(mzxmlFilter);
             
     	File file = fileChooser.showOpenDialog(stage);
     	if (file != null) {
@@ -266,7 +272,7 @@ public class FileSelectViewController {
     	fileChooser.setTitle("Open File");
     	
     	// Set extension filter
-    	// fileChooser.getExtensionFilters().add(filter); 
+    	fileChooser.getExtensionFilters().add(tsvFilter); 
             
     	File file = fileChooser.showOpenDialog(stage);
     	if (file != null) {
@@ -277,7 +283,7 @@ public class FileSelectViewController {
 
     @FXML
     void onSelectConditionFiles(ActionEvent event) {
-    	selectMultipleFile(extFilter, condition_field, condition_files);
+    	selectMultipleFile(mzxmlFilter, condition_field, condition_files);
     }
 
     @FXML
@@ -288,7 +294,7 @@ public class FileSelectViewController {
     	fileChooser.setTitle("Open File");
     	
     	// Set extension filter
-    	// fileChooser.getExtensionFilters().add(filter); 
+    	fileChooser.getExtensionFilters().add(fastaFilter); 
             
     	File file = fileChooser.showOpenDialog(stage);
     	if (file != null) {
