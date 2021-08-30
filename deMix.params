@@ -1,7 +1,0 @@
-Peptide= /Users/seongwoon/Downloads/drive-download-20210807T075028Z-001/foo_pept.tsv
-CTRLData= /Users/seongwoon/Downloads/drive-download-20210807T075028Z-001/ctrl_ms.mzXML
-HDXData=10m.mzXML, /Users/seongwoon/Downloads/drive-download-20210807T075028Z-001/d2o_10m.mzXML
-HDXData=30s.mzXML, /Users/seongwoon/Downloads/drive-download-20210807T075028Z-001/d2o_30s.mzXML
-HDXData=60m.mzXML, /Users/seongwoon/Downloads/drive-download-20210807T075028Z-001/d2o_60m.mzXML
-MassTolerance= 0.1da
-Protein= /Users/seongwoon/Downloads/drive-download-20210807T075028Z-001/foo_prot.fasta
