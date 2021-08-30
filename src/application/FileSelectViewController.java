@@ -82,7 +82,7 @@ public class FileSelectViewController {
     @FXML
     void onConfirm(ActionEvent event) {
     	try {
-
+    		
     	runDemix();
     	
     	Node node = (Node) event.getSource();
@@ -92,7 +92,6 @@ public class FileSelectViewController {
 		settings.getFormat().setLineSeparator("\n");
 		
 		TsvParser parser = new TsvParser(settings);
-		
 		String pept = this.peptide.getAbsolutePath();
 		String ddeuPath = pept.substring(0, pept.lastIndexOf('.'));
 		ddeuPath += "_DdeuAnal.tsv";
@@ -105,7 +104,7 @@ public class FileSelectViewController {
 		ArrayList<ArrayList<Scan>> file_scans = new ArrayList<ArrayList<Scan>>();
 		ArrayList<HDXProfile> profileList = new ArrayList<HDXProfile>();
 		ArrayList<DdeuAnal> ddueList = new ArrayList<DdeuAnal>();
-		
+
 		// read all control scans
 		try {
 			File file = this.control;
@@ -133,7 +132,7 @@ public class FileSelectViewController {
 				System.out.println(e);
 			}	
 		}
-		
+
 		// read all ddeu data
 		for (int i = 1; i < allDdueAnals.size(); i++) {
 			DdeuAnal ddeu = new DdeuAnal();
@@ -158,7 +157,6 @@ public class FileSelectViewController {
 		}
 		
 		 //read  all hdx profiles
-		
 		for (int i = 1; i < allHDXProfiles.size(); i++) {
 			HDXProfile profile = new HDXProfile();
 			for (int j = 0; j < allHDXProfiles.get(0).length; j++) {
@@ -179,12 +177,10 @@ public class FileSelectViewController {
 			}
 			profileList.add(profile);
 		}
-		
 		Main.mainViewController.setDdeuData(ddueList);
 		Main.mainViewController.setTreeItem(this.condition_files);
     	Main.mainViewController.setTableViewData(profileList, this.condition_files);
     	Main.mainViewController.setScanData(file_scans);
-
     	thisStage.close();
     	} catch(Exception e) {
     		Alert alert = new Alert(AlertType.WARNING);
@@ -309,8 +305,15 @@ public class FileSelectViewController {
 	    	BufferedWriter bw = new BufferedWriter(new FileWriter(param));
 	    	bw.write("Peptide= "+ this.peptide + "\n" + "CTRLData= "+this.control+"\n");
 	    	for(int i = 0 ; i < this.condition_files.size(); i++) {
-	    		String cond = this.condition_files.get(i).getName().split("_")[1];
-	    		bw.write("HDXData=" + cond + ", " + this.condition_files.get(i)+"\n");
+	    		String file_name = this.condition_files.get(i).getName().split("\\.")[0];
+	    		String label = null;
+	    		if( Character.isDigit(file_name.charAt(file_name.length()-3)) )
+	    			label = file_name.substring(file_name.length()-3);
+	    		else
+	    			label = file_name.substring(file_name.length()-2);
+	    		if(label == null)
+	    			throw new Exception("올바른 파일명이 아닙니다.");
+	    		bw.write("HDXData=" + label + ", " + this.condition_files.get(i)+"\n");
 	    	}
 	    	bw.write("MassTolerance= "+ this.mass_tolerance_filed.getText() + "\n");
 	    	if(this.protein != null)
