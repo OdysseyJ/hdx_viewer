@@ -80,6 +80,8 @@ public class MainViewController implements Initializable {
 	int currentSize_top = 0;
 	
 	int currentSize_bottom = 0;
+	
+	int currentRowIndex = -1;
 
     @FXML
     private MenuItem open;
@@ -282,7 +284,7 @@ public class MainViewController implements Initializable {
 	                Double minMass = getMinMass(mz, currentSize_top);
 	                Double maxMass = getMaxMass(minMass, peptide, currentSize_top);
 	                int tick = getTick(currentSize_top);
-	        		setTopIntensityData(currentScan_top, minMass, maxMass, tick);
+	        		setTopIntensityData(currentScan_top, minMass, maxMass, tick, false);
         		}
         	}
         });
@@ -295,7 +297,7 @@ public class MainViewController implements Initializable {
 	                Double minMass = getMinMass(mz, currentSize_top);
 	                Double maxMass = getMaxMass(minMass, peptide, currentSize_top);
 	                int tick = getTick(currentSize_top);
-	        		setTopIntensityData(currentScan_top, minMass, maxMass, tick);
+	        		setTopIntensityData(currentScan_top, minMass, maxMass, tick, false);
         		}
         	}
         });
@@ -333,7 +335,7 @@ public class MainViewController implements Initializable {
 	            Double minMass = getMinMass(mz, currentSize_top);
 	            Double maxMass = getMaxMass(minMass, peptide, currentSize_top);
 	            int tick = getTick(currentSize_top);
-	            setTopIntensityData(currentScan_top, minMass, maxMass, tick);
+	            setTopIntensityData(currentScan_top, minMass, maxMass, tick, true);
         	}
         });
         
@@ -344,7 +346,7 @@ public class MainViewController implements Initializable {
 	            Double minMass = getMinMass(mz, currentSize_top);
 	            Double maxMass = getMaxMass(minMass, peptide, currentSize_top);
 	            int tick = getTick(currentSize_top);
-	            setTopIntensityData(currentScan_top, minMass, maxMass, tick);
+	            setTopIntensityData(currentScan_top, minMass, maxMass, tick, true);
         	}
         });
         
@@ -355,7 +357,7 @@ public class MainViewController implements Initializable {
 	            Double minMass = getMinMass(mz, currentSize_bottom);
 	            Double maxMass = getMaxMass(minMass, peptide, currentSize_bottom);
 	            int tick = getTick(currentSize_bottom);
-	            setBottomIntensityData(currentScan_bottom, currentConditionIndex, minMass, maxMass, tick, false);
+	            setBottomIntensityData(currentScan_bottom, currentConditionIndex, minMass, maxMass, tick, true);
         	}
         });
         
@@ -366,22 +368,24 @@ public class MainViewController implements Initializable {
 	            Double minMass = getMinMass(mz, currentSize_bottom);
 	            Double maxMass = getMaxMass(minMass, peptide, currentSize_bottom);
 	            int tick = getTick(currentSize_bottom);
-	            setBottomIntensityData(currentScan_bottom, currentConditionIndex, minMass, maxMass, tick, false);
+	            setBottomIntensityData(currentScan_bottom, currentConditionIndex, minMass, maxMass, tick, true);
         	}
         });
 		
 		setChartxAxis(control_xAxis, tick, Math.floor(minMass), Math.ceil(maxMass));
 		
-		setTopIntensityData(scanNum, minMass, maxMass, tick);
+		setTopIntensityData(scanNum, minMass, maxMass, tick, true);
 		setBottomIntensityData(scanNum, defaultConditionIndex, minMass, maxMass, tick, true);
 		menu_button.setText(conditions.get(defaultConditionIndex));
 	}
 	
-	public void setTopIntensityData(int scanNum, Double minMass, Double maxMass, int tick) {
+	public void setTopIntensityData(int scanNum, Double minMass, Double maxMass, int tick, boolean isFirstRead) {
 		Scan ctrl_scan = ctrlList.get(scanNum);
 		double[][] intensityList = ctrl_scan.getMassIntensityList();
-		XYChart.Series series = getIntensitySeries(intensityList, minMass, maxMass);
-		control.getData().setAll(series);
+		if (isFirstRead) {
+			XYChart.Series series = getIntensitySeries(intensityList, minMass, maxMass);
+			control.getData().setAll(series);
+		}
 		setChartxAxis(control_xAxis, tick, Math.floor(minMass), Math.ceil(maxMass));
 	}
 	
@@ -392,9 +396,9 @@ public class MainViewController implements Initializable {
 		for(int i = 0; i < intensityList[0].length; i++) {
 			Double raw_mass = intensityList[0][i];
 			Double intensity = intensityList[1][i];
-			dataList.add(new XYChart.Data(raw_mass-0.0001, 0));
+			dataList.add(new XYChart.Data(raw_mass-0.001, 0));
 			dataList.add(new XYChart.Data(raw_mass, intensity));
-			dataList.add(new XYChart.Data(raw_mass+0.0001, 0));
+			dataList.add(new XYChart.Data(raw_mass+0.001, 0));
 		}
 		data.addAll(dataList);
 		return dataSeries;
@@ -639,8 +643,11 @@ public class MainViewController implements Initializable {
 	        public void handle(MouseEvent t) {
 	            TableCell c = (TableCell) t.getSource();
 	            int index = c.getIndex();
-	            setLineChartData(index);
-	            setInitialBarChartData(index);
+	            if (index != currentRowIndex) {
+		            setLineChartData(index);
+		            setInitialBarChartData(index);
+		            currentRowIndex = index;
+	            }
 	        }
 	 }
 }
