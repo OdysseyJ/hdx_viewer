@@ -32,6 +32,7 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.chart.XYChart.Data;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
@@ -79,6 +80,8 @@ public class MainViewController implements Initializable {
 	int currentSize_top = 0;
 	
 	int currentSize_bottom = 0;
+	
+	Double maxSize = 0.0;
 
     @FXML
     private MenuItem open;
@@ -256,10 +259,6 @@ public class MainViewController implements Initializable {
         String peptide = profile.getPeptide();
         String mz = profile.getMz();
         int scanNum = Integer.parseInt(apexScan);
-        
-        Double minMass = getMinMass(mz, currentSize_top);
-        Double maxMass = getMaxMass(minMass, peptide, currentSize_top);
-        int tick = 1;
         int defaultConditionIndex = 0;
         
         currentRecordIndex = index;
@@ -278,10 +277,7 @@ public class MainViewController implements Initializable {
         		if (currentSize_top < 5) {
 	        		currentSize_top += 1;
 	                sizeLabel_top.setText("size : " + Integer.toString(currentSize_top));
-	                Double minMass = getMinMass(mz, currentSize_top);
-	                Double maxMass = getMaxMass(minMass, peptide, currentSize_top);
-	                int tick = getTick(currentSize_top);
-	        		setTopIntensityData(currentScan_top, minMass, maxMass, tick);
+	        		setTopIntensityData(currentScan_top);
         		}
         	}
         });
@@ -291,10 +287,7 @@ public class MainViewController implements Initializable {
         		if (currentSize_top > 0) {
 	        		currentSize_top -= 1;
 	                sizeLabel_top.setText("size : " + Integer.toString(currentSize_top));
-	                Double minMass = getMinMass(mz, currentSize_top);
-	                Double maxMass = getMaxMass(minMass, peptide, currentSize_top);
-	                int tick = getTick(currentSize_top);
-	        		setTopIntensityData(currentScan_top, minMass, maxMass, tick);
+	        		setTopIntensityData(currentScan_top);
         		}
         	}
         });
@@ -304,10 +297,7 @@ public class MainViewController implements Initializable {
         		if (currentSize_bottom < 5) {
 	        		currentSize_bottom += 1;
 	                sizeLabel_bottom.setText("size : " + Integer.toString(currentSize_bottom));
-	                Double minMass = getMinMass(mz, currentSize_bottom);
-	                Double maxMass = getMaxMass(minMass, peptide, currentSize_bottom);
-	                int tick = getTick(currentSize_bottom);
-	                setBottomIntensityData(currentScan_bottom, currentConditionIndex, minMass, maxMass, tick);
+	                setBottomIntensityData(currentScan_bottom, currentConditionIndex);
         		}
         	}
         });
@@ -317,10 +307,7 @@ public class MainViewController implements Initializable {
         		if (currentSize_bottom > 0) {
 	        		currentSize_bottom -= 1;
 	                sizeLabel_bottom.setText("size : " + Integer.toString(currentSize_bottom));
-	                Double minMass = getMinMass(mz, currentSize_bottom);
-	                Double maxMass = getMaxMass(minMass, peptide, currentSize_bottom);
-	                int tick = getTick(currentSize_bottom);
-	                setBottomIntensityData(currentScan_bottom, currentConditionIndex, minMass, maxMass, tick);
+	                setBottomIntensityData(currentScan_bottom, currentConditionIndex);
         		}
         	}
         });
@@ -329,10 +316,7 @@ public class MainViewController implements Initializable {
         	@Override public void handle(ActionEvent e) {
         		currentScan_top += 1;
 	            scanLabel_top.setText("scan : " + Integer.toString(currentScan_top));
-	            Double minMass = getMinMass(mz, currentSize_top);
-	            Double maxMass = getMaxMass(minMass, peptide, currentSize_top);
-	            int tick = getTick(currentSize_top);
-	            setTopIntensityData(currentScan_top, minMass, maxMass, tick);
+	            setTopIntensityData(currentScan_top);
         	}
         });
         
@@ -340,10 +324,7 @@ public class MainViewController implements Initializable {
         	@Override public void handle(ActionEvent e) {
         		currentScan_top -= 1;
 	            scanLabel_top.setText("scan : " + Integer.toString(currentScan_top));
-	            Double minMass = getMinMass(mz, currentSize_top);
-	            Double maxMass = getMaxMass(minMass, peptide, currentSize_top);
-	            int tick = getTick(currentSize_top);
-	            setTopIntensityData(currentScan_top, minMass, maxMass, tick);
+	            setTopIntensityData(currentScan_top);
         	}
         });
         
@@ -351,10 +332,7 @@ public class MainViewController implements Initializable {
         	@Override public void handle(ActionEvent e) {
         		currentScan_bottom += 1;
 	            scanLabel_bottom.setText("scan : " + Integer.toString(currentScan_bottom));
-	            Double minMass = getMinMass(mz, currentSize_bottom);
-	            Double maxMass = getMaxMass(minMass, peptide, currentSize_bottom);
-	            int tick = getTick(currentSize_bottom);
-	            setBottomIntensityData(currentScan_bottom, currentConditionIndex, minMass, maxMass, tick);
+	            setBottomIntensityData(currentScan_bottom, currentConditionIndex);
         	}
         });
         
@@ -362,40 +340,50 @@ public class MainViewController implements Initializable {
         	@Override public void handle(ActionEvent e) {
         		currentScan_bottom -= 1;
 	            scanLabel_bottom.setText("scan : " + Integer.toString(currentScan_bottom));
-	            Double minMass = getMinMass(mz, currentSize_bottom);
-	            Double maxMass = getMaxMass(minMass, peptide, currentSize_bottom);
-	            int tick = getTick(currentSize_bottom);
-	            setBottomIntensityData(currentScan_bottom, currentConditionIndex, minMass, maxMass, tick);
+	            setBottomIntensityData(currentScan_bottom, currentConditionIndex);
         	}
         });
 		
-		setChartxAxis(control_xAxis, tick, Math.floor(minMass), Math.ceil(maxMass));
+        int tick = getTick(currentSize_bottom);
+		Double minMass = getMinMass(Double.parseDouble(mz), currentSize_bottom);
+		Double maxMass = getMaxMass(Double.parseDouble(mz), peptide, currentSize_bottom);
+		setChartxAxis(control_xAxis, tick, minMass, maxMass);
 		
-		setTopIntensityData(scanNum, minMass, maxMass, tick);
-		setBottomIntensityData(scanNum, defaultConditionIndex, minMass, maxMass, tick);
+		setTopIntensityData(scanNum);
+		setBottomIntensityData(scanNum, defaultConditionIndex);
 		menu_button.setText(conditions.get(defaultConditionIndex));
 	}
 	
-	public void setTopIntensityData(int scanNum, Double minMass, Double maxMass, int tick) {
+	public void setTopIntensityData(int scanNum) {
 		Scan ctrl_scan = ctrlList.get(scanNum);
 		double[][] intensityList = ctrl_scan.getMassIntensityList();
-		XYChart.Series series = getIntensitySeries(intensityList, minMass, maxMass);
+		XYChart.Series series = getIntensitySeries(intensityList);
 		control.getData().setAll(series);
-		setChartxAxis(control_xAxis, tick, Math.floor(minMass), Math.ceil(maxMass));
+		
+		HDXProfile profile = recordList.get(currentRecordIndex);
+        String peptide = profile.getPeptide();
+        Double mz = Double.parseDouble(profile.getMz());
+        
+		int tick = getTick(currentSize_top);
+		Double minMass = getMinMass(mz, currentSize_top);
+		Double maxMass = getMaxMass(mz, peptide, currentSize_top);
+		setChartxAxis(control_xAxis, tick, minMass, maxMass);
 	}
 	
-	public XYChart.Series getIntensitySeries(double[][] intensityList, Double minMass, Double maxMass) {
-		XYChart.Series dataSeries = new XYChart.Series();
+	public XYChart.Series getIntensitySeries(double[][] intensityList) {
+		XYChart.Series<Double, Double> dataSeries = new XYChart.Series<Double, Double>();
+		ObservableList<Data<Double, Double>> data = dataSeries.getData();
+		ArrayList<Data<Double, Double>> dataList = new ArrayList<Data<Double, Double>>();
 		for(int i = 0; i < intensityList[0].length; i++) {
 			Double raw_mass = intensityList[0][i];
+			if( i == intensityList[0].length - 1 )
+				maxSize = raw_mass;
 			Double intensity = intensityList[1][i];
-			if (raw_mass > maxMass) {
-				break;
-			}
-			dataSeries.getData().add(new XYChart.Data(raw_mass-0.0001, 0));
-			dataSeries.getData().add(new XYChart.Data(raw_mass, intensity));
-			dataSeries.getData().add(new XYChart.Data(raw_mass+0.0001, 0));	
+			dataList.add(new XYChart.Data(raw_mass-0.001, 0));
+			dataList.add(new XYChart.Data(raw_mass, intensity));
+			dataList.add(new XYChart.Data(raw_mass+0.001, 0));
 		}
+		data.addAll(dataList);
 		return dataSeries;
 	}
 	
@@ -431,7 +419,7 @@ public class MainViewController implements Initializable {
 		return dataSeries;
 	}
 	
-	public void setBottomIntensityData(int scanNum, int conditionIndex, Double minMass, Double maxMass, int tick) {
+	public void setBottomIntensityData(int scanNum, int conditionIndex) {
 		// ---- get data ----
 		HDXProfile profile = recordList.get(currentRecordIndex);
         String peptide = profile.getPeptide();
@@ -463,7 +451,7 @@ public class MainViewController implements Initializable {
 		
 		// --- set data ---
 		
-		XYChart.Series dataSeries1 = getIntensitySeries(intensityList, minMass, maxMass);
+		XYChart.Series dataSeries1 = getIntensitySeries(intensityList);
 		
 		Double standard_value = 1.0;
 		Double additional_value = standard_value/charge;
@@ -476,10 +464,14 @@ public class MainViewController implements Initializable {
 		XYChart.Series dataSeries2 = getPredictSeries(predictedDdeu_array, mz, additional_value,  maxIntensity, maxRatioIndex, "predicted");
 		XYChart.Series dataSeries3 = getPredictSeries(observedDdeu_array, mz, additional_value, maxIntensity, maxRatioIndex, "observed");
 		
-	    setChartxAxis(result_xAxis, tick, Math.floor(minMass), Math.ceil(maxMass));
+		int tick = getTick(currentSize_bottom);
+		Double minMass = getMinMass(mz, currentSize_bottom);
+		Double maxMass = getMaxMass(mz, peptide, currentSize_bottom);
+		
+	    setChartxAxis(result_xAxis, tick, minMass, maxMass);
 	    setChartyAxis(result_yAxis, 100, 0.0, (Math.ceil(maxIntensity/100)*100)+300);
 	   
-	    setChartxAxis(predict_xAxis, tick, Math.floor(minMass), Math.ceil(maxMass));
+	    setChartxAxis(predict_xAxis, tick, minMass, maxMass);
 	    setChartyAxis(predict_yAxis, 100, 0.0, (Math.ceil(maxIntensity/100)*100)+300);
 
 	    result.getData().setAll(dataSeries1);
@@ -520,20 +512,17 @@ public class MainViewController implements Initializable {
 		return 1 + (5 * currentSize);
 	}
 	
-	public Double getMinMass(String mz, int currentSize) {
-		Double value = Double.parseDouble(mz) - 1.0 - (400*currentSize);
-		if (value < 0) {
-			return 0.0;
-		}
-		else {
-			return value;
-		}
+	public Double getMinMass(Double mz, int currentSize) {
+		Double res = (mz - 1.0) * (double)(5 - currentSize) / 5;
+		return res;
 	}
 	
-	public Double getMaxMass(Double minMass, String peptide, int currentSize) {
-		return minMass + peptide.length() + (400*currentSize);
+	public Double getMaxMass(Double mz, String peptide, int currentSize) {
+		Double val = mz + peptide.length();
+		Double offset = (maxSize - val) * (double)(currentSize) / 5;
+		return val + offset;
 	}
-	
+
 	// ------------------------------Ddeu Data --------------------
 	public void setDdeuData(ArrayList<DdeuAnal> ddeuAnals) {
 		ddeuList.addAll(ddeuAnals);
@@ -552,13 +541,7 @@ public class MainViewController implements Initializable {
 					menu_button.setText(selected.getText());
 					int index = conditions.indexOf(selected.getText());
 					currentConditionIndex = index;
-					HDXProfile profile = recordList.get(currentRecordIndex);
-			        String peptide = profile.getPeptide();
-			        String mz = profile.getMz();
-			        Double minMass = getMinMass(mz, currentSize_bottom);
-		            Double maxMass = getMaxMass(minMass, peptide, currentSize_bottom);
-		            int tick = getTick(currentSize_bottom);
-			        setBottomIntensityData(currentScan_bottom, currentConditionIndex, minMass, maxMass, tick);
+			        setBottomIntensityData(currentScan_bottom, currentConditionIndex);
 				}
 			});
 			menu_button.getItems().add(item);

@@ -17,7 +17,7 @@
       <Button fx:id="protein_button" layoutX="507.0" layoutY="187.0" mnemonicParsing="false" onAction="#onSelectProteinFile" text="선택" />
       <TextField fx:id="protein_field" editable="false" layoutX="227.0" layoutY="187.0" prefHeight="23.0" prefWidth="242.0" />
       <Label layoutX="61.0" layoutY="191.0" text="protein file (optinal)" />
-      <TextField fx:id="mass_tolerance_filed" layoutX="227.0" layoutY="226.0" prefHeight="23.0" prefWidth="242.0" />
+      <TextField fx:id="mass_tolerance_field" layoutX="227.0" layoutY="226.0" prefHeight="23.0" prefWidth="242.0" />
       <Label layoutX="61.0" layoutY="230.0" text="mass tolerance (optional)" />
       <Button fx:id="condition_button" layoutX="507.0" layoutY="130.0" mnemonicParsing="false" onAction="#onSelectConditionFiles" text="선택" />
       <TextField fx:id="condition_field" editable="false" layoutX="227.0" layoutY="130.0" prefHeight="23.0" prefWidth="242.0" />

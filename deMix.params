@@ -1,0 +1,7 @@
+Peptide= C:\Users\Jinseok\HDXViewer\deMix_v1.02\testdata\foo_pept.tsv
+CTRLData= C:\Users\Jinseok\HDXViewer\deMix_v1.02\testdata\ctrl_ms.mzXML
+HDXData=10m, C:\Users\Jinseok\HDXViewer\deMix_v1.02\testdata\d2o_10m.mzXML
+HDXData=30s, C:\Users\Jinseok\HDXViewer\deMix_v1.02\testdata\d2o_30s.mzXML
+HDXData=60m, C:\Users\Jinseok\HDXViewer\deMix_v1.02\testdata\d2o_60m.mzXML
+MassTolerance= 10ppm
+Protein= C:\Users\Jinseok\HDXViewer\deMix_v1.02\testdata\foo_prot.fasta

@@ -1,17 +1,7 @@
 package application;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.io.*;
+import java.util.*;
 
 import org.systemsbiology.jrap.stax.MSXMLSequentialParser;
 import org.systemsbiology.jrap.stax.Scan;
@@ -22,12 +12,20 @@ import com.univocity.parsers.tsv.TsvParserSettings;
 import deMix.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class FileSelectViewController {
@@ -47,7 +45,7 @@ public class FileSelectViewController {
     		new FileChooser.ExtensionFilter("tsv FILES (*.tsv)", "*.tsv");
 
     private FileChooser.ExtensionFilter fastaFilter = 
-    		new FileChooser.ExtensionFilter("fasta FILES (*.tsv)", "*.fasta");
+    		new FileChooser.ExtensionFilter("fasta FILES (*.fasta)", "*.fasta");
 	
     @FXML
     private Button confirm_button;
@@ -77,7 +75,7 @@ public class FileSelectViewController {
     private TextField protein_field;
 
     @FXML
-    private TextField mass_tolerance_filed;
+    private TextField mass_tolerance_field;
 
     @FXML
     void onConfirm(ActionEvent event) {
@@ -311,17 +309,19 @@ public class FileSelectViewController {
 	    			label = file_name.substring(file_name.length()-3);
 	    		else
 	    			label = file_name.substring(file_name.length()-2);
-	    		if(label == null)
+	    		if(label == null) {
+	    			bw.close();
 	    			throw new Exception("올바른 파일명이 아닙니다.");
+	    		}
 	    		bw.write("HDXData=" + label + ", " + this.condition_files.get(i)+"\n");
 	    	}
-	    	bw.write("MassTolerance= "+ this.mass_tolerance_filed.getText() + "\n");
+	    	bw.write("MassTolerance= "+ this.mass_tolerance_field.getText() + "\n");
 	    	if(this.protein != null)
 	    		bw.write("Protein= "+ this.protein + "\n");
 	    	bw.close();
 	    	
 	    	String[] args = {"-i","deMix.params","-o","result"};
-			deMix.main(args);
+            deMix.main(args);
     	}
     	catch(Exception e) {
     		Alert alert = new Alert(AlertType.WARNING);
@@ -332,5 +332,18 @@ public class FileSelectViewController {
     		alert.showAndWait();
     	}
     }
+    
+    public static class Console extends OutputStream {
 
+        private TextArea output;
+
+        public Console(TextArea ta) {
+            this.output = ta;
+        }
+
+        @Override
+        public void write(int i) throws IOException {
+            output.appendText(String.valueOf((char) i));
+        }
+    }
 }
