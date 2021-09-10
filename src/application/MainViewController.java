@@ -299,7 +299,7 @@ public class MainViewController implements Initializable {
         		if (currentSize_bottom < 5) {
 	        		currentSize_bottom += 1;
 	                sizeLabel_bottom.setText("size : " + Integer.toString(currentSize_bottom));
-	                setBottomIntensityData(currentScan_bottom, currentConditionIndex);
+	                setBottomIntensityData(currentScan_bottom, currentConditionIndex, false);
         		}
         	}
         });
@@ -309,7 +309,7 @@ public class MainViewController implements Initializable {
         		if (currentSize_bottom > 0) {
 	        		currentSize_bottom -= 1;
 	                sizeLabel_bottom.setText("size : " + Integer.toString(currentSize_bottom));
-	                setBottomIntensityData(currentScan_bottom, currentConditionIndex);
+	                setBottomIntensityData(currentScan_bottom, currentConditionIndex, false);
         		}
         	}
         });
@@ -334,7 +334,7 @@ public class MainViewController implements Initializable {
         	@Override public void handle(ActionEvent e) {
         		currentScan_bottom += 1;
 	            scanLabel_bottom.setText("scan : " + Integer.toString(currentScan_bottom));
-	            setBottomIntensityData(currentScan_bottom, currentConditionIndex);
+	            setBottomIntensityData(currentScan_bottom, currentConditionIndex, true);
         	}
         });
         
@@ -342,7 +342,7 @@ public class MainViewController implements Initializable {
         	@Override public void handle(ActionEvent e) {
         		currentScan_bottom -= 1;
 	            scanLabel_bottom.setText("scan : " + Integer.toString(currentScan_bottom));
-	            setBottomIntensityData(currentScan_bottom, currentConditionIndex);
+	            setBottomIntensityData(currentScan_bottom, currentConditionIndex, true);
         	}
         });
 		
@@ -352,7 +352,7 @@ public class MainViewController implements Initializable {
 		setChartxAxis(control_xAxis, tick, minMass, maxMass);
 		
 		setTopIntensityData(scanNum);
-		setBottomIntensityData(scanNum, defaultConditionIndex);
+		setBottomIntensityData(scanNum, defaultConditionIndex, true);
 		menu_button.setText(conditions.get(defaultConditionIndex));
 	}
 	
@@ -421,7 +421,7 @@ public class MainViewController implements Initializable {
 		return dataSeries;
 	}
 	
-	public void setBottomIntensityData(int scanNum, int conditionIndex) {
+	public void setBottomIntensityData(int scanNum, int conditionIndex, boolean isFirstRead) {
 		// ---- get data ----
 		HDXProfile profile = recordList.get(currentRecordIndex);
         String peptide = profile.getPeptide();
@@ -453,8 +453,6 @@ public class MainViewController implements Initializable {
 		
 		// --- set data ---
 		
-		XYChart.Series dataSeries1 = getIntensitySeries(intensityList);
-		
 		Double standard_value = 1.0;
 		Double additional_value = standard_value/charge;
 		Double maxMz = mz + (additional_value * peptide.length());
@@ -478,7 +476,7 @@ public class MainViewController implements Initializable {
 
 		// --- set data ---
 		if (isFirstRead) {
-			XYChart.Series dataSeries1 = getIntensitySeries(intensityList, minMass, maxMass);
+			XYChart.Series dataSeries1 = getIntensitySeries(intensityList);
 		    result.getData().setAll(dataSeries1);
 		}
 	    
@@ -548,7 +546,7 @@ public class MainViewController implements Initializable {
 					menu_button.setText(selected.getText());
 					int index = conditions.indexOf(selected.getText());
 					currentConditionIndex = index;
-			        setBottomIntensityData(currentScan_bottom, currentConditionIndex);
+			        setBottomIntensityData(currentScan_bottom, currentConditionIndex, true);
 				}
 			});
 			menu_button.getItems().add(item);
