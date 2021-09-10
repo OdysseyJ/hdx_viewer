@@ -174,7 +174,7 @@ public class MainViewController implements Initializable {
     	try {
     	Stage stage = new Stage();
         Parent root = FXMLLoader.load(getClass().getResource("FileSelectView.fxml"));
-        stage.setScene(new Scene(root, 600, 400));
+        stage.setScene(new Scene(root, 600, 500));
         stage.setTitle("file select");
         stage.initModality(Modality.WINDOW_MODAL);
         stage.initOwner(parentStage);
