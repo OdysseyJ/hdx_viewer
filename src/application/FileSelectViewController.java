@@ -9,8 +9,15 @@ import org.systemsbiology.jrap.stax.Scan;
 import com.univocity.parsers.tsv.TsvParser;
 import com.univocity.parsers.tsv.TsvParserSettings;
 
+import application.MainViewController.MyEventHandler;
+import application.MainViewController.StringTableCell;
 import deMix.*;
+import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -18,15 +25,21 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 public class FileSelectViewController {
 
@@ -38,6 +51,8 @@ public class FileSelectViewController {
 	
 	private ArrayList<File> condition_files = new ArrayList<File>();
 	
+	ObservableList<String> recordList = FXCollections.observableArrayList();
+	
     private FileChooser.ExtensionFilter mzxmlFilter = 
     		new FileChooser.ExtensionFilter("MZXML FILES (*.mzxml)", "*.mzxml");
     
@@ -47,6 +62,8 @@ public class FileSelectViewController {
     private FileChooser.ExtensionFilter fastaFilter = 
     		new FileChooser.ExtensionFilter("fasta FILES (*.fasta)", "*.fasta");
 	
+	private int selected_condition_index = -1;
+    
     @FXML
     private Button confirm_button;
 
@@ -76,6 +93,63 @@ public class FileSelectViewController {
 
     @FXML
     private TextField mass_tolerance_field;
+   
+    @FXML
+    private TableView<String> condition_table_view;
+    
+    @FXML
+    private Button down_button;
+
+    @FXML
+    private Button up_button;
+    
+    @FXML
+    void onPressDown(ActionEvent event) {
+        if (selected_condition_index != -1) {
+        	if (selected_condition_index == recordList.size()-1) {
+        		return;
+        	}
+        	else {
+        		String current = recordList.get(selected_condition_index);
+            	String temp = recordList.get(selected_condition_index+1);
+            	
+            	File current_file = condition_files.get(selected_condition_index);
+            	File temp_file = condition_files.get(selected_condition_index+1);
+            	
+            	recordList.set(selected_condition_index+1, current);
+            	recordList.set(selected_condition_index, temp);
+      
+            	condition_files.set(selected_condition_index+1, current_file);
+            	condition_files.set(selected_condition_index, temp_file);
+            	
+            	selected_condition_index = selected_condition_index + 1;
+        	}
+        }
+    }
+    
+    @FXML
+    void onPressUp(ActionEvent event) {
+    	if (selected_condition_index != -1) {
+        	if (selected_condition_index == 0) {
+        		return;
+        	}
+        	else {
+        		String current = recordList.get(selected_condition_index);
+            	String temp = recordList.get(selected_condition_index-1);
+            	
+            	File current_file = condition_files.get(selected_condition_index);
+            	File temp_file = condition_files.get(selected_condition_index-1);
+            	
+            	recordList.set(selected_condition_index-1, current);
+            	recordList.set(selected_condition_index, temp);
+      
+            	condition_files.set(selected_condition_index-1, current_file);
+            	condition_files.set(selected_condition_index, temp_file);
+            	
+            	selected_condition_index = selected_condition_index - 1;
+        	}
+        }
+    }
 
     @FXML
     void onConfirm(ActionEvent event) {
@@ -229,16 +303,53 @@ public class FileSelectViewController {
         fileChooser.getExtensionFilters().add(filter); 
         
 		List<File> files = fileChooser.showOpenMultipleDialog(stage);
-		String condition_files_text = "";
+		condition_files.addAll(files);
 		
-		if (files != null) {
-			for (int i = 0; i < files.size(); i++) {
-				f.add(files.get(i));
-				condition_files_text += files.get(i).getName();
-			}
+		if (files == null) return;
+		
+		Callback<TableColumn<String, String>, TableCell<String, String>> stringCellFactory =
+                new Callback<TableColumn<String, String>, TableCell<String, String>>() {
+            @Override
+            public TableCell<String, String> call(TableColumn<String, String> p) {
+            	StringTableCell cell = new StringTableCell();
+                cell.addEventFilter(MouseEvent.MOUSE_CLICKED, new MyEventHandler());
+                return cell;
+            }
+        };
+		ArrayList<String> file_names = new ArrayList<String>();
+		
+		int size = condition_table_view.getColumns().size();
+		if (size == 0) {
+			TableColumn<String, String> col = new TableColumn<>("Conditions");
+			col.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue()));
+			col.setCellFactory(stringCellFactory);
+			col.setSortable(false);
+			condition_table_view.getColumns().add(col);	
 		}
-
-		field.setText(condition_files_text);
+		for(int i = 0 ; i < files.size() ; i++) {
+	    	String file_name = files.get(i).getName();
+	    	file_names.add(file_name);
+	    }
+		recordList.addAll(file_names);
+		condition_table_view.setItems(recordList);
+    }
+    
+    class StringTableCell extends TableCell<String, String> {
+        @Override
+        public void updateItem(String item, boolean empty) {
+        	setText(item);
+        }
+    }
+    
+    class MyEventHandler implements EventHandler<MouseEvent> {
+        @Override
+        public void handle(MouseEvent t) {
+            TableCell c = (TableCell) t.getSource();
+            int index = c.getIndex();
+            if (index < condition_files.size()){
+            	selected_condition_index = index;
+            }
+        }
     }
     
     @FXML
@@ -294,6 +405,21 @@ public class FileSelectViewController {
     	if (file != null) {
     		protein = file;
     		protein_field.setText(file.getName());
+    	}
+    }
+    
+    private void showConditionSelectModal(Stage parentStage) {
+    	try {
+    	Stage stage = new Stage();
+        Parent root = FXMLLoader.load(getClass().getResource("ConditionSelectView.fxml"));
+        stage.setScene(new Scene(root, 600, 400));
+        stage.setTitle("condition select");
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.initOwner(parentStage);
+        stage.showAndWait();
+    	}
+    	catch(Exception e){
+    		System.out.println(e);
     	}
     }
     

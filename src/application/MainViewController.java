@@ -83,6 +83,8 @@ public class MainViewController implements Initializable {
 	
 	Double maxSize = 0.0;
 
+	int currentRowIndex = -1;
+
     @FXML
     private MenuItem open;
 
@@ -174,7 +176,7 @@ public class MainViewController implements Initializable {
     	try {
     	Stage stage = new Stage();
         Parent root = FXMLLoader.load(getClass().getResource("FileSelectView.fxml"));
-        stage.setScene(new Scene(root, 600, 400));
+        stage.setScene(new Scene(root, 600, 500));
         stage.setTitle("file select");
         stage.initModality(Modality.WINDOW_MODAL);
         stage.initOwner(parentStage);
@@ -474,7 +476,12 @@ public class MainViewController implements Initializable {
 	    setChartxAxis(predict_xAxis, tick, minMass, maxMass);
 	    setChartyAxis(predict_yAxis, 100, 0.0, (Math.ceil(maxIntensity/100)*100)+300);
 
-	    result.getData().setAll(dataSeries1);
+		// --- set data ---
+		if (isFirstRead) {
+			XYChart.Series dataSeries1 = getIntensitySeries(intensityList, minMass, maxMass);
+		    result.getData().setAll(dataSeries1);
+		}
+	    
 		predict.getData().setAll(dataSeries2, dataSeries3);
 	}
 	
@@ -620,8 +627,11 @@ public class MainViewController implements Initializable {
 	        public void handle(MouseEvent t) {
 	            TableCell c = (TableCell) t.getSource();
 	            int index = c.getIndex();
-	            setLineChartData(index);
-	            setInitialBarChartData(index);
+	            if (index != currentRowIndex) {
+		            setLineChartData(index);
+		            setInitialBarChartData(index);
+		            currentRowIndex = index;
+	            }
 	        }
 	 }
 }
