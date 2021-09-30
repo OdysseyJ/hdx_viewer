@@ -22,7 +22,7 @@
       <Label layoutX="61.0" layoutY="364.0" text="mass tolerance (optional)" />
       <Button fx:id="condition_button" layoutX="507.0" layoutY="130.0" mnemonicParsing="false" onAction="#onSelectConditionFiles" text="선택" />
       <Label layoutX="61.0" layoutY="134.0" text="condition files" />
-      <TableView fx:id="condition_table_view" layoutX="227.0" layoutY="134.0" prefHeight="161.0" prefWidth="242.0">
+      <TableView fx:id="condition_table_view" editable="true" layoutX="227.0" layoutY="134.0" prefHeight="161.0" prefWidth="242.0">
       	<columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>

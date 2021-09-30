@@ -12,14 +12,6 @@
 	-fx-stroke: #002545;
 }
 
-#predict .chart-series-line {
-	-fx-stroke: transparent;
-}
-
-.default-color0.chart-series-area-fill { -fx-fill: #ffa07a55; }
-
-.default-color1.chart-series-area-fill { -fx-fill: #fffacd55; }
-
 .chart-legend{
      -fx-translate-y: 10;
 }
