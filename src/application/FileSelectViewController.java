@@ -38,6 +38,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
@@ -448,8 +449,17 @@ public class FileSelectViewController {
 	    		bw.write("Protein= "+ this.protein + "\n");
 	    	bw.close();
 	    	
-	    	String[] args = {"-i","deMix.params","-o","result"};
+	    	Stage stage = new Stage();
+	        Parent root = FXMLLoader.load(getClass().getResource("Popup.fxml"));
+	        stage.setScene(new Scene(root, 300, 0));
+	        stage.setTitle("Running DeMix ...");
+	        stage.initModality(Modality.WINDOW_MODAL);
+	        stage.initOwner(Main.getPrimaryStage());
+	        stage.show();
+	        
+            String[] args = {"-i","deMix.params","-o","result"};
             deMix.main(args);
+            stage.close();
     	}
     	catch(Exception e) {
     		Alert alert = new Alert(AlertType.WARNING);
