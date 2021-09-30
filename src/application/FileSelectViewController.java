@@ -324,6 +324,7 @@ public class FileSelectViewController {
 			TableColumn<String, String> col = new TableColumn<>("Conditions");
 			col.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue()));
 			col.setCellFactory(stringCellFactory);
+			col.setEditable(true);
 			col.setSortable(false);
 			condition_table_view.getColumns().add(col);	
 		}
@@ -332,6 +333,7 @@ public class FileSelectViewController {
 	    	file_names.add(file_name);
 	    }
 		recordList.addAll(file_names);
+		condition_table_view.setEditable(true);
 		condition_table_view.setItems(recordList);
     }
     
@@ -438,7 +440,7 @@ public class FileSelectViewController {
 	    			label = file_name.substring(file_name.length()-2);
 	    		if(label == null) {
 	    			bw.close();
-	    			throw new Exception("¿Ã¹Ù¸¥ ÆÄÀÏ¸íÀÌ ¾Æ´Õ´Ï´Ù.");
+	    			throw new Exception("ï¿½Ã¹Ù¸ï¿½ ï¿½ï¿½ï¿½Ï¸ï¿½ï¿½ï¿½ ï¿½Æ´Õ´Ï´ï¿½.");
 	    		}
 	    		bw.write("HDXData=" + label + ", " + this.condition_files.get(i)+"\n");
 	    	}

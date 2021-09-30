@@ -1,20 +1,15 @@
 package application;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-import javax.xml.stream.XMLStreamException;
-
-import org.systemsbiology.jrap.stax.MSXMLSequentialParser;
 import org.systemsbiology.jrap.stax.Scan;
 
+import Peptide.IsotopicCluster;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -22,33 +17,24 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.AreaChart;
-import javafx.scene.chart.BarChart;
-import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.chart.XYChart.Data;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.StackPane;
-import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -98,22 +84,28 @@ public class MainViewController implements Initializable {
     private Button peptide_view;
     
     @FXML
-    private NumberAxis predict_xAxis ;
+    private NumberAxis predict_xAxis;
 
     @FXML
-    private NumberAxis predict_yAxis ;
+    private NumberAxis predict_yAxis;
     
     @FXML
-    private NumberAxis result_xAxis ;
+    private NumberAxis result_xAxis;
 
     @FXML
-    private NumberAxis result_yAxis ;
+    private NumberAxis result_yAxis;
     
     @FXML
-    private NumberAxis control_xAxis ;
+    private NumberAxis control_xAxis;
 
     @FXML
-    private NumberAxis control_yAxis ;
+    private NumberAxis control_yAxis;
+    
+    @FXML
+    private NumberAxis isotopic_xAxis;
+
+    @FXML
+    private NumberAxis isotopic_yAxis;
     
     @FXML
     private LineChart<Number, Number> control;
@@ -123,6 +115,9 @@ public class MainViewController implements Initializable {
     
     @FXML
     private AreaChart<Number, Number> predict;
+    
+    @FXML
+    private AreaChart<Number, Number> isotopic;
 
     @FXML
     private TableView<HDXProfile> tableview;
@@ -360,16 +355,34 @@ public class MainViewController implements Initializable {
 		Scan ctrl_scan = ctrlList.get(scanNum);
 		double[][] intensityList = ctrl_scan.getMassIntensityList();
 		XYChart.Series series = getIntensitySeries(intensityList);
-		control.getData().setAll(series);
 		
 		HDXProfile profile = recordList.get(currentRecordIndex);
         String peptide = profile.getPeptide();
         Double mz = Double.parseDouble(profile.getMz());
+        int charge = Integer.parseInt(profile.getCharge());
+        ArrayList<Double> isotopicCluster = IsotopicCluster.get(peptide, charge);
+        
+        Double standard_value = 1.0;
+		Double additional_value = standard_value/charge;
+        
+        String data = getMaxIsotopic(isotopicCluster, intensityList, mz, additional_value);
+		Double maxIntensity = Double.parseDouble(data.split(",")[0]);
+		int maxRatioIndex = Integer.parseInt(data.split(",")[1]);
+
+		XYChart.Series dataSeries = getIsotopicSeries(isotopicCluster, mz, additional_value,  maxIntensity, maxRatioIndex, "isotopicCluster");
         
 		int tick = getTick(currentSize_top);
 		Double minMass = getMinMass(mz, currentSize_top);
 		Double maxMass = getMaxMass(mz, peptide, currentSize_top);
+		
 		setChartxAxis(control_xAxis, tick, minMass, maxMass);
+	    setChartyAxis(control_yAxis, 100, 0.0, (Math.ceil(maxIntensity/100)*100)+300);
+		
+		setChartxAxis(isotopic_xAxis, tick, minMass, maxMass);
+	    setChartyAxis(isotopic_yAxis, 100, 0.0, (Math.ceil(maxIntensity/100)*100)+300);
+
+		isotopic.getData().setAll(dataSeries);
+		control.getData().setAll(series);
 	}
 	
 	public XYChart.Series getIntensitySeries(double[][] intensityList) {
@@ -403,10 +416,28 @@ public class MainViewController implements Initializable {
 		yAxis.setTickUnit(tick);
 	}
 	
+	public XYChart.Series getIsotopicSeries(ArrayList<Double> array, Double minMz, Double additionalMz, Double maxIntensity, int maxRatioIndex, String name) {		
+		XYChart.Series dataSeries = new XYChart.Series();
+		Double maxRatio = array.get(maxRatioIndex);
+		Double fittingValue = maxIntensity / maxRatio;
+		ArrayList<XYChart.Data<Double, Double>> dataArray = new ArrayList<Data<Double, Double>>();
+		
+		for(int i = 0; i < array.size(); i++) {
+			Double y = array.get(i) * fittingValue;
+			Double x = minMz + (additionalMz * i);
+			dataArray.add(new XYChart.Data(x, y));
+		}
+		dataSeries.getData().addAll(dataArray);
+		dataSeries.setName(name);
+		
+		return dataSeries;
+	}
+	
 	public XYChart.Series getPredictSeries(String[] array, Double minMz, Double additionalMz, Double maxIntensity, int maxRatioIndex, String name) {		
 		XYChart.Series dataSeries = new XYChart.Series();
 		Double maxRatio = Double.parseDouble(array[maxRatioIndex]);
 		Double fittingValue = maxIntensity / maxRatio;
+		ArrayList<XYChart.Data<Double, Double>> dataArray = new ArrayList<Data<Double, Double>>();
 		
 		for(int i = 0; i < array.length; i++) {
 			if (array[i].equals("-")) {
@@ -414,8 +445,10 @@ public class MainViewController implements Initializable {
 			}
 			Double y = Double.parseDouble(array[i]) * fittingValue;
 			Double x = minMz + (additionalMz * i);
-			dataSeries.getData().add(new XYChart.Data(x, y));
+			dataArray.add(new XYChart.Data(x, y));
 		}
+
+		dataSeries.getData().addAll(dataArray);
 		dataSeries.setName(name);
 		
 		return dataSeries;
@@ -455,7 +488,6 @@ public class MainViewController implements Initializable {
 		
 		Double standard_value = 1.0;
 		Double additional_value = standard_value/charge;
-		Double maxMz = mz + (additional_value * peptide.length());
 		
 		String data = getMaxIntensity(predictedDdeu_array, intensityList, mz, additional_value);
 		Double maxIntensity = Double.parseDouble(data.split(",")[0]);
@@ -481,6 +513,33 @@ public class MainViewController implements Initializable {
 		}
 	    
 		predict.getData().setAll(dataSeries2, dataSeries3);
+	}
+	
+	public String getMaxIsotopic(ArrayList<Double> isotopic_array, double[][] intensityList, Double mz, Double additional_value) {
+		Double maxRatio = 0.0;
+		int maxRatioIndex = 0;
+		for (int i = 0; i < isotopic_array.size(); i++) {
+			Double currentRatio = isotopic_array.get(i);
+			if (maxRatio < currentRatio) {
+				maxRatio = currentRatio;
+				maxRatioIndex = i; 
+			}
+		}
+		Double maxRatioX = mz + (additional_value * maxRatioIndex);
+		
+		Double minDiff = Double.MAX_VALUE;
+		Double nearestIntensity = 0.0;
+		for(int i = 0; i < intensityList[0].length; i++) {
+			Double x = intensityList[0][i];
+			Double y = intensityList[1][i];
+			
+			Double diff = Math.abs(maxRatioX - x);
+			if (diff < minDiff) {
+				minDiff = diff;
+				nearestIntensity = y;
+			}
+		}
+		return nearestIntensity.toString() + "," + maxRatioIndex;
 	}
 	
 	public String getMaxIntensity(String[] predictedDdeu_array, double[][] intensityList, Double mz, Double additional_value) {
