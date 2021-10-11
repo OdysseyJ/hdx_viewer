@@ -9,11 +9,8 @@ import org.systemsbiology.jrap.stax.Scan;
 import com.univocity.parsers.tsv.TsvParser;
 import com.univocity.parsers.tsv.TsvParserSettings;
 
-import application.MainViewController.MyEventHandler;
-import application.MainViewController.StringTableCell;
 import deMix.*;
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -25,24 +22,20 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.control.Button;
-import javafx.scene.control.ProgressIndicator;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
 public class FileSelectViewController {
+	
+	FileChooser fileChooser = new FileChooser();
 
 	private File control;
 	
@@ -160,16 +153,29 @@ public class FileSelectViewController {
     	
     	Node node = (Node) event.getSource();
     	Stage thisStage = (Stage) node.getScene().getWindow();
-    	
-    	TsvParserSettings settings = new TsvParserSettings();
-		settings.getFormat().setLineSeparator("\n");
-		
-		TsvParser parser = new TsvParser(settings);
 		String pept = this.peptide.getAbsolutePath();
 		String ddeuPath = pept.substring(0, pept.lastIndexOf('.'));
 		ddeuPath += "_DdeuAnal.tsv";
 		String hdxPath = pept.substring(0, pept.lastIndexOf('.'));
 		hdxPath += "_HDXProfile.tsv";
+		setMainViewData(ddeuPath, hdxPath);
+    	thisStage.close();
+    	} catch(Exception e) {
+    		Alert alert = new Alert(AlertType.WARNING);
+    		alert.setTitle("error.");
+    		alert.setHeaderText("error.");
+    		alert.setContentText(e.getMessage());
+
+    		alert.showAndWait();
+    	}
+    }
+    
+    public void setMainViewData(String ddeuPath, String hdxPath) {
+    	try {
+    	TsvParserSettings settings = new TsvParserSettings();
+    	settings.getFormat().setLineSeparator("\n");
+    		
+    	TsvParser parser = new TsvParser(settings);
 		
 		List<String[]> allDdueAnals = parser.parseAll(getReader(ddeuPath));
 		List<String[]> allHDXProfiles = parser.parseAll(getReader(hdxPath));
@@ -254,7 +260,6 @@ public class FileSelectViewController {
 		Main.mainViewController.setTreeItem(this.condition_files);
     	Main.mainViewController.setTableViewData(profileList, this.condition_files);
     	Main.mainViewController.setScanData(file_scans);
-    	thisStage.close();
     	} catch(Exception e) {
     		Alert alert = new Alert(AlertType.WARNING);
     		alert.setTitle("error.");
@@ -281,11 +286,9 @@ public class FileSelectViewController {
     
     void selectFile(FileChooser.ExtensionFilter filter, TextField field, File f) {
     	Stage stage = Main.getPrimaryStage();
-    	
-    	FileChooser fileChooser = new FileChooser();
-		fileChooser.setTitle("Open File");
 		
 		// Set extension filter
+    	fileChooser.getExtensionFilters().clear();
         fileChooser.getExtensionFilters().add(filter); 
         
 		File file = fileChooser.showOpenDialog(stage);
@@ -296,11 +299,9 @@ public class FileSelectViewController {
     
     void selectMultipleFile(FileChooser.ExtensionFilter filter, TextField field, ArrayList<File> f) {
     	Stage stage = Main.getPrimaryStage();
-    	
-    	FileChooser fileChooser = new FileChooser();
-		fileChooser.setTitle("Open File");
 		
 		// Set extension filter
+    	fileChooser.getExtensionFilters().clear();
         fileChooser.getExtensionFilters().add(filter); 
         
 		List<File> files = fileChooser.showOpenMultipleDialog(stage);
@@ -358,11 +359,9 @@ public class FileSelectViewController {
     @FXML
     void onSelectControlFile(ActionEvent event) {
         Stage stage = Main.getPrimaryStage();
-        	
-        FileChooser fileChooser = new FileChooser();
-    	fileChooser.setTitle("Open File");
     	
     	// Set extension filter
+        fileChooser.getExtensionFilters().clear();
     	fileChooser.getExtensionFilters().add(mzxmlFilter);
             
     	File file = fileChooser.showOpenDialog(stage);
@@ -376,10 +375,8 @@ public class FileSelectViewController {
     void onSelectPeptideFile(ActionEvent event) {
         Stage stage = Main.getPrimaryStage();
     	
-        FileChooser fileChooser = new FileChooser();
-    	fileChooser.setTitle("Open File");
-    	
     	// Set extension filter
+    	fileChooser.getExtensionFilters().clear();
     	fileChooser.getExtensionFilters().add(tsvFilter); 
             
     	File file = fileChooser.showOpenDialog(stage);
@@ -398,31 +395,14 @@ public class FileSelectViewController {
     void onSelectProteinFile(ActionEvent event) {
         Stage stage = Main.getPrimaryStage();
     	
-        FileChooser fileChooser = new FileChooser();
-    	fileChooser.setTitle("Open File");
-    	
     	// Set extension filter
+        fileChooser.getExtensionFilters().clear();
     	fileChooser.getExtensionFilters().add(fastaFilter); 
             
     	File file = fileChooser.showOpenDialog(stage);
     	if (file != null) {
     		protein = file;
     		protein_field.setText(file.getName());
-    	}
-    }
-    
-    private void showConditionSelectModal(Stage parentStage) {
-    	try {
-    	Stage stage = new Stage();
-        Parent root = FXMLLoader.load(getClass().getResource("ConditionSelectView.fxml"));
-        stage.setScene(new Scene(root, 600, 400));
-        stage.setTitle("condition select");
-        stage.initModality(Modality.WINDOW_MODAL);
-        stage.initOwner(parentStage);
-        stage.showAndWait();
-    	}
-    	catch(Exception e){
-    		System.out.println(e);
     	}
     }
     

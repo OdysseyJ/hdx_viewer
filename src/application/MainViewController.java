@@ -255,6 +255,7 @@ public class MainViewController implements Initializable {
         String apexScan = profile.getApexScan();
         String peptide = profile.getPeptide();
         String mz = profile.getMz();
+        Integer charge = Integer.parseInt(profile.getCharge());
         int scanNum = Integer.parseInt(apexScan);
         int defaultConditionIndex = 0;
         
@@ -343,7 +344,7 @@ public class MainViewController implements Initializable {
 		
         int tick = getTick(currentSize_bottom);
 		Double minMass = getMinMass(Double.parseDouble(mz), currentSize_bottom);
-		Double maxMass = getMaxMass(Double.parseDouble(mz), peptide, currentSize_bottom);
+		Double maxMass = getMaxMass(Double.parseDouble(mz), charge, peptide, currentSize_bottom);
 		setChartxAxis(control_xAxis, tick, minMass, maxMass);
 		
 		setTopIntensityData(scanNum);
@@ -373,7 +374,7 @@ public class MainViewController implements Initializable {
         
 		int tick = getTick(currentSize_top);
 		Double minMass = getMinMass(mz, currentSize_top);
-		Double maxMass = getMaxMass(mz, peptide, currentSize_top);
+		Double maxMass = getMaxMass(mz, charge, peptide, currentSize_top);
 		
 		setChartxAxis(control_xAxis, tick, minMass, maxMass);
 	    setChartyAxis(control_yAxis, 100, 0.0, (Math.ceil(maxIntensity/100)*100)+300);
@@ -435,9 +436,12 @@ public class MainViewController implements Initializable {
 	
 	public XYChart.Series getPredictSeries(String[] array, Double minMz, Double additionalMz, Double maxIntensity, int maxRatioIndex, String name) {		
 		XYChart.Series dataSeries = new XYChart.Series();
+		if (array[0].equals("-")) {
+			return dataSeries;
+		}
+		ArrayList<XYChart.Data<Double, Double>> dataArray = new ArrayList<Data<Double, Double>>();
 		Double maxRatio = Double.parseDouble(array[maxRatioIndex]);
 		Double fittingValue = maxIntensity / maxRatio;
-		ArrayList<XYChart.Data<Double, Double>> dataArray = new ArrayList<Data<Double, Double>>();
 		
 		for(int i = 0; i < array.length; i++) {
 			if (array[i].equals("-")) {
@@ -447,7 +451,7 @@ public class MainViewController implements Initializable {
 			Double x = minMz + (additionalMz * i);
 			dataArray.add(new XYChart.Data(x, y));
 		}
-
+		
 		dataSeries.getData().addAll(dataArray);
 		dataSeries.setName(name);
 		
@@ -480,7 +484,7 @@ public class MainViewController implements Initializable {
 		ArrayList<Scan> conditionScans = conditionLists.get(conditionIndex);
 		Scan scan = conditionScans.get(scanNum);
 		double[][] intensityList = scan.getMassIntensityList();
-
+		
 		String[] predictedDdeu_array = predictedDdeu.split(";");
 		String[] observedDdeu_array = observedDdeu.split(";");
 		
@@ -490,15 +494,17 @@ public class MainViewController implements Initializable {
 		Double additional_value = standard_value/charge;
 		
 		String data = getMaxIntensity(predictedDdeu_array, intensityList, mz, additional_value);
+		
 		Double maxIntensity = Double.parseDouble(data.split(",")[0]);
 		int maxRatioIndex = Integer.parseInt(data.split(",")[1]);
 		
 		XYChart.Series dataSeries2 = getPredictSeries(predictedDdeu_array, mz, additional_value,  maxIntensity, maxRatioIndex, "predicted");
 		XYChart.Series dataSeries3 = getPredictSeries(observedDdeu_array, mz, additional_value, maxIntensity, maxRatioIndex, "observed");
 		
+		
 		int tick = getTick(currentSize_bottom);
 		Double minMass = getMinMass(mz, currentSize_bottom);
-		Double maxMass = getMaxMass(mz, peptide, currentSize_bottom);
+		Double maxMass = getMaxMass(mz, Integer.parseInt(profile.getCharge()), peptide, currentSize_bottom);
 		
 	    setChartxAxis(result_xAxis, tick, minMass, maxMass);
 	    setChartyAxis(result_yAxis, 100, 0.0, (Math.ceil(maxIntensity/100)*100)+300);
@@ -581,10 +587,10 @@ public class MainViewController implements Initializable {
 		return res;
 	}
 	
-	public Double getMaxMass(Double mz, String peptide, int currentSize) {
-		Double val = mz + peptide.length();
+	public Double getMaxMass(Double mz, Integer charge, String peptide, int currentSize) {
+		Double val = mz + (peptide.length() / charge);
 		Double offset = (maxSize - val) * (double)(currentSize) / 5;
-		return val + offset;
+		return val + offset + 1;
 	}
 
 	// ------------------------------Ddeu Data --------------------

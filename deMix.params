@@ -4,3 +4,4 @@ HDXData=10m, /Users/seongwoon/Downloads/drive-download-20210807T075028Z-001/d2o_
 HDXData=30s, /Users/seongwoon/Downloads/drive-download-20210807T075028Z-001/d2o_30s.mzXML
 HDXData=60m, /Users/seongwoon/Downloads/drive-download-20210807T075028Z-001/d2o_60m.mzXML
 MassTolerance= 0.1da
+Protein= /Users/seongwoon/Downloads/drive-download-20210807T075028Z-001/foo_prot.fasta

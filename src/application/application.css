@@ -12,6 +12,22 @@
 	-fx-stroke: #002545;
 }
 
+.default-color0.chart-legend-item-symbol { -fx-background-color:    #d46d00;}
+.default-color0.chart-series-line {-fx-stroke:                      #d46d00;}
+.default-color0.chart-series-area-line {-fx-stroke:                 #d46d00;}
+.default-color0.chart-series-area-fill {
+	-fx-fill: #d46d00;
+	-fx-opacity: 0.5;
+}
+
+.default-color1.chart-legend-item-symbol { -fx-background-color:    #0077B6;}
+.default-color1.chart-series-line {-fx-stroke:                      #0077B6;}
+.default-color1.chart-series-area-line {-fx-stroke:                 #0077B6;}
+.default-color1.chart-series-area-fill {
+	-fx-fill: #0077B6;
+	-fx-opacity: 0.5;
+}
+
 .chart-legend{
      -fx-translate-y: 10;
 }
