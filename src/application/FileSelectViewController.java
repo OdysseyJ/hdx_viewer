@@ -211,7 +211,7 @@ public class FileSelectViewController {
 				System.out.println(e);
 			}	
 		}
-
+		
 		// read all ddeu data
 		for (int i = 1; i < allDdueAnals.size(); i++) {
 			DdeuAnal ddeu = new DdeuAnal();
@@ -234,27 +234,49 @@ public class FileSelectViewController {
 			ddeu.setMatchedScore(line[15]);
 			ddueList.add(ddeu);
 		}
-		
+
 		 //read  all hdx profiles
-		for (int i = 1; i < allHDXProfiles.size(); i++) {
-			HDXProfile profile = new HDXProfile();
-			for (int j = 0; j < allHDXProfiles.get(0).length; j++) {
-				profile.setId(allHDXProfiles.get(i)[0]);
-				profile.setMz(allHDXProfiles.get(i)[1]);
-				profile.setCharge(allHDXProfiles.get(i)[2]);
-				profile.setPeptide(allHDXProfiles.get(i)[3]);
-				profile.setProtein(allHDXProfiles.get(i)[4]);
-				profile.setPosFrom(allHDXProfiles.get(i)[5]);
-				profile.setPosTo(allHDXProfiles.get(i)[6]);
-				profile.setExpMz(allHDXProfiles.get(i)[7]);
-				profile.setMzShift(allHDXProfiles.get(i)[8]);
-				profile.setStartScan(allHDXProfiles.get(i)[9]);
-				profile.setEndScan(allHDXProfiles.get(i)[10]);
-				profile.setApexScan(allHDXProfiles.get(i)[11]);
-				profile.setApexRt(allHDXProfiles.get(i)[12]);
-				profile.setConditions(Arrays.copyOfRange(allHDXProfiles.get(i),13,allHDXProfiles.get(i).length));
+
+		if(this.protein != null) {
+			for (int i = 1; i < allHDXProfiles.size(); i++) {
+				HDXProfile profile = new HDXProfile();
+				for (int j = 0; j < allHDXProfiles.get(0).length; j++) {
+					profile.setId(allHDXProfiles.get(i)[0]);
+					profile.setMz(allHDXProfiles.get(i)[1]);
+					profile.setCharge(allHDXProfiles.get(i)[2]);
+					profile.setPeptide(allHDXProfiles.get(i)[3]);
+					profile.setProtein(allHDXProfiles.get(i)[4]);
+					profile.setPosFrom(allHDXProfiles.get(i)[5]);
+					profile.setPosTo(allHDXProfiles.get(i)[6]);
+					profile.setExpMz(allHDXProfiles.get(i)[7]);
+					profile.setMzShift(allHDXProfiles.get(i)[8]);
+					profile.setStartScan(allHDXProfiles.get(i)[9]);
+					profile.setEndScan(allHDXProfiles.get(i)[10]);
+					profile.setApexScan(allHDXProfiles.get(i)[11]);
+					profile.setApexRt(allHDXProfiles.get(i)[12]);
+					profile.setConditions(Arrays.copyOfRange(allHDXProfiles.get(i),13,allHDXProfiles.get(i).length));
+				}
+				profileList.add(profile);
 			}
-			profileList.add(profile);
+		}
+		else {
+			for (int i = 1; i < allHDXProfiles.size(); i++) {
+				HDXProfile profile = new HDXProfile();
+				for (int j = 0; j < allHDXProfiles.get(0).length; j++) {
+					profile.setId(allHDXProfiles.get(i)[0]);
+					profile.setMz(allHDXProfiles.get(i)[1]);
+					profile.setCharge(allHDXProfiles.get(i)[2]);
+					profile.setPeptide(allHDXProfiles.get(i)[3]);
+					profile.setExpMz(allHDXProfiles.get(i)[4]);
+					profile.setMzShift(allHDXProfiles.get(i)[5]);
+					profile.setStartScan(allHDXProfiles.get(i)[6]);
+					profile.setEndScan(allHDXProfiles.get(i)[7]);
+					profile.setApexScan(allHDXProfiles.get(i)[8]);
+					profile.setApexRt(allHDXProfiles.get(i)[9]);
+					profile.setConditions(Arrays.copyOfRange(allHDXProfiles.get(i),10,allHDXProfiles.get(i).length));
+				}
+				profileList.add(profile);
+			}
 		}
 		Main.mainViewController.setDdeuData(ddueList);
 		Main.mainViewController.setTreeItem(this.condition_files);
@@ -420,7 +442,7 @@ public class FileSelectViewController {
 	    			label = file_name.substring(file_name.length()-2);
 	    		if(label == null) {
 	    			bw.close();
-	    			throw new Exception("ï¿½Ã¹Ù¸ï¿½ ï¿½ï¿½ï¿½Ï¸ï¿½ï¿½ï¿½ ï¿½Æ´Õ´Ï´ï¿½.");
+	    			throw new Exception("ÆÄÀÏ¸íÀÌ ¿Ã¹Ù¸£Áö ¾Ê½À´Ï´Ù.");
 	    		}
 	    		bw.write("HDXData=" + label + ", " + this.condition_files.get(i)+"\n");
 	    	}
