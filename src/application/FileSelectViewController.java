@@ -442,11 +442,11 @@ public class FileSelectViewController {
 	    			label = file_name.substring(file_name.length()-2);
 	    		if(label == null) {
 	    			bw.close();
-	    			throw new Exception("ÆÄÀÏ¸íÀÌ ¿Ã¹Ù¸£Áö ¾Ê½À´Ï´Ù.");
+	    			throw new Exception("ï¿½ï¿½ï¿½Ï¸ï¿½ï¿½ï¿½ ï¿½Ã¹Ù¸ï¿½ï¿½ï¿½ ï¿½Ê½ï¿½ï¿½Ï´ï¿½.");
 	    		}
 	    		bw.write("HDXData=" + label + ", " + this.condition_files.get(i)+"\n");
 	    	}
-	    	bw.write("MassTolerance= "+ this.mass_tolerance_field.getText() + "\n");
+	    	bw.write("MassTolerance= " + this.mass_tolerance_field.getText() + "\n");
 	    	if(this.protein != null)
 	    		bw.write("Protein= "+ this.protein + "\n");
 	    	bw.close();

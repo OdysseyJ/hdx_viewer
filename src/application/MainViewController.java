@@ -202,11 +202,14 @@ public class MainViewController implements Initializable {
 		try {
 			this.files = files;
 			TreeItem<String> Root = new TreeItem<String>("Project");
+			Root.setExpanded(true);
 			if( files.size() > 0 ) {
 				TreeItem<String> newItem = new TreeItem<String>("Ctrl");
+				newItem.setExpanded(true);
 				for (int i = 0; i < files.size(); i++) {
 					String condition = files.get(i).getName().replaceFirst("[.][^.]+$", "");
 					TreeItem<String> child = new TreeItem<String>(condition);
+					child.setExpanded(true);
 					newItem.getChildren().add(child);
 				}
 				Root.getChildren().add(newItem);
