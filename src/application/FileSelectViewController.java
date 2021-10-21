@@ -156,6 +156,10 @@ public class FileSelectViewController {
     
     @FXML
     void onDeleteConditionFile(ActionEvent event) {
+    	if (selected_condition_index == -1) {
+    		return;
+    	}
+    	
     	condition_files.remove(selected_condition_index);
     	condition_table_view.getItems().remove(selected_condition_index);
     	selected_condition_index = -1;
