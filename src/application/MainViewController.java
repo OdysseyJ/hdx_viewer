@@ -51,7 +51,7 @@ public class MainViewController implements Initializable {
 	
 	ArrayList<ArrayList<Scan>> conditionLists = new ArrayList<ArrayList<Scan>>();
 	
-	private ArrayList<File> files = new ArrayList<File>();
+	private ArrayList<ConditionFile> files = new ArrayList<ConditionFile>();
 	
 	ArrayList<String> conditions = new ArrayList<String>();
 	
@@ -198,16 +198,16 @@ public class MainViewController implements Initializable {
 	}
 	
 	// ------------------------------tree view------------------
-	public void setTreeItem(ArrayList<File> files) {
+	public void setTreeItem(ArrayList<ConditionFile> files, String project_name) {
 		try {
 			this.files = files;
 			TreeItem<String> Root = new TreeItem<String>("Project");
 			Root.setExpanded(true);
 			if( files.size() > 0 ) {
-				TreeItem<String> newItem = new TreeItem<String>("Ctrl");
+				TreeItem<String> newItem = new TreeItem<String>(project_name);
 				newItem.setExpanded(true);
 				for (int i = 0; i < files.size(); i++) {
-					String condition = files.get(i).getName().replaceFirst("[.][^.]+$", "");
+					String condition = files.get(i).getName();
 					TreeItem<String> child = new TreeItem<String>(condition);
 					child.setExpanded(true);
 					newItem.getChildren().add(child);
@@ -466,7 +466,7 @@ public class MainViewController implements Initializable {
 		HDXProfile profile = recordList.get(currentRecordIndex);
         String peptide = profile.getPeptide();
         String condition = conditions.get(conditionIndex);
-        String d2o_label = condition.split("_")[1];
+        String d2o_label = condition;
         Double charge = Double.parseDouble(profile.getCharge());
         Double mz = Double.parseDouble(profile.getMz());
 
@@ -603,11 +603,11 @@ public class MainViewController implements Initializable {
 	
 	// ------------------------------Table View---------------------
 
-	public void setTableViewData(ArrayList<HDXProfile> profileList, ArrayList<File> files) {
+	public void setTableViewData(ArrayList<HDXProfile> profileList, ArrayList<ConditionFile> files) {
 		menu_button.getItems().clear();
 		for (int i = 0; i < files.size(); i++) {
-			File file = files.get(i);
-			MenuItem item = new MenuItem(file.getName().replaceFirst("[.][^.]+$", ""));
+			ConditionFile file = files.get(i);
+			MenuItem item = new MenuItem(file.getName());
 			item.setOnAction(new EventHandler<ActionEvent>() {
 				public void handle(ActionEvent event) {
 					MenuItem selected = (MenuItem) event.getSource();
@@ -618,7 +618,7 @@ public class MainViewController implements Initializable {
 				}
 			});
 			menu_button.getItems().add(item);
-			conditions.add(file.getName().replaceFirst("[.][^.]+$", ""));
+			conditions.add(file.getName());
 		}
 		
 		recordList.setAll(FXCollections.observableArrayList(profileList));

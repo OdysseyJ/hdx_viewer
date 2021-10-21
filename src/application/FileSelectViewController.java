@@ -36,14 +36,16 @@ import javafx.util.Callback;
 public class FileSelectViewController {
 	
 	FileChooser fileChooser = new FileChooser();
-
+	
 	private File control;
 	
 	private File peptide;
 	
 	private File protein;
 	
-	private ArrayList<File> condition_files = new ArrayList<File>();
+	private ConditionFile current_condition_file;
+	
+	private ArrayList<ConditionFile> condition_files = new ArrayList<ConditionFile>();
 	
 	ObservableList<String> recordList = FXCollections.observableArrayList();
 	
@@ -96,6 +98,85 @@ public class FileSelectViewController {
 
     @FXML
     private Button up_button;
+
+    @FXML
+	private TextField project_name;
+   
+    @FXML
+	private TextField current_condition_field;
+    
+    @FXML
+    private Button delete_condition_button;
+    
+    @FXML
+    private Button add_condition_button;
+    
+    @FXML
+    private Button condition_select_button;
+    
+    @FXML
+    void onAddConditionFile(ActionEvent event) {
+    	if (current_condition_file == null) {
+    		return;
+    	}
+    	String current_condition_name = current_condition_field.getText();
+    	if (current_condition_name.isEmpty() || current_condition_name.equals("")) {
+    		return;
+    	}
+    	
+    	System.out.println(current_condition_name);
+		condition_files.add(new ConditionFile(current_condition_name, current_condition_file.getFile()));
+		
+		Callback<TableColumn<String, String>, TableCell<String, String>> stringCellFactory =
+                new Callback<TableColumn<String, String>, TableCell<String, String>>() {
+            @Override
+            public TableCell<String, String> call(TableColumn<String, String> p) {
+            	StringTableCell cell = new StringTableCell();
+                cell.addEventFilter(MouseEvent.MOUSE_CLICKED, new MyEventHandler());
+                return cell;
+            }
+        };
+		
+		int size = condition_table_view.getColumns().size();
+		if (size == 0) {
+			TableColumn<String, String> col = new TableColumn<>("Conditions");
+			col.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue()));
+			col.setCellFactory(stringCellFactory);
+			col.setEditable(true);
+			col.setSortable(false);
+			condition_table_view.getColumns().add(col);	
+		}
+		recordList.add(current_condition_name);
+		condition_table_view.setEditable(true);
+		condition_table_view.setItems(recordList);
+		
+		current_condition_file = null;
+		current_condition_field.setText(null);
+    }
+    
+    @FXML
+    void onDeleteConditionFile(ActionEvent event) {
+    	condition_files.remove(selected_condition_index);
+    	condition_table_view.getItems().remove(selected_condition_index);
+    	selected_condition_index = -1;
+    }
+    
+    @FXML
+    void onSelectConditionFile(ActionEvent event) {
+    	Stage stage = Main.getPrimaryStage();
+		
+		// Set extension filter
+    	fileChooser.getExtensionFilters().clear();
+        fileChooser.getExtensionFilters().add(mzxmlFilter); 
+        
+		File file = fileChooser.showOpenDialog(stage);
+		if (file==null) {
+			return;
+		}
+		
+		current_condition_file = new ConditionFile(file.getName(), file);
+		current_condition_field.setText(file.getName());
+    }
     
     @FXML
     void onPressDown(ActionEvent event) {
@@ -107,8 +188,8 @@ public class FileSelectViewController {
         		String current = recordList.get(selected_condition_index);
             	String temp = recordList.get(selected_condition_index+1);
             	
-            	File current_file = condition_files.get(selected_condition_index);
-            	File temp_file = condition_files.get(selected_condition_index+1);
+            	ConditionFile current_file = condition_files.get(selected_condition_index);
+            	ConditionFile temp_file = condition_files.get(selected_condition_index+1);
             	
             	recordList.set(selected_condition_index+1, current);
             	recordList.set(selected_condition_index, temp);
@@ -131,8 +212,8 @@ public class FileSelectViewController {
         		String current = recordList.get(selected_condition_index);
             	String temp = recordList.get(selected_condition_index-1);
             	
-            	File current_file = condition_files.get(selected_condition_index);
-            	File temp_file = condition_files.get(selected_condition_index-1);
+            	ConditionFile current_file = condition_files.get(selected_condition_index);
+            	ConditionFile temp_file = condition_files.get(selected_condition_index-1);
             	
             	recordList.set(selected_condition_index-1, current);
             	recordList.set(selected_condition_index, temp);
@@ -148,25 +229,41 @@ public class FileSelectViewController {
     @FXML
     void onConfirm(ActionEvent event) {
     	try {
-    		
-    	runDemix();
-    	
-    	Node node = (Node) event.getSource();
-    	Stage thisStage = (Stage) node.getScene().getWindow();
-		String pept = this.peptide.getAbsolutePath();
-		String ddeuPath = pept.substring(0, pept.lastIndexOf('.'));
-		ddeuPath += "_DdeuAnal.tsv";
-		String hdxPath = pept.substring(0, pept.lastIndexOf('.'));
-		hdxPath += "_HDXProfile.tsv";
-		setMainViewData(ddeuPath, hdxPath);
-    	thisStage.close();
+    		validateInputs();
+	    	runDemix();
+	    	
+	    	Node node = (Node) event.getSource();
+	    	Stage thisStage = (Stage) node.getScene().getWindow();
+			String pept = this.peptide.getAbsolutePath();
+			String ddeuPath = pept.substring(0, pept.lastIndexOf('.'));
+			ddeuPath += "_DdeuAnal.tsv";
+			String hdxPath = pept.substring(0, pept.lastIndexOf('.'));
+			hdxPath += "_HDXProfile.tsv";
+			setMainViewData(ddeuPath, hdxPath);
+	    	thisStage.close();
     	} catch(Exception e) {
     		Alert alert = new Alert(AlertType.WARNING);
-    		alert.setTitle("error.");
-    		alert.setHeaderText("error.");
+    		alert.setTitle("Error.");
+    		alert.setHeaderText("Error.");
     		alert.setContentText(e.getMessage());
 
     		alert.showAndWait();
+    	}
+    }
+    
+    public void validateInputs() throws Exception {
+    	String project_name_string = project_name.getText();
+    	if (project_name_string.isEmpty() || project_name_string.equals("")) {
+    		throw new Exception("Must put project name");
+    	}
+    	if (control == null) {
+    		throw new Exception("Must select control file");
+    	}
+    	if (peptide == null) {
+    		throw new Exception("Must select peptide file");
+    	}
+    	if (condition_files.size() == 0) {
+    		throw new Exception("Must add condition files");
     	}
     }
     
@@ -199,9 +296,9 @@ public class FileSelectViewController {
 		}
 		for (int i = 0; i < this.condition_files.size(); i++) {
 			try {
-				File file = this.condition_files.get(i);
+				ConditionFile file = this.condition_files.get(i);
 				MSXMLSequentialParser msxml_parser = new MSXMLSequentialParser();
-				msxml_parser.open(file.getPath());
+				msxml_parser.open(file.getFile().getPath());
 				ArrayList<Scan> scans = new ArrayList<Scan>();
 				while (msxml_parser.hasNextScan()){
 					scans.add(msxml_parser.getNextScan());
@@ -279,7 +376,7 @@ public class FileSelectViewController {
 			}
 		}
 		Main.mainViewController.setDdeuData(ddueList);
-		Main.mainViewController.setTreeItem(this.condition_files);
+		Main.mainViewController.setTreeItem(this.condition_files, project_name.getText());
     	Main.mainViewController.setTableViewData(profileList, this.condition_files);
     	Main.mainViewController.setScanData(file_scans);
     	} catch(Exception e) {
@@ -317,47 +414,6 @@ public class FileSelectViewController {
 		if (file != null) {
 			field.setText(file.getName());
 		}
-    }
-    
-    void selectMultipleFile(FileChooser.ExtensionFilter filter, TextField field, ArrayList<File> f) {
-    	Stage stage = Main.getPrimaryStage();
-		
-		// Set extension filter
-    	fileChooser.getExtensionFilters().clear();
-        fileChooser.getExtensionFilters().add(filter); 
-        
-		List<File> files = fileChooser.showOpenMultipleDialog(stage);
-		condition_files.addAll(files);
-		
-		if (files == null) return;
-		
-		Callback<TableColumn<String, String>, TableCell<String, String>> stringCellFactory =
-                new Callback<TableColumn<String, String>, TableCell<String, String>>() {
-            @Override
-            public TableCell<String, String> call(TableColumn<String, String> p) {
-            	StringTableCell cell = new StringTableCell();
-                cell.addEventFilter(MouseEvent.MOUSE_CLICKED, new MyEventHandler());
-                return cell;
-            }
-        };
-		ArrayList<String> file_names = new ArrayList<String>();
-		
-		int size = condition_table_view.getColumns().size();
-		if (size == 0) {
-			TableColumn<String, String> col = new TableColumn<>("Conditions");
-			col.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue()));
-			col.setCellFactory(stringCellFactory);
-			col.setEditable(true);
-			col.setSortable(false);
-			condition_table_view.getColumns().add(col);	
-		}
-		for(int i = 0 ; i < files.size() ; i++) {
-	    	String file_name = files.get(i).getName();
-	    	file_names.add(file_name);
-	    }
-		recordList.addAll(file_names);
-		condition_table_view.setEditable(true);
-		condition_table_view.setItems(recordList);
     }
     
     class StringTableCell extends TableCell<String, String> {
@@ -409,11 +465,6 @@ public class FileSelectViewController {
     }
 
     @FXML
-    void onSelectConditionFiles(ActionEvent event) {
-    	selectMultipleFile(mzxmlFilter, condition_field, condition_files);
-    }
-
-    @FXML
     void onSelectProteinFile(ActionEvent event) {
         Stage stage = Main.getPrimaryStage();
     	
@@ -434,17 +485,8 @@ public class FileSelectViewController {
 	    	BufferedWriter bw = new BufferedWriter(new FileWriter(param));
 	    	bw.write("Peptide= "+ this.peptide + "\n" + "CTRLData= "+this.control+"\n");
 	    	for(int i = 0 ; i < this.condition_files.size(); i++) {
-	    		String file_name = this.condition_files.get(i).getName().split("\\.")[0];
-	    		String label = null;
-	    		if( Character.isDigit(file_name.charAt(file_name.length()-3)) )
-	    			label = file_name.substring(file_name.length()-3);
-	    		else
-	    			label = file_name.substring(file_name.length()-2);
-	    		if(label == null) {
-	    			bw.close();
-	    			throw new Exception("���ϸ��� �ùٸ��� �ʽ��ϴ�.");
-	    		}
-	    		bw.write("HDXData=" + label + ", " + this.condition_files.get(i)+"\n");
+	    		String file_name = this.condition_files.get(i).getName();
+	    		bw.write("HDXData=" + file_name + ", " + this.condition_files.get(i).getFile() +"\n");
 	    	}
 	    	bw.write("MassTolerance= " + this.mass_tolerance_field.getText() + "\n");
 	    	if(this.protein != null)
