@@ -37,6 +37,8 @@ public class FileSelectViewController {
 	
 	FileChooser fileChooser = new FileChooser();
 	
+	private String project_name;
+	
 	private File control;
 	
 	private File peptide;
@@ -100,7 +102,7 @@ public class FileSelectViewController {
     private Button up_button;
 
     @FXML
-	private TextField project_name;
+	private TextField project_name_field;
    
     @FXML
 	private TextField current_condition_field;
@@ -239,11 +241,9 @@ public class FileSelectViewController {
 	    	Node node = (Node) event.getSource();
 	    	Stage thisStage = (Stage) node.getScene().getWindow();
 			String pept = this.peptide.getAbsolutePath();
-			String ddeuPath = pept.substring(0, pept.lastIndexOf('.'));
-			ddeuPath += "_DdeuAnal.tsv";
-			String hdxPath = pept.substring(0, pept.lastIndexOf('.'));
-			hdxPath += "_HDXProfile.tsv";
-			setMainViewData(ddeuPath, hdxPath);
+			String path = pept.substring(0, pept.lastIndexOf('\\') + 1) + this.project_name + ".dmxj";
+
+			setMainViewData(path);
 	    	thisStage.close();
     	} catch(Exception e) {
     		Alert alert = new Alert(AlertType.WARNING);
@@ -256,9 +256,12 @@ public class FileSelectViewController {
     }
     
     public void validateInputs() throws Exception {
-    	String project_name_string = project_name.getText();
+    	String project_name_string = project_name_field.getText();
     	if (project_name_string.isEmpty() || project_name_string.equals("")) {
     		throw new Exception("Must put project name");
+    	}
+    	else {
+    		this.project_name = project_name_string;
     	}
     	if (control == null) {
     		throw new Exception("Must select control file");
@@ -271,19 +274,34 @@ public class FileSelectViewController {
     	}
     }
     
-    public void setMainViewData(String ddeuPath, String hdxPath) {
+    public void setMainViewData(String path) {
     	try {
     	TsvParserSettings settings = new TsvParserSettings();
     	settings.getFormat().setLineSeparator("\n");
     		
     	TsvParser parser = new TsvParser(settings);
 		
-		List<String[]> allDdueAnals = parser.parseAll(getReader(ddeuPath));
-		List<String[]> allHDXProfiles = parser.parseAll(getReader(hdxPath));
+		List<String[]> all = parser.parseAll(getReader(path));
 		
+		File output = new File(path);
+    	BufferedReader br = new BufferedReader(new FileReader(output));
+		
+    	String str;
+		int hdxStart = 0;
+		int ddeuStart = 0;
+    	for(int i = 0 ;(str = br.readLine()) != null; i++) {
+    		if( str.equals("#HDXProfile::") )
+    			hdxStart = i - 2;
+    		else if(str.equals("#DdeuAnal::")) {
+    			ddeuStart = i - 4;
+    			break;
+    		}
+    	}
+		br.close();
+
 		ArrayList<ArrayList<Scan>> file_scans = new ArrayList<ArrayList<Scan>>();
 		ArrayList<HDXProfile> profileList = new ArrayList<HDXProfile>();
-		ArrayList<DdeuAnal> ddueList = new ArrayList<DdeuAnal>();
+		ArrayList<DdeuAnal> ddeuList = new ArrayList<DdeuAnal>();
 
 		// read all control scans
 		try {
@@ -314,9 +332,9 @@ public class FileSelectViewController {
 		}
 		
 		// read all ddeu data
-		for (int i = 1; i < allDdueAnals.size(); i++) {
+		for (int i = ddeuStart + 1; i < all.size(); i++) {
 			DdeuAnal ddeu = new DdeuAnal();
-			String[] line = allDdueAnals.get(i);
+			String[] line = all.get(i);
 			ddeu.setId(line[0]);
 			ddeu.setMz(line[1]);
 			ddeu.setCharge(line[2]);
@@ -333,54 +351,54 @@ public class FileSelectViewController {
 			ddeu.setEndRT(line[13]);
 			ddeu.setObservedDdeu(line[14]);
 			ddeu.setMatchedScore(line[15]);
-			ddueList.add(ddeu);
+			ddeuList.add(ddeu);
 		}
 
 		 //read  all hdx profiles
 
 		if(this.protein != null) {
-			for (int i = 1; i < allHDXProfiles.size(); i++) {
+			for (int i = hdxStart + 1; i < ddeuStart ; i++) {
 				HDXProfile profile = new HDXProfile();
-				for (int j = 0; j < allHDXProfiles.get(0).length; j++) {
-					profile.setId(allHDXProfiles.get(i)[0]);
-					profile.setMz(allHDXProfiles.get(i)[1]);
-					profile.setCharge(allHDXProfiles.get(i)[2]);
-					profile.setPeptide(allHDXProfiles.get(i)[3]);
-					profile.setProtein(allHDXProfiles.get(i)[4]);
-					profile.setPosFrom(allHDXProfiles.get(i)[5]);
-					profile.setPosTo(allHDXProfiles.get(i)[6]);
-					profile.setExpMz(allHDXProfiles.get(i)[7]);
-					profile.setMzShift(allHDXProfiles.get(i)[8]);
-					profile.setStartScan(allHDXProfiles.get(i)[9]);
-					profile.setEndScan(allHDXProfiles.get(i)[10]);
-					profile.setApexScan(allHDXProfiles.get(i)[11]);
-					profile.setApexRt(allHDXProfiles.get(i)[12]);
-					profile.setConditions(Arrays.copyOfRange(allHDXProfiles.get(i),13,allHDXProfiles.get(i).length));
+				for (int j = 0; j < all.get(0).length; j++) {
+					profile.setId(all.get(i)[0]);
+					profile.setMz(all.get(i)[1]);
+					profile.setCharge(all.get(i)[2]);
+					profile.setPeptide(all.get(i)[3]);
+					profile.setProtein(all.get(i)[4]);
+					profile.setPosFrom(all.get(i)[5]);
+					profile.setPosTo(all.get(i)[6]);
+					profile.setExpMz(all.get(i)[7]);
+					profile.setMzShift(all.get(i)[8]);
+					profile.setStartScan(all.get(i)[9]);
+					profile.setEndScan(all.get(i)[10]);
+					profile.setApexScan(all.get(i)[11]);
+					profile.setApexRt(all.get(i)[12]);
+					profile.setConditions(Arrays.copyOfRange(all.get(i),13,all.get(i).length));
 				}
 				profileList.add(profile);
 			}
 		}
 		else {
-			for (int i = 1; i < allHDXProfiles.size(); i++) {
+			for (int i = hdxStart + 1; i < ddeuStart; i++) {
 				HDXProfile profile = new HDXProfile();
-				for (int j = 0; j < allHDXProfiles.get(0).length; j++) {
-					profile.setId(allHDXProfiles.get(i)[0]);
-					profile.setMz(allHDXProfiles.get(i)[1]);
-					profile.setCharge(allHDXProfiles.get(i)[2]);
-					profile.setPeptide(allHDXProfiles.get(i)[3]);
-					profile.setExpMz(allHDXProfiles.get(i)[4]);
-					profile.setMzShift(allHDXProfiles.get(i)[5]);
-					profile.setStartScan(allHDXProfiles.get(i)[6]);
-					profile.setEndScan(allHDXProfiles.get(i)[7]);
-					profile.setApexScan(allHDXProfiles.get(i)[8]);
-					profile.setApexRt(allHDXProfiles.get(i)[9]);
-					profile.setConditions(Arrays.copyOfRange(allHDXProfiles.get(i),10,allHDXProfiles.get(i).length));
+				for (int j = 0; j < all.get(0).length; j++) {
+					profile.setId(all.get(i)[0]);
+					profile.setMz(all.get(i)[1]);
+					profile.setCharge(all.get(i)[2]);
+					profile.setPeptide(all.get(i)[3]);
+					profile.setExpMz(all.get(i)[4]);
+					profile.setMzShift(all.get(i)[5]);
+					profile.setStartScan(all.get(i)[6]);
+					profile.setEndScan(all.get(i)[7]);
+					profile.setApexScan(all.get(i)[8]);
+					profile.setApexRt(all.get(i)[9]);
+					profile.setConditions(Arrays.copyOfRange(all.get(i),10,all.get(i).length));
 				}
 				profileList.add(profile);
 			}
 		}
-		Main.mainViewController.setDdeuData(ddueList);
-		Main.mainViewController.setTreeItem(this.condition_files, project_name.getText());
+		Main.mainViewController.setDdeuData(ddeuList);
+		Main.mainViewController.setTreeItem(this.condition_files, this.project_name);
     	Main.mainViewController.setTableViewData(profileList, this.condition_files);
     	Main.mainViewController.setScanData(file_scans);
     	} catch(Exception e) {
@@ -487,7 +505,7 @@ public class FileSelectViewController {
     	try {
 	    	File param = new File("deMix.params");
 	    	BufferedWriter bw = new BufferedWriter(new FileWriter(param));
-	    	bw.write("Peptide= "+ this.peptide + "\n" + "CTRLData= "+this.control+"\n");
+	    	bw.write("Project= " + this.project_name + "\n" + "Peptide= "+ this.peptide + "\n" + "CTRLData= "+this.control+"\n");
 	    	for(int i = 0 ; i < this.condition_files.size(); i++) {
 	    		String file_name = this.condition_files.get(i).getName();
 	    		bw.write("HDXData=" + file_name + ", " + this.condition_files.get(i).getFile() +"\n");

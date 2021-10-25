@@ -66,8 +66,6 @@ public class MainViewController implements Initializable {
 	int currentSize_top = 0;
 	
 	int currentSize_bottom = 0;
-	
-	Double maxSize = 0.0;
 
 	int currentRowIndex = -1;
 
@@ -275,7 +273,7 @@ public class MainViewController implements Initializable {
         
         sizeup_top.setOnAction(new EventHandler<ActionEvent>() { 
         	@Override public void handle(ActionEvent e) {
-        		if (currentSize_top < 5) {
+        		if (currentSize_top < 10) {
 	        		currentSize_top += 1;
 	                sizeLabel_top.setText("size : " + Integer.toString(currentSize_top));
 	        		setTopIntensityData(currentScan_top);
@@ -295,7 +293,7 @@ public class MainViewController implements Initializable {
         
         sizeup_bottom.setOnAction(new EventHandler<ActionEvent>() { 
         	@Override public void handle(ActionEvent e) {
-        		if (currentSize_bottom < 5) {
+        		if (currentSize_bottom < 10) {
 	        		currentSize_bottom += 1;
 	                sizeLabel_bottom.setText("size : " + Integer.toString(currentSize_bottom));
 	                setBottomIntensityData(currentScan_bottom, currentConditionIndex, false);
@@ -395,8 +393,6 @@ public class MainViewController implements Initializable {
 		ArrayList<Data<Double, Double>> dataList = new ArrayList<Data<Double, Double>>();
 		for(int i = 0; i < intensityList[0].length; i++) {
 			Double raw_mass = intensityList[0][i];
-			if( i == intensityList[0].length - 1 )
-				maxSize = raw_mass;
 			Double intensity = intensityList[1][i];
 			dataList.add(new XYChart.Data(raw_mass-0.001, 0));
 			dataList.add(new XYChart.Data(raw_mass, intensity));
@@ -586,14 +582,12 @@ public class MainViewController implements Initializable {
 	}
 	
 	public Double getMinMass(Double mz, int currentSize) {
-		Double res = (mz - 1.0) * (double)(5 - currentSize) / 5;
+		Double res = mz - 1.0 - currentSize*5;
 		return res;
 	}
 	
 	public Double getMaxMass(Double mz, Integer charge, String peptide, int currentSize) {
-		Double val = mz + (peptide.length() / charge);
-		Double offset = (maxSize - val) * (double)(currentSize) / 5;
-		return val + offset + 1;
+		return mz + (peptide.length() / charge) + currentSize*5;
 	}
 
 	// ------------------------------Ddeu Data --------------------
