@@ -161,6 +161,57 @@ public class MainViewController implements Initializable {
     
     @FXML
     private Label sizeLabel_bottom;
+    
+    // right labels
+    
+    @FXML
+    private Label posFromLabel;
+    
+    @FXML
+    private Label posToLabel;
+    
+    @FXML
+    private Label expMzLabel;
+    
+    @FXML
+    private Label mzShiftLabel;
+    
+    @FXML
+    private Label upStartScanLabel;
+    
+    @FXML
+    private Label upEndScanLabel;
+    
+    @FXML
+    private Label apexScanLabel;
+
+    @FXML
+    private Label apexRtLabel;
+
+    @FXML
+    private Label firstDeuNumLabel;
+
+    @FXML
+    private Label firstDeuPercentLabel;
+
+    @FXML
+    private Label secondDeuNumLabel;
+
+    @FXML
+    private Label secondDeuPercentLabel;
+
+    @FXML
+    private Label downStartScanLabel;
+
+    @FXML
+    private Label downEndScanLabel;
+
+    @FXML
+    private Label startRtLabel;
+
+    @FXML
+    private Label endRtLabel;
+    
 
     @FXML
     void onClickRun(ActionEvent event) {
@@ -381,6 +432,7 @@ public class MainViewController implements Initializable {
 		XYChart.Series series = getIntensitySeries(intensityList);
 		
 		HDXProfile profile = recordList.get(currentRecordIndex);
+		setProfileLabels(profile);
         String peptide = profile.getPeptide();
         Double mz = Double.parseDouble(profile.getMz());
         int charge = Integer.parseInt(profile.getCharge());
@@ -498,6 +550,7 @@ public class MainViewController implements Initializable {
         	if (data_peptide.equals(peptide) && data_d2o_label.contains(d2o_label)) {
         		predictedDdeu = data.getPredictedDdeu();
         		observedDdeu = data.getObservedDdeu();
+        		setDdeuLabels(data);
         		break;
         	}
         }
@@ -610,6 +663,37 @@ public class MainViewController implements Initializable {
 	
 	public Double getMaxMass(Double mz, Integer charge, String peptide, int currentSize) {
 		return mz + (peptide.length() / charge) + currentSize*5;
+	}
+	
+	public void setProfileLabels(HDXProfile p) {
+		System.out.println("#####################3");
+		this.posFromLabel.setText(p.getPosFrom());
+		System.out.println("#####################3");
+		this.posToLabel.setText(p.getPosTo());
+		System.out.println("#####################3");
+		this.expMzLabel.setText(p.getExpMz());
+		System.out.println("#####################3");
+		this.mzShiftLabel.setText(p.getMzShift());
+		System.out.println("#####################3");
+		this.upStartScanLabel.setText(p.getStartScan());
+		System.out.println("#####################3");
+		this.upEndScanLabel.setText(p.getEndScan());
+		System.out.println("#####################3");
+		this.apexScanLabel.setText(p.getApexScan());
+		System.out.println("#####################3");
+		this.apexRtLabel.setText(p.getApexRt());
+		System.out.println("#####################3");
+	}
+	
+	public void setDdeuLabels(DdeuAnal d) {
+		this.firstDeuNumLabel.setText(d.getFirstDdeuNum());
+		this.firstDeuPercentLabel.setText(d.getFirstDdeuPercent());
+		this.secondDeuNumLabel.setText(d.getSecondDdeuNum());
+		this.secondDeuPercentLabel.setText(d.getSecondDdeuPercent());
+		this.downStartScanLabel.setText(d.getStartScan());
+		this.downEndScanLabel.setText(d.getEndScan());
+		this.startRtLabel.setText(d.getStartRT());
+		this.endRtLabel.setText(d.getEndRT());
 	}
 
 	// ------------------------------Ddeu Data --------------------

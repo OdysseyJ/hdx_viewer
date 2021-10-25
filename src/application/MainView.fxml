@@ -30,7 +30,7 @@
       </MenuBar>
       <Pane layoutY="30.0" prefHeight="500.0" prefWidth="1280.0">
          <children>
-            <StackPane layoutX="365.0" layoutY="20.0" prefHeight="230.0" prefWidth="915.0">
+            <StackPane layoutX="365.0" layoutY="20.0" prefHeight="230.0" prefWidth="750.0">
                <children>
                   <AreaChart fx:id="isotopic" alternativeRowFillVisible="false" animated="false" createSymbols="false" horizontalGridLinesVisible="false" horizontalZeroLineVisible="false" legendSide="TOP" legendVisible="false" verticalGridLinesVisible="false" verticalZeroLineVisible="false">
                      <xAxis>
@@ -40,7 +40,7 @@
                         <NumberAxis fx:id="isotopic_yAxis" animated="false" forceZeroInRange="false" minHeight="160.0" minWidth="30.0" minorTickVisible="false" prefHeight="160.0" prefWidth="30.0" side="LEFT" tickLabelsVisible="false" tickMarkVisible="false" />
                      </yAxis>
                   </AreaChart>
-                  <LineChart fx:id="control" alternativeRowFillVisible="false" animated="false" createSymbols="false" legendVisible="false" prefHeight="230.0" prefWidth="915.0" verticalGridLinesVisible="false" verticalZeroLineVisible="false">
+                  <LineChart fx:id="control" alternativeRowFillVisible="false" animated="false" createSymbols="false" legendVisible="false" prefHeight="230.0" prefWidth="662.0" verticalGridLinesVisible="false" verticalZeroLineVisible="false">
                     <xAxis>
                       <NumberAxis fx:id="control_xAxis" animated="false" autoRanging="false" prefHeight="40.0" side="BOTTOM" />
                     </xAxis>
@@ -62,7 +62,7 @@
                 <NumberAxis animated="false" side="LEFT" />
               </yAxis>
             </LineChart>
-            <StackPane layoutX="365.0" layoutY="240.0" prefHeight="260.0" prefWidth="915.0">
+            <StackPane layoutX="365.0" layoutY="240.0" prefHeight="260.0" prefWidth="750.0">
                <children>
                   <AreaChart fx:id="predict" alternativeRowFillVisible="false" animated="false" createSymbols="false" horizontalGridLinesVisible="false" horizontalZeroLineVisible="false" legendSide="TOP" verticalGridLinesVisible="false" verticalZeroLineVisible="false">
                     <xAxis>
@@ -106,6 +106,38 @@
             <Label fx:id="sizeLabel_bottom" layoutX="980.0" layoutY="260.0" prefHeight="17.0" prefWidth="75.0" text="size:" />
             <Button fx:id="sizedown_bottom" layoutX="1065.0" layoutY="255.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="-" textAlignment="CENTER" />
             <Button fx:id="sizeup_bottom" layoutX="1095.0" layoutY="255.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="+" textAlignment="CENTER" />
+            <Label layoutX="1130.0" layoutY="51.0" text="posFrom" />
+            <Label layoutX="1130.0" layoutY="70.0" text="posTo" />
+            <Label layoutX="1131.0" layoutY="88.0" text="ExpM/z" />
+            <Label layoutX="1130.0" layoutY="109.0" text="m/zShift" />
+            <Label layoutX="1130.0" layoutY="128.0" text="startScan" />
+            <Label layoutX="1130.0" layoutY="168.0" text="ApexScan" />
+            <Label layoutX="1130.0" layoutY="187.0" prefHeight="17.0" prefWidth="70.0" text="ApexRT(m)" />
+            <Label layoutX="1131.0" layoutY="148.0" text="endScan" />
+            <Label layoutX="1133.0" layoutY="294.0" text="1stDeuNum" />
+            <Label layoutX="1133.0" layoutY="313.0" text="1stDeu%" />
+            <Label layoutX="1134.0" layoutY="331.0" text="2ndDeuNum" />
+            <Label layoutX="1133.0" layoutY="352.0" text="2ndDeu%" />
+            <Label layoutX="1133.0" layoutY="371.0" text="startScan" />
+            <Label layoutX="1133.0" layoutY="411.0" text="StartRT(m)" />
+            <Label layoutX="1133.0" layoutY="430.0" prefHeight="17.0" prefWidth="52.0" text="EndRt(m)" />
+            <Label layoutX="1134.0" layoutY="391.0" text="endScan" />
+            <Label fx:id="posFromLabel" layoutX="1210.0" layoutY="52.0" text="0" />
+            <Label fx:id="posToLabel" layoutX="1210.0" layoutY="71.0" text="0" />
+            <Label fx:id="expMzLabel" layoutX="1210.0" layoutY="89.0" text="0" />
+            <Label fx:id="mzShiftLabel" layoutX="1210.0" layoutY="110.0" text="0" />
+            <Label fx:id="upStartScanLabel" layoutX="1210.0" layoutY="129.0" text="0" />
+            <Label fx:id="apexScanLabel" layoutX="1211.0" layoutY="169.0" text="0" />
+            <Label fx:id="apexRtLabel" layoutX="1211.0" layoutY="188.0" text="0" />
+            <Label fx:id="upEndScanLabel" layoutX="1211.0" layoutY="149.0" text="0" />
+            <Label fx:id="firstDeuNumLabel" layoutX="1213.0" layoutY="295.0" text="0" />
+            <Label fx:id="firstDeuPercentLabel" layoutX="1213.0" layoutY="314.0" text="0" />
+            <Label fx:id="secondDeuNumLabel" layoutX="1213.0" layoutY="332.0" text="0" />
+            <Label fx:id="secondDeuPercentLabel" layoutX="1213.0" layoutY="353.0" text="0" />
+            <Label fx:id="downStartScanLabel" layoutX="1213.0" layoutY="372.0" text="0" />
+            <Label fx:id="startRtLabel" layoutX="1214.0" layoutY="412.0" text="0" />
+            <Label fx:id="endRtLabel" layoutX="1214.0" layoutY="431.0" text="0" />
+            <Label fx:id="downEndScanLabel" layoutX="1214.0" layoutY="392.0" text="0" />
          </children>
       </Pane>
       <TableView fx:id="tableview" layoutY="530.0" onMouseClicked="#onClickTableView" prefHeight="190.0" prefWidth="1280.0">
