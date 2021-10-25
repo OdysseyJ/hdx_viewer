@@ -242,7 +242,10 @@ public class FileSelectViewController {
 	    	Stage thisStage = (Stage) node.getScene().getWindow();
 			String pept = this.peptide.getAbsolutePath();
 			String path = pept.substring(0, pept.lastIndexOf('\\') + 1) + this.project_name + ".dmxj";
-
+			
+			
+			
+			
 			setMainViewData(path);
 	    	thisStage.close();
     	} catch(Exception e) {

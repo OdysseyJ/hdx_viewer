@@ -258,10 +258,8 @@ public class MainViewController implements Initializable {
         String mz = profile.getMz();
         Integer charge = Integer.parseInt(profile.getCharge());
         int scanNum = Integer.parseInt(apexScan);
-        int defaultConditionIndex = 0;
         
         currentRecordIndex = index;
-        currentConditionIndex = 0;
         currentSize_top = 0;
         currentSize_bottom = 0;
         sizeLabel_top.setText("size : " + Integer.toString(currentSize_top));
@@ -349,8 +347,8 @@ public class MainViewController implements Initializable {
 		setChartxAxis(control_xAxis, tick, minMass, maxMass);
 		
 		setTopIntensityData(scanNum);
-		setBottomIntensityData(scanNum, defaultConditionIndex, true);
-		menu_button.setText(conditions.get(defaultConditionIndex));
+		setBottomIntensityData(scanNum, currentConditionIndex, true);
+		menu_button.setText(conditions.get(currentConditionIndex));
 	}
 	
 	public void setTopIntensityData(int scanNum) {

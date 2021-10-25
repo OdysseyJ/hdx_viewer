@@ -1,8 +1,8 @@
-Project= test2
+Project= sad
 Peptide= C:\Users\Jinseok\HDXViewer\deMix_v1.02\testdata\foo_pept.tsv
 CTRLData= C:\Users\Jinseok\HDXViewer\deMix_v1.02\testdata\ctrl_ms.mzXML
-HDXData=30s, C:\Users\Jinseok\HDXViewer\deMix_v1.02\testdata\d2o_30s.mzXML
-HDXData=10m, C:\Users\Jinseok\HDXViewer\deMix_v1.02\testdata\d2o_10m.mzXML
-HDXData=60m, C:\Users\Jinseok\HDXViewer\deMix_v1.02\testdata\d2o_60m.mzXML
+HDXData=d2o_10m.mzXML, C:\Users\Jinseok\HDXViewer\deMix_v1.02\testdata\d2o_10m.mzXML
+HDXData=d2o_30s.mzXML, C:\Users\Jinseok\HDXViewer\deMix_v1.02\testdata\d2o_30s.mzXML
+HDXData=d2o_60m.mzXML, C:\Users\Jinseok\HDXViewer\deMix_v1.02\testdata\d2o_60m.mzXML
 MassTolerance= 0.1da
 Protein= C:\Users\Jinseok\HDXViewer\deMix_v1.02\testdata\foo_prot.fasta
