@@ -240,12 +240,10 @@ public class FileSelectViewController {
 	    	
 	    	Node node = (Node) event.getSource();
 	    	Stage thisStage = (Stage) node.getScene().getWindow();
-			String pept = this.peptide.getAbsolutePath();
-			String path = pept.substring(0, pept.lastIndexOf('\\') + 1) + this.project_name + ".dmxj";
-			
-			
-			
-			
+			String pept_absolute_path = this.peptide.getAbsolutePath();
+			int pept_name_len = this.peptide.getName().length();
+			String path = pept_absolute_path.substring(0, pept_absolute_path.length() - pept_name_len) + this.project_name + ".dmxj";
+		
 			setMainViewData(path);
 	    	thisStage.close();
     	} catch(Exception e) {
@@ -279,32 +277,32 @@ public class FileSelectViewController {
     
     public void setMainViewData(String path) {
     	try {
-    	TsvParserSettings settings = new TsvParserSettings();
-    	settings.getFormat().setLineSeparator("\n");
-    		
-    	TsvParser parser = new TsvParser(settings);
-		
-		List<String[]> all = parser.parseAll(getReader(path));
-		
-		File output = new File(path);
-    	BufferedReader br = new BufferedReader(new FileReader(output));
-		
-    	String str;
-		int hdxStart = 0;
-		int ddeuStart = 0;
-    	for(int i = 0 ;(str = br.readLine()) != null; i++) {
-    		if( str.equals("#HDXProfile::") )
-    			hdxStart = i - 2;
-    		else if(str.equals("#DdeuAnal::")) {
-    			ddeuStart = i - 4;
-    			break;
-    		}
-    	}
-		br.close();
-
-		ArrayList<ArrayList<Scan>> file_scans = new ArrayList<ArrayList<Scan>>();
-		ArrayList<HDXProfile> profileList = new ArrayList<HDXProfile>();
-		ArrayList<DdeuAnal> ddeuList = new ArrayList<DdeuAnal>();
+	    	TsvParserSettings settings = new TsvParserSettings();
+	    	settings.getFormat().setLineSeparator("\n");
+	    		
+	    	TsvParser parser = new TsvParser(settings);
+			
+			List<String[]> all = parser.parseAll(getReader(path));
+			
+			File output = new File(path);
+	    	BufferedReader br = new BufferedReader(new FileReader(output));
+			
+	    	String str;
+			int hdxStart = 0;
+			int ddeuStart = 0;
+	    	for(int i = 0 ;(str = br.readLine()) != null; i++) {
+	    		if( str.equals("#HDXProfile::") )
+	    			hdxStart = i - 2;
+	    		else if(str.equals("#DdeuAnal::")) {
+	    			ddeuStart = i - 4;
+	    			break;
+	    		}
+	    	}
+			br.close();
+	
+			ArrayList<ArrayList<Scan>> file_scans = new ArrayList<ArrayList<Scan>>();
+			ArrayList<HDXProfile> profileList = new ArrayList<HDXProfile>();
+			ArrayList<DdeuAnal> ddeuList = new ArrayList<DdeuAnal>();
 
 		// read all control scans
 		try {
@@ -359,7 +357,7 @@ public class FileSelectViewController {
 
 		 //read  all hdx profiles
 
-		if(this.protein != null) {
+		if(all.get(hdxStart)[4].equals("Protein")) {
 			for (int i = hdxStart + 1; i < ddeuStart ; i++) {
 				HDXProfile profile = new HDXProfile();
 				for (int j = 0; j < all.get(0).length; j++) {

@@ -71,6 +71,9 @@ public class MainViewController implements Initializable {
 
     @FXML
     private MenuItem open;
+    
+    @FXML
+    private MenuItem run;
 
     @FXML
     private TreeView<String> treeview;
@@ -160,17 +163,38 @@ public class MainViewController implements Initializable {
     private Label sizeLabel_bottom;
 
     @FXML
-    void onClickOpen(ActionEvent event) {
+    void onClickRun(ActionEvent event) {
     	Stage stage = Main.getPrimaryStage();
-    	showFileModal(stage);
+    	showRunModal(stage);
     }
     
-    private void showFileModal(Stage parentStage) {
+    @FXML
+    void onClickOpen(ActionEvent event) {
+    	Stage stage = Main.getPrimaryStage();
+    	showOpenModal(stage);
+    }
+    
+    private void showRunModal(Stage parentStage) {
     	try {
     	Stage stage = new Stage();
         Parent root = FXMLLoader.load(getClass().getResource("FileSelectView.fxml"));
         stage.setScene(new Scene(root, 600, 500));
-        stage.setTitle("file select");
+        stage.setTitle("Run");
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.initOwner(parentStage);
+        stage.showAndWait();
+    	}
+    	catch(Exception e){
+    		System.out.println(e);
+    	}
+    }
+    
+    private void showOpenModal(Stage parentStage) {
+    	try {
+    	Stage stage = new Stage();
+        Parent root = FXMLLoader.load(getClass().getResource("OpenProjectView.fxml"));
+        stage.setScene(new Scene(root, 290, 220));
+        stage.setTitle("Open");
         stage.initModality(Modality.WINDOW_MODAL);
         stage.initOwner(parentStage);
         stage.showAndWait();
