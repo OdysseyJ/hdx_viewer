@@ -666,23 +666,14 @@ public class MainViewController implements Initializable {
 	}
 	
 	public void setProfileLabels(HDXProfile p) {
-		System.out.println("#####################3");
 		this.posFromLabel.setText(p.getPosFrom());
-		System.out.println("#####################3");
 		this.posToLabel.setText(p.getPosTo());
-		System.out.println("#####################3");
 		this.expMzLabel.setText(p.getExpMz());
-		System.out.println("#####################3");
 		this.mzShiftLabel.setText(p.getMzShift());
-		System.out.println("#####################3");
 		this.upStartScanLabel.setText(p.getStartScan());
-		System.out.println("#####################3");
 		this.upEndScanLabel.setText(p.getEndScan());
-		System.out.println("#####################3");
 		this.apexScanLabel.setText(p.getApexScan());
-		System.out.println("#####################3");
 		this.apexRtLabel.setText(p.getApexRt());
-		System.out.println("#####################3");
 	}
 	
 	public void setDdeuLabels(DdeuAnal d) {
