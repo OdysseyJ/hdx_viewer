@@ -4,13 +4,26 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="220.0" prefWidth="290.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"  fx:controller="application.OpenProjectController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="220.0" prefWidth="290.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.OpenProjectController">
    <children>
-      <TextField fx:id="project_file_field" editable="false" layoutX="34.0" layoutY="63.0" promptText="Select File" />
-      <Label layoutX="33.0" layoutY="31.0" text="프로젝트 파일" />
-      <Button fx:id="project_file_select" layoutX="206.0" layoutY="64.0" mnemonicParsing="false" text="Select" onAction="#onClickProjectFileSelect" />
-      <Button fx:id="confirm_button" layoutX="206.0" layoutY="181.0" mnemonicParsing="false" text="Confirm" onAction="#onClickConfirm"/>
+      <TextField fx:id="project_file_field" editable="false" layoutX="24.0" layoutY="82.0" prefHeight="35.0" prefWidth="169.0" promptText="Select File">
+         <font>
+            <Font name="Noto Sans Oriya" size="14.0" />
+         </font></TextField>
+      <Label layoutX="24.0" layoutY="30.0" text="Project Fille">
+         <font>
+            <Font name="Noto Sans Oriya" size="14.0" />
+         </font></Label>
+      <Button fx:id="project_file_select" layoutX="202.0" layoutY="82.0" mnemonicParsing="false" onAction="#onClickProjectFileSelect" prefHeight="35.0" prefWidth="68.0" text="Select">
+         <font>
+            <Font name="Noto Sans Oriya" size="14.0" />
+         </font></Button>
+      <Button fx:id="confirm_button" layoutX="202.0" layoutY="171.0" mnemonicParsing="false" onAction="#onClickConfirm" text="Confirm">
+         <font>
+            <Font name="Noto Sans Oriya" size="14.0" />
+         </font></Button>
       <Label layoutX="33.0" layoutY="135.0" />
    </children>
 </Pane>

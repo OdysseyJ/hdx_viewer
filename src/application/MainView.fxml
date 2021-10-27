@@ -13,24 +13,17 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TreeView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
 
-<Pane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.MainViewController">
+
+<AnchorPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.MainViewController">
    <children>
-      <MenuBar prefHeight="25.0" prefWidth="1280.0">
-        <menus>
-          <Menu mnemonicParsing="false" text="File">
-            <items>
-              <MenuItem fx:id="run" mnemonicParsing="false" onAction="#onClickRun" text="Run" />
-                  <MenuItem fx:id="open" mnemonicParsing="false" onAction="#onClickOpen" text="Open" />
-            </items>
-          </Menu>
-        </menus>
-      </MenuBar>
-      <Pane layoutY="30.0" prefHeight="500.0" prefWidth="1280.0">
+      <AnchorPane AnchorPane.bottomAnchor="320.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <StackPane layoutX="365.0" layoutY="20.0" prefHeight="230.0" prefWidth="750.0">
+            <StackPane layoutX="375.0" layoutY="50.0" maxHeight="230.0" minWidth="750.0" AnchorPane.leftAnchor="430.0" AnchorPane.rightAnchor="200.0">
                <children>
                   <AreaChart fx:id="isotopic" alternativeRowFillVisible="false" animated="false" createSymbols="false" horizontalGridLinesVisible="false" horizontalZeroLineVisible="false" legendSide="TOP" legendVisible="false" verticalGridLinesVisible="false" verticalZeroLineVisible="false">
                      <xAxis>
@@ -40,12 +33,20 @@
                         <NumberAxis fx:id="isotopic_yAxis" animated="false" forceZeroInRange="false" minHeight="160.0" minWidth="30.0" minorTickVisible="false" prefHeight="160.0" prefWidth="30.0" side="LEFT" tickLabelsVisible="false" tickMarkVisible="false" />
                      </yAxis>
                   </AreaChart>
-                  <LineChart fx:id="control" alternativeRowFillVisible="false" animated="false" createSymbols="false" legendVisible="false" prefHeight="230.0" prefWidth="662.0" verticalGridLinesVisible="false" verticalZeroLineVisible="false">
+                  <LineChart fx:id="control" alternativeRowFillVisible="false" animated="false" createSymbols="false" legendVisible="false" verticalGridLinesVisible="false" verticalZeroLineVisible="false">
                     <xAxis>
-                      <NumberAxis fx:id="control_xAxis" animated="false" autoRanging="false" prefHeight="40.0" side="BOTTOM" />
+                      <NumberAxis fx:id="control_xAxis" animated="false" autoRanging="false" prefHeight="40.0" side="BOTTOM">
+                           <tickLabelFont>
+                              <Font name="Noto Sans Oriya" size="10.0" />
+                           </tickLabelFont>
+                        </NumberAxis>
                     </xAxis>
                     <yAxis>
-                      <NumberAxis fx:id="control_yAxis" animated="false" minorTickVisible="false" prefHeight="160.0" prefWidth="30.0" side="LEFT" tickMarkVisible="false" />
+                      <NumberAxis fx:id="control_yAxis" animated="false" minorTickVisible="false" prefHeight="160.0" prefWidth="30.0" side="LEFT" tickMarkVisible="false">
+                           <tickLabelFont>
+                              <Font name="Noto Sans Oriya" size="10.0" />
+                           </tickLabelFont>
+                        </NumberAxis>
                     </yAxis>
                      <StackPane.margin>
                         <Insets />
@@ -53,16 +54,20 @@
                   </LineChart>
                </children>
             </StackPane>
-            <TreeView fx:id="treeview" layoutX="10.0" layoutY="7.0" onMouseClicked="#onClickTreeView" prefHeight="193.0" prefWidth="358.0" />
-            <LineChart fx:id="linechart" animated="false" createSymbols="false" layoutY="270.0" legendVisible="false" prefHeight="230.0" prefWidth="365.0">
+            <TreeView fx:id="treeview" layoutX="15.0" layoutY="40.0" maxHeight="200.0" minWidth="400.0" onMouseClicked="#onClickTreeView" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="40.0" />
+            <LineChart fx:id="linechart" animated="false" createSymbols="false" layoutY="270.0" legendVisible="false" maxHeight="260.0" maxWidth="430.0" AnchorPane.leftAnchor="0.0">
               <xAxis>
-                <CategoryAxis animated="false" prefHeight="40.0" prefWidth="307.0" side="BOTTOM" />
+                <CategoryAxis animated="false" prefHeight="40.0" side="BOTTOM" />
               </xAxis>
               <yAxis>
-                <NumberAxis animated="false" side="LEFT" />
+                <NumberAxis animated="false" minorTickVisible="false" side="LEFT" tickMarkVisible="false">
+                     <tickLabelFont>
+                        <Font name="Noto Sans Oriya" size="10.0" />
+                     </tickLabelFont>
+                  </NumberAxis>
               </yAxis>
             </LineChart>
-            <StackPane layoutX="365.0" layoutY="240.0" prefHeight="260.0" prefWidth="750.0">
+            <StackPane layoutX="375.0" layoutY="270.0" maxHeight="260.0" minWidth="750.0" AnchorPane.leftAnchor="430.0" AnchorPane.rightAnchor="200.0">
                <children>
                   <AreaChart fx:id="predict" alternativeRowFillVisible="false" animated="false" createSymbols="false" horizontalGridLinesVisible="false" horizontalZeroLineVisible="false" legendSide="TOP" verticalGridLinesVisible="false" verticalZeroLineVisible="false">
                     <xAxis>
@@ -77,72 +82,257 @@
                   </AreaChart>
                   <LineChart fx:id="result" alternativeRowFillVisible="false" animated="false" createSymbols="false" horizontalZeroLineVisible="false" legendVisible="false" verticalGridLinesVisible="false" verticalZeroLineVisible="false">
                      <xAxis>
-                        <NumberAxis fx:id="result_xAxis" animated="false" autoRanging="false" prefHeight="40.0" side="BOTTOM" />
+                        <NumberAxis fx:id="result_xAxis" animated="false" autoRanging="false" prefHeight="40.0" side="BOTTOM">
+                           <tickLabelFont>
+                              <Font name="Noto Sans Oriya" size="10.0" />
+                           </tickLabelFont>
+                        </NumberAxis>
                      </xAxis>
                      <yAxis>
-                        <NumberAxis fx:id="result_yAxis" animated="false" minHeight="160.0" minWidth="30.0" minorTickVisible="false" prefHeight="160.0" prefWidth="30.0" side="LEFT" tickMarkVisible="false" visible="false" />
+                        <NumberAxis fx:id="result_yAxis" animated="false" minHeight="160.0" minWidth="30.0" minorTickVisible="false" prefHeight="160.0" prefWidth="30.0" side="LEFT" tickMarkVisible="false" visible="false">
+                           <tickLabelFont>
+                              <Font name="Noto Sans Oriya" size="10.0" />
+                           </tickLabelFont>
+                        </NumberAxis>
                      </yAxis>
                      <StackPane.margin>
                         <Insets top="30.0" />
                      </StackPane.margin>
                   </LineChart>
+                  <MenuButton fx:id="menu_button" mnemonicParsing="false" text="Conditions" StackPane.alignment="TOP_LEFT">
+                    <items>
+                      <MenuItem mnemonicParsing="false" text="Action 1" />
+                      <MenuItem mnemonicParsing="false" text="Action 2" />
+                    </items>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <StackPane.margin>
+                        <Insets left="50.0" />
+                     </StackPane.margin>
+                  </MenuButton>
                </children>
             </StackPane>
-            <MenuButton fx:id="menu_button" layoutX="410.0" layoutY="254.0" mnemonicParsing="false" text="Conditions">
-              <items>
-                <MenuItem mnemonicParsing="false" text="Action 1" />
-                <MenuItem mnemonicParsing="false" text="Action 2" />
-              </items>
-            </MenuButton>
-            <Button fx:id="prevScan_bottom" layoutX="1215.0" layoutY="255.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="&lt;" textAlignment="CENTER" />
-            <Button fx:id="nextScan_bottom" layoutX="1245.0" layoutY="255.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="&gt;" textAlignment="CENTER" />
-            <Button fx:id="prevScan_top" layoutX="1215.0" layoutY="5.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="&lt;" textAlignment="CENTER" />
-            <Button fx:id="nextScan_top" layoutX="1245.0" layoutY="5.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="&gt;" textAlignment="CENTER" />
-            <Label fx:id="scanLabel_top" layoutX="1130.0" layoutY="12.0" prefHeight="17.0" prefWidth="75.0" text="scan:" />
-            <Label fx:id="sizeLabel_top" layoutX="980.0" layoutY="12.0" prefHeight="17.0" prefWidth="75.0" text="size:" />
-            <Button fx:id="sizedown_top" layoutX="1065.0" layoutY="5.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="-" textAlignment="CENTER" />
-            <Button fx:id="sizeup_top" layoutX="1095.0" layoutY="5.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="+" textAlignment="CENTER" />
-            <Label fx:id="scanLabel_bottom" layoutX="1130.0" layoutY="260.0" prefHeight="17.0" prefWidth="75.0" text="scan:" />
-            <Label fx:id="sizeLabel_bottom" layoutX="980.0" layoutY="260.0" prefHeight="17.0" prefWidth="75.0" text="size:" />
-            <Button fx:id="sizedown_bottom" layoutX="1065.0" layoutY="255.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="-" textAlignment="CENTER" />
-            <Button fx:id="sizeup_bottom" layoutX="1095.0" layoutY="255.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="+" textAlignment="CENTER" />
-            <Label layoutX="1130.0" layoutY="51.0" text="posFrom" />
-            <Label layoutX="1130.0" layoutY="70.0" text="posTo" />
-            <Label layoutX="1131.0" layoutY="88.0" text="ExpM/z" />
-            <Label layoutX="1130.0" layoutY="109.0" text="m/zShift" />
-            <Label layoutX="1130.0" layoutY="128.0" text="startScan" />
-            <Label layoutX="1130.0" layoutY="168.0" text="ApexScan" />
-            <Label layoutX="1130.0" layoutY="187.0" prefHeight="17.0" prefWidth="70.0" text="ApexRT(m)" />
-            <Label layoutX="1131.0" layoutY="148.0" text="endScan" />
-            <Label layoutX="1133.0" layoutY="294.0" text="1stDeuNum" />
-            <Label layoutX="1133.0" layoutY="313.0" text="1stDeu%" />
-            <Label layoutX="1134.0" layoutY="331.0" text="2ndDeuNum" />
-            <Label layoutX="1133.0" layoutY="352.0" text="2ndDeu%" />
-            <Label layoutX="1133.0" layoutY="371.0" text="startScan" />
-            <Label layoutX="1133.0" layoutY="411.0" text="StartRT(m)" />
-            <Label layoutX="1133.0" layoutY="430.0" prefHeight="17.0" prefWidth="52.0" text="EndRt(m)" />
-            <Label layoutX="1134.0" layoutY="391.0" text="endScan" />
-            <Label fx:id="posFromLabel" layoutX="1210.0" layoutY="52.0" text="0" />
-            <Label fx:id="posToLabel" layoutX="1210.0" layoutY="71.0" text="0" />
-            <Label fx:id="expMzLabel" layoutX="1210.0" layoutY="89.0" text="0" />
-            <Label fx:id="mzShiftLabel" layoutX="1210.0" layoutY="110.0" text="0" />
-            <Label fx:id="upStartScanLabel" layoutX="1210.0" layoutY="129.0" text="0" />
-            <Label fx:id="apexScanLabel" layoutX="1211.0" layoutY="169.0" text="0" />
-            <Label fx:id="apexRtLabel" layoutX="1211.0" layoutY="188.0" text="0" />
-            <Label fx:id="upEndScanLabel" layoutX="1211.0" layoutY="149.0" text="0" />
-            <Label fx:id="firstDeuNumLabel" layoutX="1213.0" layoutY="295.0" text="0" />
-            <Label fx:id="firstDeuPercentLabel" layoutX="1213.0" layoutY="314.0" text="0" />
-            <Label fx:id="secondDeuNumLabel" layoutX="1213.0" layoutY="332.0" text="0" />
-            <Label fx:id="secondDeuPercentLabel" layoutX="1213.0" layoutY="353.0" text="0" />
-            <Label fx:id="downStartScanLabel" layoutX="1213.0" layoutY="372.0" text="0" />
-            <Label fx:id="startRtLabel" layoutX="1214.0" layoutY="412.0" text="0" />
-            <Label fx:id="endRtLabel" layoutX="1214.0" layoutY="431.0" text="0" />
-            <Label fx:id="downEndScanLabel" layoutX="1214.0" layoutY="392.0" text="0" />
+            <Pane layoutX="994.0" layoutY="273.0" AnchorPane.rightAnchor="30.0">
+               <children>
+                  <Button fx:id="prevScan_bottom" layoutX="231.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="27.0" text="&lt;" textAlignment="CENTER" />
+                  <Button fx:id="nextScan_bottom" layoutX="261.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="&gt;" textAlignment="CENTER" />
+                  <Label fx:id="scanLabel_bottom" layoutX="149.0" prefHeight="17.0" prefWidth="75.0" text="scan:">
+                     <font>
+                        <Font name="Noto Sans Oriya" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="sizeLabel_bottom" layoutY="5.0" prefHeight="17.0" prefWidth="75.0" text="size:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="sizedown_bottom" layoutX="81.0" layoutY="1.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="-" textAlignment="CENTER" />
+                  <Button fx:id="sizeup_bottom" layoutX="111.0" layoutY="1.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="+" textAlignment="CENTER" />
+               </children>
+            </Pane>
+            <Pane layoutX="994.0" layoutY="34.0" AnchorPane.rightAnchor="30.0">
+               <children>
+                  <Button fx:id="prevScan_top" layoutX="231.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="&lt;" textAlignment="CENTER" />
+                  <Button fx:id="nextScan_top" layoutX="261.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="&gt;" textAlignment="CENTER" />
+                  <Label fx:id="scanLabel_top" layoutX="146.0" layoutY="1.0" prefHeight="17.0" prefWidth="75.0" text="scan:">
+                     <font>
+                        <Font name="Noto Sans Oriya" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="sizeLabel_top" layoutY="5.0" prefHeight="17.0" prefWidth="75.0" text="size:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="sizedown_top" layoutX="81.0" layoutY="1.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="-" textAlignment="CENTER" />
+                  <Button fx:id="sizeup_top" layoutX="111.0" layoutY="1.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" text="+" textAlignment="CENTER" />
+               </children>
+            </Pane>
+            <Pane layoutX="1270.986328125" layoutY="81.0" AnchorPane.rightAnchor="30.0">
+               <children>
+                  <Label layoutX="23.513671875" text="posFrom">
+                     <font>
+                        <Font name="Noto Sans Oriya" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="40.013671875" layoutY="19.0" text="posTo">
+                     <font>
+                        <Font name="Noto Sans Oriya" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="30.013671875" layoutY="37.0" text="ExpM/z">
+                     <font>
+                        <Font name="Noto Sans Oriya" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="26.013671875" layoutY="58.0" text="m/zShift">
+                     <font>
+                        <Font name="Noto Sans Oriya" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="19.513671875" layoutY="77.0" text="startScan">
+                     <font>
+                        <Font name="Noto Sans Oriya" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="15.013671875" layoutY="117.0" text="ApexScan">
+                     <font>
+                        <Font name="Noto Sans Oriya" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="8.013671875" layoutY="136.0" text="ApexRT(m)">
+                     <font>
+                        <Font name="Noto Sans Oriya" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="23.513671875" layoutY="97.0" text="endScan">
+                     <font>
+                        <Font name="Noto Sans Oriya" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="posFromLabel" layoutX="120.513671875" layoutY="1.0" text="0">
+                     <font>
+                        <Font name="Noto Sans Oriya" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="posToLabel" layoutX="120.513671875" layoutY="20.0" text="0">
+                     <font>
+                        <Font name="Noto Sans Oriya" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="expMzLabel" layoutX="120.513671875" layoutY="38.0" text="0">
+                     <font>
+                        <Font name="Noto Sans Oriya" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="mzShiftLabel" layoutX="120.513671875" layoutY="59.0" text="0">
+                     <font>
+                        <Font name="Noto Sans Oriya" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="upStartScanLabel" layoutX="120.513671875" layoutY="78.0" text="0">
+                     <font>
+                        <Font name="Noto Sans Oriya" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="apexScanLabel" layoutX="120.513671875" layoutY="118.0" text="0">
+                     <font>
+                        <Font name="Noto Sans Oriya" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="apexRtLabel" layoutX="120.513671875" layoutY="137.0" text="0">
+                     <font>
+                        <Font name="Noto Sans Oriya" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="upEndScanLabel" layoutX="120.513671875" layoutY="98.0" text="0">
+                     <font>
+                        <Font name="Noto Sans Oriya" size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+            <Pane layoutX="1271.0" layoutY="323.0" AnchorPane.rightAnchor="30.0">
+               <children>
+                  <Label layoutX="4.5" layoutY="1.0" text="1stDeuNum">
+                     <font>
+                        <Font name="Noto Sans Oriya" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="22.5" layoutY="20.0" text="1stDeu%">
+                     <font>
+                        <Font name="Noto Sans Oriya" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutY="38.0" text="2ndDeuNum">
+                     <font>
+                        <Font name="Noto Sans Oriya" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="18.0" layoutY="59.0" text="2ndDeu%">
+                     <font>
+                        <Font name="Noto Sans Oriya" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="19.5" layoutY="78.0" text="startScan">
+                     <font>
+                        <Font name="Noto Sans Oriya" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="9.0" layoutY="118.0" text="StartRT(m)">
+                     <font>
+                        <Font name="Noto Sans Oriya" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="18.0" layoutY="137.0" text="EndRt(m)">
+                     <font>
+                        <Font name="Noto Sans Oriya" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="23.5" layoutY="98.0" text="endScan">
+                     <font>
+                        <Font name="Noto Sans Oriya" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="firstDeuNumLabel" layoutX="120.5" text="0">
+                     <font>
+                        <Font name="Noto Sans Oriya" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="firstDeuPercentLabel" layoutX="120.5" layoutY="19.0" text="0">
+                     <font>
+                        <Font name="Noto Sans Oriya" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="secondDeuNumLabel" layoutX="120.5" layoutY="37.0" text="0">
+                     <font>
+                        <Font name="Noto Sans Oriya" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="secondDeuPercentLabel" layoutX="120.5" layoutY="58.0" text="0">
+                     <font>
+                        <Font name="Noto Sans Oriya" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="downStartScanLabel" layoutX="120.5" layoutY="77.0" text="0">
+                     <font>
+                        <Font name="Noto Sans Oriya" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="startRtLabel" layoutX="120.5" layoutY="117.0" text="0">
+                     <font>
+                        <Font name="Noto Sans Oriya" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="endRtLabel" layoutX="120.5" layoutY="138.0" text="0">
+                     <font>
+                        <Font name="Noto Sans Oriya" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="downEndScanLabel" layoutX="120.5" layoutY="97.0" text="0">
+                     <font>
+                        <Font name="Noto Sans Oriya" size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
          </children>
-      </Pane>
-      <TableView fx:id="tableview" layoutY="530.0" onMouseClicked="#onClickTableView" prefHeight="190.0" prefWidth="1280.0">
+      </AnchorPane>
+      <TableView fx:id="tableview" onMouseClicked="#onClickTableView" prefHeight="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="550.0">
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-         </columnResizePolicy></TableView>
+         </columnResizePolicy>
+      </TableView>
+      <MenuBar prefHeight="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem fx:id="run" mnemonicParsing="false" onAction="#onClickRun" text="Run" />
+                  <MenuItem fx:id="open" mnemonicParsing="false" onAction="#onClickOpen" text="Open" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
    </children>
-</Pane>
+</AnchorPane>

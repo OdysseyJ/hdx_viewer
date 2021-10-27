@@ -1,7 +1,7 @@
 /* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
 
 #linechart .chart-series-line {
-	-fx-stroke: #E1AD01;
+	-fx-stroke: #FF7F00;
 }
 
 #control .chart-series-line {
@@ -12,20 +12,23 @@
 	-fx-stroke: #002545;
 }
 
-.default-color0.chart-legend-item-symbol { -fx-background-color:    #d46d00;}
-.default-color0.chart-series-line {-fx-stroke:                      #d46d00;}
-.default-color0.chart-series-area-line {-fx-stroke:                 #d46d00;}
+.default-color0.chart-legend-item-symbol { -fx-background-color:    #FF0000;}
+.default-color0.chart-series-line {-fx-stroke:                      #FF0000;}
+.default-color0.chart-series-area-line {
+	-fx-stroke-dash-array: 10 10 10 10;
+	-fx-stroke-width: 5;
+	-fx-stroke: #FF0000;
+}
 .default-color0.chart-series-area-fill {
-	-fx-fill: #d46d00;
-	-fx-opacity: 0.5;
+	-fx-fill: transparent;
 }
 
-.default-color1.chart-legend-item-symbol { -fx-background-color:    #0077B6;}
-.default-color1.chart-series-line {-fx-stroke:                      #0077B6;}
-.default-color1.chart-series-area-line {-fx-stroke:                 #0077B6;}
+.default-color1.chart-legend-item-symbol { -fx-background-color:    #FF7F00;}
+.default-color1.chart-series-line {-fx-stroke:                      #FF7F00;}
+.default-color1.chart-series-area-line {-fx-stroke:                 #FF7F00;}
 .default-color1.chart-series-area-fill {
-	-fx-fill: #0077B6;
-	-fx-opacity: 0.5;
+	-fx-fill: #FF7F00;
+	-fx-opacity: 0.3;
 }
 
 .chart-legend{

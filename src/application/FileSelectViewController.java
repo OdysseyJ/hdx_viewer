@@ -105,7 +105,10 @@ public class FileSelectViewController {
 	private TextField project_name_field;
    
     @FXML
-	private TextField current_condition_field;
+	private TextField current_condition_filename_field;
+
+    @FXML
+	private TextField current_condition_nickname_field;
     
     @FXML
     private Button delete_condition_button;
@@ -121,12 +124,11 @@ public class FileSelectViewController {
     	if (current_condition_file == null) {
     		return;
     	}
-    	String current_condition_name = current_condition_field.getText();
+    	String current_condition_name = current_condition_nickname_field.getText();
     	if (current_condition_name.isEmpty() || current_condition_name.equals("")) {
     		return;
     	}
     	
-    	System.out.println(current_condition_name);
 		condition_files.add(new ConditionFile(current_condition_name, current_condition_file.getFile()));
 		
 		Callback<TableColumn<String, String>, TableCell<String, String>> stringCellFactory =
@@ -148,12 +150,13 @@ public class FileSelectViewController {
 			col.setSortable(false);
 			condition_table_view.getColumns().add(col);	
 		}
-		recordList.add(current_condition_name);
+		recordList.add(current_condition_file.getName() + " (" + current_condition_name + ")");
 		condition_table_view.setEditable(true);
 		condition_table_view.setItems(recordList);
 		
 		current_condition_file = null;
-		current_condition_field.setText(null);
+		current_condition_filename_field.setText(null);
+		current_condition_nickname_field.setText(null);
     }
     
     @FXML
@@ -181,7 +184,7 @@ public class FileSelectViewController {
 		}
 		
 		current_condition_file = new ConditionFile(file.getName(), file);
-		current_condition_field.setText(file.getName());
+		current_condition_filename_field.setText(file.getName());
     }
     
     @FXML
