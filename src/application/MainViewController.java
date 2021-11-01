@@ -695,6 +695,7 @@ public class MainViewController implements Initializable {
 	// ------------------------------Table View---------------------
 
 	public void setTableViewData(ArrayList<HDXProfile> profileList, ArrayList<ConditionFile> files) {
+		tableview.getColumns().clear();
 		menu_button.getItems().clear();
 		for (int i = 0; i < files.size(); i++) {
 			ConditionFile file = files.get(i);
